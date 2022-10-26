@@ -1,0 +1,19 @@
+# OS
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Program
+target/
+bin/
+*.test
+*.out
+*.log
