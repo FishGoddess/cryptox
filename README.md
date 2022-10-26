@@ -1,4 +1,4 @@
-# 📝 Cryptox
+# 🔒 Cryptox
 
 [![Go Doc](_icons/godoc.svg)](https://pkg.go.dev/github.com/FishGoddess/cryptox)
 [![License](_icons/license.svg)](https://opensource.org/licenses/MIT)
@@ -9,7 +9,7 @@
 
 [Read me in English](./README.en.md)
 
-### 🥇 功能特性
+### 💡 功能特性
 
 * 支持 DES/3DES/AES 等对称加密算法。
 * 支持 RSA 等非对称加密算法。
@@ -20,15 +20,15 @@
 
 _历史版本的特性请查看 [HISTORY.md](./HISTORY.md)。未来版本的新特性和计划请查看 [FUTURE.md](./FUTURE.md)。_
 
-### 🚀 使用方式
+### ⚙ 使用方式
 
 $ go get -u github.com/FishGoddess/cryptox
 
-### 👥 贡献者
+### 🎨 贡献者
 
 如果您觉得 cryptox 缺少您需要的功能，请不要犹豫，马上参与进来，发起一个 _**issue**_。
 
-### 📦 使用 cryptox 的项目
+### 💪 使用 cryptox 的项目
 
 | 项目  | 作者  | 描述  | 链接                  |
 |-----|-----|-----|---------------------|

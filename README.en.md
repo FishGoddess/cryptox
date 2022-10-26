@@ -1,4 +1,4 @@
-# 📝 Cryptox
+# 🔒 Cryptox
 
 [![Go Doc](_icons/godoc.svg)](https://pkg.go.dev/github.com/FishGoddess/cryptox)
 [![License](_icons/license.svg)](https://opensource.org/licenses/MIT)
@@ -9,7 +9,7 @@
 
 [阅读中文版的文档](./README.md)
 
-### 🥇 Features
+### 💡 Features
 
 * DES/3DES/AES Supports.
 * RSA Supports.
@@ -20,15 +20,15 @@
 
 _Check [HISTORY.md](./HISTORY.md) and [FUTURE.md](./FUTURE.md) to know about more information._
 
-### 🚀 How to use
+### ⚙ How to use
 
 $ go get -u github.com/FishGoddess/cryptox
 
-### 👥 Contributing
+### 🎨 Contributing
 
 If you find that something is not working as expected please open an _**issue**_.
 
-### 📦 Projects using cryptox
+### 💪 Projects using cryptox
 
 | Project | Author | Description | link                   |
 |---------|--------|-------------|------------------------|
