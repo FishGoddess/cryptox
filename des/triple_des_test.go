@@ -10,8 +10,8 @@ import (
 	"github.com/FishGoddess/cryptox"
 )
 
-// go test -v -cover -run=^TestTripleEncryptECB$
-func TestTripleEncryptECB(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESEncryptECB$
+func TestTripleDESEncryptECB(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 
 	cases := map[string]string{
@@ -33,8 +33,8 @@ func TestTripleEncryptECB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleEncryptECBHex$
-func TestTripleEncryptECBHex(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESEncryptECBHex$
+func TestTripleDESEncryptECBHex(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 
 	cases := map[string]string{
@@ -55,8 +55,8 @@ func TestTripleEncryptECBHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleEncryptECBBase64$
-func TestTripleEncryptECBBase64(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESEncryptECBBase64$
+func TestTripleDESEncryptECBBase64(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 
 	cases := map[string]string{
@@ -77,8 +77,8 @@ func TestTripleEncryptECBBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleDecryptECB$
-func TestTripleDecryptECB(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESDecryptECB$
+func TestTripleDESDecryptECB(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 
 	cases := map[string]string{
@@ -100,8 +100,8 @@ func TestTripleDecryptECB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleDecryptECBHex$
-func TestTripleDecryptECBHex(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESDecryptECBHex$
+func TestTripleDESDecryptECBHex(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 
 	cases := map[string]string{
@@ -123,8 +123,8 @@ func TestTripleDecryptECBHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleDecryptECBBase64$
-func TestTripleDecryptECBBase64(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESDecryptECBBase64$
+func TestTripleDESDecryptECBBase64(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 
 	cases := map[string]string{
@@ -146,8 +146,8 @@ func TestTripleDecryptECBBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleEncryptCBC$
-func TestTripleEncryptCBC(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESEncryptCBC$
+func TestTripleDESEncryptCBC(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -170,8 +170,8 @@ func TestTripleEncryptCBC(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleEncryptCBCHex$
-func TestTripleEncryptCBCHex(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESEncryptCBCHex$
+func TestTripleDESEncryptCBCHex(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -193,8 +193,8 @@ func TestTripleEncryptCBCHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleEncryptCBCBase64$
-func TestTripleEncryptCBCBase64(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESEncryptCBCBase64$
+func TestTripleDESEncryptCBCBase64(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -216,8 +216,8 @@ func TestTripleEncryptCBCBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleDecryptCBC$
-func TestTripleDecryptCBC(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESDecryptCBC$
+func TestTripleDESDecryptCBC(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -240,8 +240,8 @@ func TestTripleDecryptCBC(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleDecryptCBCHex$
-func TestTripleDecryptCBCHex(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESDecryptCBCHex$
+func TestTripleDESDecryptCBCHex(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -264,8 +264,8 @@ func TestTripleDecryptCBCHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleDecryptCBCBase64$
-func TestTripleDecryptCBCBase64(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESDecryptCBCBase64$
+func TestTripleDESDecryptCBCBase64(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -288,8 +288,8 @@ func TestTripleDecryptCBCBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleEncryptCFB$
-func TestTripleEncryptCFB(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESEncryptCFB$
+func TestTripleDESEncryptCFB(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -312,8 +312,8 @@ func TestTripleEncryptCFB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleEncryptCFBHex$
-func TestTripleEncryptCFBHex(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESEncryptCFBHex$
+func TestTripleDESEncryptCFBHex(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -335,8 +335,8 @@ func TestTripleEncryptCFBHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleEncryptCFBBase64$
-func TestTripleEncryptCFBBase64(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESEncryptCFBBase64$
+func TestTripleDESEncryptCFBBase64(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -358,8 +358,8 @@ func TestTripleEncryptCFBBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleDecryptCFB$
-func TestTripleDecryptCFB(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESDecryptCFB$
+func TestTripleDESDecryptCFB(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -382,8 +382,8 @@ func TestTripleDecryptCFB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleDecryptCFBHex$
-func TestTripleDecryptCFBHex(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESDecryptCFBHex$
+func TestTripleDESDecryptCFBHex(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -406,8 +406,8 @@ func TestTripleDecryptCFBHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleDecryptCFBBase64$
-func TestTripleDecryptCFBBase64(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESDecryptCFBBase64$
+func TestTripleDESDecryptCFBBase64(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -430,8 +430,8 @@ func TestTripleDecryptCFBBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleEncryptOFB$
-func TestTripleEncryptOFB(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESEncryptOFB$
+func TestTripleDESEncryptOFB(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -454,8 +454,8 @@ func TestTripleEncryptOFB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleEncryptOFBHex$
-func TestTripleEncryptOFBHex(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESEncryptOFBHex$
+func TestTripleDESEncryptOFBHex(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -477,8 +477,8 @@ func TestTripleEncryptOFBHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleEncryptOFBBase64$
-func TestTripleEncryptOFBBase64(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESEncryptOFBBase64$
+func TestTripleDESEncryptOFBBase64(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -500,8 +500,8 @@ func TestTripleEncryptOFBBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleDecryptOFB$
-func TestTripleDecryptOFB(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESDecryptOFB$
+func TestTripleDESDecryptOFB(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -524,8 +524,8 @@ func TestTripleDecryptOFB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleDecryptOFBHex$
-func TestTripleDecryptOFBHex(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESDecryptOFBHex$
+func TestTripleDESDecryptOFBHex(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -548,8 +548,8 @@ func TestTripleDecryptOFBHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleDecryptOFBBase64$
-func TestTripleDecryptOFBBase64(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESDecryptOFBBase64$
+func TestTripleDESDecryptOFBBase64(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -572,8 +572,8 @@ func TestTripleDecryptOFBBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleEncryptCTR$
-func TestTripleEncryptCTR(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESEncryptCTR$
+func TestTripleDESEncryptCTR(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -596,8 +596,8 @@ func TestTripleEncryptCTR(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleEncryptCTRHex$
-func TestTripleEncryptCTRHex(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESEncryptCTRHex$
+func TestTripleDESEncryptCTRHex(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -619,8 +619,8 @@ func TestTripleEncryptCTRHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleEncryptCTRBase64$
-func TestTripleEncryptCTRBase64(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESEncryptCTRBase64$
+func TestTripleDESEncryptCTRBase64(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -642,8 +642,8 @@ func TestTripleEncryptCTRBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleDecryptCTR$
-func TestTripleDecryptCTR(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESDecryptCTR$
+func TestTripleDESDecryptCTR(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -666,8 +666,8 @@ func TestTripleDecryptCTR(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleDecryptCTRHex$
-func TestTripleDecryptCTRHex(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESDecryptCTRHex$
+func TestTripleDESDecryptCTRHex(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
@@ -690,8 +690,8 @@ func TestTripleDecryptCTRHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestTripleDecryptCTRBase64$
-func TestTripleDecryptCTRBase64(t *testing.T) {
+// go test -v -cover -run=^TestTripleDESDecryptCTRBase64$
+func TestTripleDESDecryptCTRBase64(t *testing.T) {
 	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
