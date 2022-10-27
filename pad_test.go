@@ -6,10 +6,8 @@ package cryptox
 
 import "testing"
 
-// go test -v -cover -run=^TestNoPadding$
-func TestNoPadding(t *testing.T) {
-	padder := NoPadding()
-
+// go test -v -cover -run=^TestPaddingAndUnPaddingNone$
+func TestPaddingAndUnPaddingNone(t *testing.T) {
 	blockSize := 8
 	cases := map[string]string{
 		string([]byte{}):                       string([]byte{}),
@@ -18,14 +16,14 @@ func TestNoPadding(t *testing.T) {
 	}
 
 	for data, expect := range cases {
-		padding := padder.Padding([]byte(data), blockSize)
+		padding := PaddingNone([]byte(data), blockSize)
 		if string(padding) != expect {
 			t.Errorf("data %+v: padding %+v != expect %s", []byte(data), padding, []byte(expect))
 		}
 	}
 
 	for data, expect := range cases {
-		unPadding, err := padder.UnPadding([]byte(expect), blockSize)
+		unPadding, err := UnPaddingNone([]byte(expect), blockSize)
 		if err != nil {
 			t.Error(err)
 		}
@@ -36,10 +34,8 @@ func TestNoPadding(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestZeroPadding$
-func TestZeroPadding(t *testing.T) {
-	padder := ZeroPadding()
-
+// go test -v -cover -run=^TestPaddingAndUnPaddingZero$
+func TestPaddingAndUnPaddingZero(t *testing.T) {
 	blockSize := 8
 	cases := map[string]string{
 		string([]byte{}):                       string([]byte{0, 0, 0, 0, 0, 0, 0, 0}),
@@ -48,14 +44,14 @@ func TestZeroPadding(t *testing.T) {
 	}
 
 	for data, expect := range cases {
-		padding := padder.Padding([]byte(data), blockSize)
+		padding := PaddingZero([]byte(data), blockSize)
 		if string(padding) != expect {
 			t.Errorf("data %+v: padding %+v != expect %s", []byte(data), padding, []byte(expect))
 		}
 	}
 
 	for data, expect := range cases {
-		unPadding, err := padder.UnPadding([]byte(expect), blockSize)
+		unPadding, err := UnPaddingZero([]byte(expect), blockSize)
 		if err != nil {
 			t.Error(err)
 		}
@@ -66,10 +62,8 @@ func TestZeroPadding(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestPKCS5$
-func TestPKCS5(t *testing.T) {
-	padder := PKCS5()
-
+// go test -v -cover -run=^TestPaddingAndUnPaddingPKCS5$
+func TestPaddingAndUnPaddingPKCS5(t *testing.T) {
 	blockSize := 8
 	cases := map[string]string{
 		string([]byte{}):                       string([]byte{8, 8, 8, 8, 8, 8, 8, 8}),
@@ -78,14 +72,14 @@ func TestPKCS5(t *testing.T) {
 	}
 
 	for data, expect := range cases {
-		padding := padder.Padding([]byte(data), blockSize)
+		padding := PaddingPKCS5([]byte(data), blockSize)
 		if string(padding) != expect {
 			t.Errorf("data %+v: padding %+v != expect %s", []byte(data), padding, []byte(expect))
 		}
 	}
 
 	for data, expect := range cases {
-		unPadding, err := padder.UnPadding([]byte(expect), blockSize)
+		unPadding, err := UnPaddingPKCS5([]byte(expect), blockSize)
 		if err != nil {
 			t.Error(err)
 		}
@@ -96,10 +90,8 @@ func TestPKCS5(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestPKCS7$
-func TestPKCS7(t *testing.T) {
-	padder := PKCS7()
-
+// go test -v -cover -run=^TestPaddingAndUnPaddingPKCS7$
+func TestPaddingAndUnPaddingPKCS7(t *testing.T) {
 	blockSize := 8
 	cases := map[string]string{
 		string([]byte{}):                       string([]byte{8, 8, 8, 8, 8, 8, 8, 8}),
@@ -108,14 +100,14 @@ func TestPKCS7(t *testing.T) {
 	}
 
 	for data, expect := range cases {
-		padding := padder.Padding([]byte(data), blockSize)
+		padding := PaddingPKCS7([]byte(data), blockSize)
 		if string(padding) != expect {
 			t.Errorf("data %+v: padding %+v != expect %s", []byte(data), padding, []byte(expect))
 		}
 	}
 
 	for data, expect := range cases {
-		unPadding, err := padder.UnPadding([]byte(expect), blockSize)
+		unPadding, err := UnPaddingPKCS7([]byte(expect), blockSize)
 		if err != nil {
 			t.Error(err)
 		}
