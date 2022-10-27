@@ -10,14 +10,14 @@ import (
 	"github.com/FishGoddess/cryptox"
 )
 
-// go test -v -cover -run=^TestEncryptECB$
-func TestEncryptECB(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleEncryptECB$
+func TestTripleEncryptECB(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 
 	cases := map[string]string{
-		"":      string([]byte{254, 185, 89, 183, 212, 100, 47, 203}),
-		"123":   string([]byte{44, 56, 133, 81, 215, 244, 137, 236}),
-		"你好，世界": string([]byte{109, 82, 56, 231, 116, 36, 60, 100, 116, 149, 15, 240, 198, 38, 198, 204}),
+		"":      string([]byte{73, 245, 96, 2, 192, 105, 51, 72}),
+		"123":   string([]byte{37, 137, 202, 82, 231, 19, 57, 53}),
+		"你好，世界": string([]byte{212, 119, 38, 169, 194, 81, 104, 5, 1, 74, 9, 70, 20, 45, 187, 182}),
 	}
 
 	for plain, expect := range cases {
@@ -33,14 +33,14 @@ func TestEncryptECB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestEncryptECBHex$
-func TestEncryptECBHex(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleEncryptECBHex$
+func TestTripleEncryptECBHex(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 
 	cases := map[string]string{
-		"":      "feb959b7d4642fcb",
-		"123":   "2c388551d7f489ec",
-		"你好，世界": "6d5238e774243c6474950ff0c626c6cc",
+		"":      "49f56002c0693348",
+		"123":   "2589ca52e7133935",
+		"你好，世界": "d47726a9c2516805014a0946142dbbb6",
 	}
 
 	for plain, expect := range cases {
@@ -55,14 +55,14 @@ func TestEncryptECBHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestEncryptECBBase64$
-func TestEncryptECBBase64(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleEncryptECBBase64$
+func TestTripleEncryptECBBase64(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 
 	cases := map[string]string{
-		"":      "/rlZt9RkL8s=",
-		"123":   "LDiFUdf0iew=",
-		"你好，世界": "bVI453QkPGR0lQ/wxibGzA==",
+		"":      "SfVgAsBpM0g=",
+		"123":   "JYnKUucTOTU=",
+		"你好，世界": "1HcmqcJRaAUBSglGFC27tg==",
 	}
 
 	for plain, expect := range cases {
@@ -77,14 +77,14 @@ func TestEncryptECBBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestDecryptECB$
-func TestDecryptECB(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleDecryptECB$
+func TestTripleDecryptECB(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 
 	cases := map[string]string{
-		string([]byte{254, 185, 89, 183, 212, 100, 47, 203}):                                     "",
-		string([]byte{44, 56, 133, 81, 215, 244, 137, 236}):                                      "123",
-		string([]byte{109, 82, 56, 231, 116, 36, 60, 100, 116, 149, 15, 240, 198, 38, 198, 204}): "你好，世界",
+		string([]byte{73, 245, 96, 2, 192, 105, 51, 72}):                                   "",
+		string([]byte{37, 137, 202, 82, 231, 19, 57, 53}):                                  "123",
+		string([]byte{212, 119, 38, 169, 194, 81, 104, 5, 1, 74, 9, 70, 20, 45, 187, 182}): "你好，世界",
 	}
 
 	for crypted, expect := range cases {
@@ -100,14 +100,14 @@ func TestDecryptECB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestDecryptECBHex$
-func TestDecryptECBHex(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleDecryptECBHex$
+func TestTripleDecryptECBHex(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 
 	cases := map[string]string{
-		"feb959b7d4642fcb":                 "",
-		"2c388551d7f489ec":                 "123",
-		"6d5238e774243c6474950ff0c626c6cc": "你好，世界",
+		"49f56002c0693348":                 "",
+		"2589ca52e7133935":                 "123",
+		"d47726a9c2516805014a0946142dbbb6": "你好，世界",
 	}
 
 	for crypted, expect := range cases {
@@ -123,14 +123,14 @@ func TestDecryptECBHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestDecryptECBBase64$
-func TestDecryptECBBase64(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleDecryptECBBase64$
+func TestTripleDecryptECBBase64(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 
 	cases := map[string]string{
-		"/rlZt9RkL8s=":             "",
-		"LDiFUdf0iew=":             "123",
-		"bVI453QkPGR0lQ/wxibGzA==": "你好，世界",
+		"SfVgAsBpM0g=":             "",
+		"JYnKUucTOTU=":             "123",
+		"1HcmqcJRaAUBSglGFC27tg==": "你好，世界",
 	}
 
 	for crypted, expect := range cases {
@@ -146,15 +146,15 @@ func TestDecryptECBBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestEncryptCBC$
-func TestEncryptCBC(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleEncryptCBC$
+func TestTripleEncryptCBC(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
-		"":      string([]byte{205, 172, 198, 131, 218, 176, 175, 188}),
-		"123":   string([]byte{243, 126, 30, 174, 181, 95, 17, 128}),
-		"你好，世界": string([]byte{185, 108, 29, 112, 42, 71, 169, 240, 62, 215, 156, 154, 145, 88, 110, 10}),
+		"":      string([]byte{70, 170, 202, 51, 163, 225, 197, 228}),
+		"123":   string([]byte{81, 238, 137, 172, 209, 239, 198, 42}),
+		"你好，世界": string([]byte{232, 31, 15, 88, 209, 165, 0, 7, 119, 65, 204, 53, 39, 116, 226, 80}),
 	}
 
 	for plain, expect := range cases {
@@ -170,15 +170,15 @@ func TestEncryptCBC(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestEncryptCBCHex$
-func TestEncryptCBCHex(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleEncryptCBCHex$
+func TestTripleEncryptCBCHex(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
-		"":      "cdacc683dab0afbc",
-		"123":   "f37e1eaeb55f1180",
-		"你好，世界": "b96c1d702a47a9f03ed79c9a91586e0a",
+		"":      "46aaca33a3e1c5e4",
+		"123":   "51ee89acd1efc62a",
+		"你好，世界": "e81f0f58d1a500077741cc352774e250",
 	}
 
 	for plain, expect := range cases {
@@ -193,15 +193,15 @@ func TestEncryptCBCHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestEncryptCBCBase64$
-func TestEncryptCBCBase64(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleEncryptCBCBase64$
+func TestTripleEncryptCBCBase64(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
-		"":      "zazGg9qwr7w=",
-		"123":   "834errVfEYA=",
-		"你好，世界": "uWwdcCpHqfA+15yakVhuCg==",
+		"":      "RqrKM6PhxeQ=",
+		"123":   "Ue6JrNHvxio=",
+		"你好，世界": "6B8PWNGlAAd3Qcw1J3TiUA==",
 	}
 
 	for plain, expect := range cases {
@@ -216,15 +216,15 @@ func TestEncryptCBCBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestDecryptCBC$
-func TestDecryptCBC(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleDecryptCBC$
+func TestTripleDecryptCBC(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
-		string([]byte{205, 172, 198, 131, 218, 176, 175, 188}):                                   "",
-		string([]byte{243, 126, 30, 174, 181, 95, 17, 128}):                                      "123",
-		string([]byte{185, 108, 29, 112, 42, 71, 169, 240, 62, 215, 156, 154, 145, 88, 110, 10}): "你好，世界",
+		string([]byte{70, 170, 202, 51, 163, 225, 197, 228}):                                "",
+		string([]byte{81, 238, 137, 172, 209, 239, 198, 42}):                                "123",
+		string([]byte{232, 31, 15, 88, 209, 165, 0, 7, 119, 65, 204, 53, 39, 116, 226, 80}): "你好，世界",
 	}
 
 	for crypted, expect := range cases {
@@ -240,15 +240,15 @@ func TestDecryptCBC(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestDecryptCBCHex$
-func TestDecryptCBCHex(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleDecryptCBCHex$
+func TestTripleDecryptCBCHex(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
-		"cdacc683dab0afbc":                 "",
-		"f37e1eaeb55f1180":                 "123",
-		"b96c1d702a47a9f03ed79c9a91586e0a": "你好，世界",
+		"46aaca33a3e1c5e4":                 "",
+		"51ee89acd1efc62a":                 "123",
+		"e81f0f58d1a500077741cc352774e250": "你好，世界",
 	}
 
 	for crypted, expect := range cases {
@@ -264,15 +264,15 @@ func TestDecryptCBCHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestDecryptCBCBase64$
-func TestDecryptCBCBase64(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleDecryptCBCBase64$
+func TestTripleDecryptCBCBase64(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
-		"zazGg9qwr7w=":             "",
-		"834errVfEYA=":             "123",
-		"uWwdcCpHqfA+15yakVhuCg==": "你好，世界",
+		"RqrKM6PhxeQ=":             "",
+		"Ue6JrNHvxio=":             "123",
+		"6B8PWNGlAAd3Qcw1J3TiUA==": "你好，世界",
 	}
 
 	for crypted, expect := range cases {
@@ -288,15 +288,15 @@ func TestDecryptCBCBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestEncryptCFB$
-func TestEncryptCFB(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleEncryptCFB$
+func TestTripleEncryptCFB(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
 		"":      string([]byte{}),
-		"123":   string([]byte{9, 102, 3}),
-		"你好，世界": string([]byte{220, 233, 144, 205, 62, 200, 123, 152, 231, 237, 219, 68, 211, 43, 255}),
+		"123":   string([]byte{210, 71, 136}),
+		"你好，世界": string([]byte{7, 200, 27, 33, 117, 119, 69, 251, 214, 81, 119, 34, 242, 142, 227}),
 	}
 
 	for plain, expect := range cases {
@@ -312,15 +312,15 @@ func TestEncryptCFB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestEncryptCFBHex$
-func TestEncryptCFBHex(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleEncryptCFBHex$
+func TestTripleEncryptCFBHex(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
 		"":      "",
-		"123":   "096603",
-		"你好，世界": "dce990cd3ec87b98e7eddb44d32bff",
+		"123":   "d24788",
+		"你好，世界": "07c81b21757745fbd6517722f28ee3",
 	}
 
 	for plain, expect := range cases {
@@ -335,15 +335,15 @@ func TestEncryptCFBHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestEncryptCFBBase64$
-func TestEncryptCFBBase64(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleEncryptCFBBase64$
+func TestTripleEncryptCFBBase64(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
 		"":      "",
-		"123":   "CWYD",
-		"你好，世界": "3OmQzT7Ie5jn7dtE0yv/",
+		"123":   "0keI",
+		"你好，世界": "B8gbIXV3RfvWUXci8o7j",
 	}
 
 	for plain, expect := range cases {
@@ -358,15 +358,15 @@ func TestEncryptCFBBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestDecryptCFB$
-func TestDecryptCFB(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleDecryptCFB$
+func TestTripleDecryptCFB(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
-		string([]byte{}):          "",
-		string([]byte{9, 102, 3}): "123",
-		string([]byte{220, 233, 144, 205, 62, 200, 123, 152, 231, 237, 219, 68, 211, 43, 255}): "你好，世界",
+		string([]byte{}):             "",
+		string([]byte{210, 71, 136}): "123",
+		string([]byte{7, 200, 27, 33, 117, 119, 69, 251, 214, 81, 119, 34, 242, 142, 227}): "你好，世界",
 	}
 
 	for crypted, expect := range cases {
@@ -382,15 +382,15 @@ func TestDecryptCFB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestDecryptCFBHex$
-func TestDecryptCFBHex(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleDecryptCFBHex$
+func TestTripleDecryptCFBHex(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
 		"":                               "",
-		"096603":                         "123",
-		"dce990cd3ec87b98e7eddb44d32bff": "你好，世界",
+		"d24788":                         "123",
+		"07c81b21757745fbd6517722f28ee3": "你好，世界",
 	}
 
 	for crypted, expect := range cases {
@@ -406,15 +406,15 @@ func TestDecryptCFBHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestDecryptCFBBase64$
-func TestDecryptCFBBase64(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleDecryptCFBBase64$
+func TestTripleDecryptCFBBase64(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
 		"":                     "",
-		"CWYD":                 "123",
-		"3OmQzT7Ie5jn7dtE0yv/": "你好，世界",
+		"0keI":                 "123",
+		"B8gbIXV3RfvWUXci8o7j": "你好，世界",
 	}
 
 	for crypted, expect := range cases {
@@ -430,15 +430,15 @@ func TestDecryptCFBBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestEncryptOFB$
-func TestEncryptOFB(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleEncryptOFB$
+func TestTripleEncryptOFB(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
 		"":      string([]byte{}),
-		"123":   string([]byte{9, 102, 3}),
-		"你好，世界": string([]byte{220, 233, 144, 205, 62, 200, 123, 152, 169, 42, 97, 1, 193, 120, 15}),
+		"123":   string([]byte{210, 71, 136}),
+		"你好，世界": string([]byte{7, 200, 27, 33, 117, 119, 69, 251, 78, 85, 83, 153, 35, 11, 99}),
 	}
 
 	for plain, expect := range cases {
@@ -454,15 +454,15 @@ func TestEncryptOFB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestEncryptOFBHex$
-func TestEncryptOFBHex(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleEncryptOFBHex$
+func TestTripleEncryptOFBHex(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
 		"":      "",
-		"123":   "096603",
-		"你好，世界": "dce990cd3ec87b98a92a6101c1780f",
+		"123":   "d24788",
+		"你好，世界": "07c81b21757745fb4e555399230b63",
 	}
 
 	for plain, expect := range cases {
@@ -477,15 +477,15 @@ func TestEncryptOFBHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestEncryptOFBBase64$
-func TestEncryptOFBBase64(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleEncryptOFBBase64$
+func TestTripleEncryptOFBBase64(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
 		"":      "",
-		"123":   "CWYD",
-		"你好，世界": "3OmQzT7Ie5ipKmEBwXgP",
+		"123":   "0keI",
+		"你好，世界": "B8gbIXV3RftOVVOZIwtj",
 	}
 
 	for plain, expect := range cases {
@@ -500,15 +500,15 @@ func TestEncryptOFBBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestDecryptOFB$
-func TestDecryptOFB(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleDecryptOFB$
+func TestTripleDecryptOFB(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
-		string([]byte{}):          "",
-		string([]byte{9, 102, 3}): "123",
-		string([]byte{220, 233, 144, 205, 62, 200, 123, 152, 169, 42, 97, 1, 193, 120, 15}): "你好，世界",
+		string([]byte{}):             "",
+		string([]byte{210, 71, 136}): "123",
+		string([]byte{7, 200, 27, 33, 117, 119, 69, 251, 78, 85, 83, 153, 35, 11, 99}): "你好，世界",
 	}
 
 	for crypted, expect := range cases {
@@ -524,15 +524,15 @@ func TestDecryptOFB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestDecryptOFBHex$
-func TestDecryptOFBHex(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleDecryptOFBHex$
+func TestTripleDecryptOFBHex(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
 		"":                               "",
-		"096603":                         "123",
-		"dce990cd3ec87b98a92a6101c1780f": "你好，世界",
+		"d24788":                         "123",
+		"07c81b21757745fb4e555399230b63": "你好，世界",
 	}
 
 	for crypted, expect := range cases {
@@ -548,15 +548,15 @@ func TestDecryptOFBHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestDecryptOFBBase64$
-func TestDecryptOFBBase64(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleDecryptOFBBase64$
+func TestTripleDecryptOFBBase64(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
 		"":                     "",
-		"CWYD":                 "123",
-		"3OmQzT7Ie5ipKmEBwXgP": "你好，世界",
+		"0keI":                 "123",
+		"B8gbIXV3RftOVVOZIwtj": "你好，世界",
 	}
 
 	for crypted, expect := range cases {
@@ -572,15 +572,15 @@ func TestDecryptOFBBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestEncryptCTR$
-func TestEncryptCTR(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleEncryptCTR$
+func TestTripleEncryptCTR(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
 		"":      string([]byte{}),
-		"123":   string([]byte{9, 102, 3}),
-		"你好，世界": string([]byte{220, 233, 144, 205, 62, 200, 123, 152, 82, 201, 236, 67, 30, 240, 63}),
+		"123":   string([]byte{210, 71, 136}),
+		"你好，世界": string([]byte{7, 200, 27, 33, 117, 119, 69, 251, 24, 219, 209, 174, 15, 129, 116}),
 	}
 
 	for plain, expect := range cases {
@@ -596,15 +596,15 @@ func TestEncryptCTR(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestEncryptCTRHex$
-func TestEncryptCTRHex(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleEncryptCTRHex$
+func TestTripleEncryptCTRHex(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
 		"":      "",
-		"123":   "096603",
-		"你好，世界": "dce990cd3ec87b9852c9ec431ef03f",
+		"123":   "d24788",
+		"你好，世界": "07c81b21757745fb18dbd1ae0f8174",
 	}
 
 	for plain, expect := range cases {
@@ -619,15 +619,15 @@ func TestEncryptCTRHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestEncryptCTRBase64$
-func TestEncryptCTRBase64(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleEncryptCTRBase64$
+func TestTripleEncryptCTRBase64(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
 		"":      "",
-		"123":   "CWYD",
-		"你好，世界": "3OmQzT7Ie5hSyexDHvA/",
+		"123":   "0keI",
+		"你好，世界": "B8gbIXV3RfsY29GuD4F0",
 	}
 
 	for plain, expect := range cases {
@@ -642,15 +642,15 @@ func TestEncryptCTRBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestDecryptCTR$
-func TestDecryptCTR(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleDecryptCTR$
+func TestTripleDecryptCTR(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
-		string([]byte{}):          "",
-		string([]byte{9, 102, 3}): "123",
-		string([]byte{220, 233, 144, 205, 62, 200, 123, 152, 82, 201, 236, 67, 30, 240, 63}): "你好，世界",
+		string([]byte{}):             "",
+		string([]byte{210, 71, 136}): "123",
+		string([]byte{7, 200, 27, 33, 117, 119, 69, 251, 24, 219, 209, 174, 15, 129, 116}): "你好，世界",
 	}
 
 	for crypted, expect := range cases {
@@ -666,15 +666,15 @@ func TestDecryptCTR(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestDecryptCTRHex$
-func TestDecryptCTRHex(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleDecryptCTRHex$
+func TestTripleDecryptCTRHex(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
 		"":                               "",
-		"096603":                         "123",
-		"dce990cd3ec87b9852c9ec431ef03f": "你好，世界",
+		"d24788":                         "123",
+		"07c81b21757745fb18dbd1ae0f8174": "你好，世界",
 	}
 
 	for crypted, expect := range cases {
@@ -690,15 +690,15 @@ func TestDecryptCTRHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestDecryptCTRBase64$
-func TestDecryptCTRBase64(t *testing.T) {
-	des := New([]byte("12345678"))
+// go test -v -cover -run=^TestTripleDecryptCTRBase64$
+func TestTripleDecryptCTRBase64(t *testing.T) {
+	des := NewTriple([]byte("12345678ABCDEFGH87654321"))
 	iv := []byte("87654321")
 
 	cases := map[string]string{
 		"":                     "",
-		"CWYD":                 "123",
-		"3OmQzT7Ie5hSyexDHvA/": "你好，世界",
+		"0keI":                 "123",
+		"B8gbIXV3RfsY29GuD4F0": "你好，世界",
 	}
 
 	for crypted, expect := range cases {
