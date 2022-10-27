@@ -6,6 +6,7 @@ import (
 	"github.com/FishGoddess/cryptox"
 	"github.com/FishGoddess/cryptox/base64"
 	"github.com/FishGoddess/cryptox/hex"
+	"github.com/FishGoddess/cryptox/pkg/bytes"
 )
 
 type DES struct {
@@ -18,19 +19,79 @@ func New(key []byte) *DES {
 	}
 }
 
-func (d *DES) EncryptCBC(plain []byte, iv []byte, padder crypto.Padder) ([]byte, error) {
+func (d *DES) EncryptECB(plain []byte, padder cryptox.Padder) ([]byte, error) {
 	block, err := des.NewCipher(d.key)
 	if err != nil {
 		return nil, err
 	}
 
-	plain = append(make([]byte, 0, len(plain)), plain...)
+	plain = bytes.Copy(plain)
 
-	mode := crypto.NewEncryptCBC(block, iv, padder)
-	return mode.Encrypt(plain)
+	ecb := cryptox.NewEncryptECB(block, padder)
+	return ecb.Encrypt(plain)
 }
 
-func (d *DES) EncryptCBCHex(plain []byte, iv []byte, padder crypto.Padder) (string, error) {
+func (d *DES) EncryptECBHex(plain []byte, padder cryptox.Padder) (string, error) {
+	crypted, err := d.EncryptECB(plain, padder)
+	if err != nil {
+		return "", err
+	}
+
+	return hex.Encode(crypted), nil
+}
+
+func (d *DES) EncryptECBBase64(plain []byte, padder cryptox.Padder) (string, error) {
+	crypted, err := d.EncryptECB(plain, padder)
+	if err != nil {
+		return "", err
+	}
+
+	return base64.Encode(crypted), nil
+}
+
+func (d *DES) DecryptECB(crypted []byte, padder cryptox.Padder) ([]byte, error) {
+	block, err := des.NewCipher(d.key)
+	if err != nil {
+		return nil, err
+	}
+
+	crypted = bytes.Copy(crypted)
+
+	ecb := cryptox.NewDecryptECB(block, padder)
+	return ecb.Decrypt(crypted)
+}
+
+func (d *DES) DecryptECBHex(crypted string, padder cryptox.Padder) ([]byte, error) {
+	decoded, err := hex.Decode(crypted)
+	if err != nil {
+		return nil, err
+	}
+
+	return d.DecryptECB(decoded, padder)
+}
+
+func (d *DES) DecryptECBBase64(crypted string, padder cryptox.Padder) ([]byte, error) {
+	decoded, err := base64.Decode(crypted)
+	if err != nil {
+		return nil, err
+	}
+
+	return d.DecryptECB(decoded, padder)
+}
+
+func (d *DES) EncryptCBC(plain []byte, iv []byte, padder cryptox.Padder) ([]byte, error) {
+	block, err := des.NewCipher(d.key)
+	if err != nil {
+		return nil, err
+	}
+
+	plain = bytes.Copy(plain)
+
+	cbc := cryptox.NewEncryptCBC(block, iv, padder)
+	return cbc.Encrypt(plain)
+}
+
+func (d *DES) EncryptCBCHex(plain []byte, iv []byte, padder cryptox.Padder) (string, error) {
 	crypted, err := d.EncryptCBC(plain, iv, padder)
 	if err != nil {
 		return "", err
@@ -39,7 +100,7 @@ func (d *DES) EncryptCBCHex(plain []byte, iv []byte, padder crypto.Padder) (stri
 	return hex.Encode(crypted), nil
 }
 
-func (d *DES) EncryptCBCBase64(plain []byte, iv []byte, padder crypto.Padder) (string, error) {
+func (d *DES) EncryptCBCBase64(plain []byte, iv []byte, padder cryptox.Padder) (string, error) {
 	crypted, err := d.EncryptCBC(plain, iv, padder)
 	if err != nil {
 		return "", err
@@ -48,19 +109,19 @@ func (d *DES) EncryptCBCBase64(plain []byte, iv []byte, padder crypto.Padder) (s
 	return base64.Encode(crypted), nil
 }
 
-func (d *DES) DecryptCBC(crypted []byte, iv []byte, padder crypto.Padder) ([]byte, error) {
+func (d *DES) DecryptCBC(crypted []byte, iv []byte, padder cryptox.Padder) ([]byte, error) {
 	block, err := des.NewCipher(d.key)
 	if err != nil {
 		return nil, err
 	}
 
-	crypted = append(make([]byte, 0, len(crypted)), crypted...)
+	crypted = bytes.Copy(crypted)
 
-	mode := crypto.NewDecryptCBC(block, iv, padder)
-	return mode.Decrypt(crypted)
+	cbc := cryptox.NewDecryptCBC(block, iv, padder)
+	return cbc.Decrypt(crypted)
 }
 
-func (d *DES) DecryptCBCHex(crypted string, iv []byte, padder crypto.Padder) ([]byte, error) {
+func (d *DES) DecryptCBCHex(crypted string, iv []byte, padder cryptox.Padder) ([]byte, error) {
 	decoded, err := hex.Decode(crypted)
 	if err != nil {
 		return nil, err
@@ -69,7 +130,7 @@ func (d *DES) DecryptCBCHex(crypted string, iv []byte, padder crypto.Padder) ([]
 	return d.DecryptCBC(decoded, iv, padder)
 }
 
-func (d *DES) DecryptCBCBase64(crypted string, iv []byte, padder crypto.Padder) ([]byte, error) {
+func (d *DES) DecryptCBCBase64(crypted string, iv []byte, padder cryptox.Padder) ([]byte, error) {
 	decoded, err := base64.Decode(crypted)
 	if err != nil {
 		return nil, err

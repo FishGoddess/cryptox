@@ -1,21 +1,18 @@
-package crypto
+package cryptox
 
-import "crypto/cipher"
+import (
+	"crypto/cipher"
+	"fmt"
+)
 
 type EncryptECB struct {
 	block  cipher.Block
-	iv     []byte
 	padder Padder
 }
 
-func NewEncryptECB(block cipher.Block, iv []byte, padder Padder) *EncryptECB {
-	if len(iv) != block.BlockSize() {
-		panic("cryptox.NewEncryptECB: IV length must equal block size")
-	}
-
+func NewEncryptECB(block cipher.Block, padder Padder) *EncryptECB {
 	return &EncryptECB{
 		block:  block,
-		iv:     iv,
 		padder: padder,
 	}
 }
@@ -25,7 +22,7 @@ func (ec *EncryptECB) Encrypt(plain []byte) ([]byte, error) {
 	plain = ec.padder.Padding(plain, blockSize)
 
 	if len(plain)%blockSize != 0 {
-		panic("cryptox.EncryptECB: input not full blocks")
+		return nil, fmt.Errorf("cryptox.EncryptECB: len(plain) %d %% blockSize %d != 0", len(plain), blockSize)
 	}
 
 	crypted := plain
@@ -44,18 +41,12 @@ func (ec *EncryptECB) Encrypt(plain []byte) ([]byte, error) {
 
 type DecryptECB struct {
 	block  cipher.Block
-	iv     []byte
 	padder Padder
 }
 
-func NewDecryptECB(block cipher.Block, iv []byte, padder Padder) *DecryptECB {
-	if len(iv) != block.BlockSize() {
-		panic("cryptox.NewDecryptECB: IV length must equal block size")
-	}
-
+func NewDecryptECB(block cipher.Block, padder Padder) *DecryptECB {
 	return &DecryptECB{
 		block:  block,
-		iv:     iv,
 		padder: padder,
 	}
 }
@@ -64,7 +55,7 @@ func (dc *DecryptECB) Decrypt(crypted []byte) ([]byte, error) {
 	blockSize := dc.block.BlockSize()
 
 	if len(crypted)%blockSize != 0 {
-		panic("cryptox.DecryptECB: input not full blocks")
+		return nil, fmt.Errorf("cryptox.DecryptECB: len(crypted) %d %% blockSize %d != 0", len(crypted), blockSize)
 	}
 
 	plain := crypted
