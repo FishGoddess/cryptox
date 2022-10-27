@@ -2,8 +2,8 @@
 
 [![Go Doc](_icons/godoc.svg)](https://pkg.go.dev/github.com/FishGoddess/cryptox)
 [![License](_icons/license.svg)](https://opensource.org/licenses/MIT)
-[![License](_icons/build.svg)](_icons/build.svg)
 [![License](_icons/coverage.svg)](_icons/coverage.svg)
+![Test](https://github.com/FishGoddess/cryptox/actions/workflows/test.yml/badge.svg)
 
 **Cryptox** 是使用 Go 开发的安全套件，包括了常用的对称加密和非对称加密算法，还有散列算法、编解码常用算法等，主要是为了方便相关场景使用。
 

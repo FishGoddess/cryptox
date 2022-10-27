@@ -43,7 +43,7 @@ func (pkcs7) UnPadding(data []byte, blockSize int) ([]byte, error) {
 	number := int(data[length-1])
 
 	if number > length || number > blockSize {
-		return nil, fmt.Errorf("pkcs7 padding: invalid number %d", number)
+		return nil, fmt.Errorf("cryptox.pkcs7: invalid number %d", number)
 	}
 
 	return data[:length-number], nil
