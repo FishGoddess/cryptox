@@ -138,3 +138,63 @@ func (d *DES) DecryptCBCBase64(crypted string, iv []byte, padder cryptox.Padder)
 
 	return d.DecryptCBC(decoded, iv, padder)
 }
+
+func (d *DES) EncryptCFB(plain []byte, iv []byte, padder cryptox.Padder) ([]byte, error) {
+	block, err := des.NewCipher(d.key)
+	if err != nil {
+		return nil, err
+	}
+
+	plain = bytes.Copy(plain)
+
+	cfb := cryptox.NewEncryptCFB(block, iv, padder)
+	return cfb.Encrypt(plain)
+}
+
+func (d *DES) EncryptCFBHex(plain []byte, iv []byte, padder cryptox.Padder) (string, error) {
+	crypted, err := d.EncryptCFB(plain, iv, padder)
+	if err != nil {
+		return "", err
+	}
+
+	return hex.Encode(crypted), nil
+}
+
+func (d *DES) EncryptCFBBase64(plain []byte, iv []byte, padder cryptox.Padder) (string, error) {
+	crypted, err := d.EncryptCFB(plain, iv, padder)
+	if err != nil {
+		return "", err
+	}
+
+	return base64.Encode(crypted), nil
+}
+
+func (d *DES) DecryptCFB(crypted []byte, iv []byte, padder cryptox.Padder) ([]byte, error) {
+	block, err := des.NewCipher(d.key)
+	if err != nil {
+		return nil, err
+	}
+
+	crypted = bytes.Copy(crypted)
+
+	cfb := cryptox.NewDecryptCFB(block, iv, padder)
+	return cfb.Decrypt(crypted)
+}
+
+func (d *DES) DecryptCFBHex(crypted string, iv []byte, padder cryptox.Padder) ([]byte, error) {
+	decoded, err := hex.Decode(crypted)
+	if err != nil {
+		return nil, err
+	}
+
+	return d.DecryptCFB(decoded, iv, padder)
+}
+
+func (d *DES) DecryptCFBBase64(crypted string, iv []byte, padder cryptox.Padder) ([]byte, error) {
+	decoded, err := base64.Decode(crypted)
+	if err != nil {
+		return nil, err
+	}
+
+	return d.DecryptCFB(decoded, iv, padder)
+}

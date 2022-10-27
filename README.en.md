@@ -12,7 +12,7 @@
 ### 💡 Features
 
 * DES/3DES/AES Supports.
-* RSA Supports.
+* RSA/ECC Supports.
 * ECB/CBC/OFB/CFB/CTR Supports.
 * PKCS5/PKCS7/ZERO Supports.
 * MD5/SHA1/SHA256/SHA512/HMAC Supports.

@@ -283,3 +283,145 @@ func TestDecryptCBCBase64(t *testing.T) {
 		}
 	}
 }
+
+// go test -v -cover -run=^TestEncryptCFB$
+func TestEncryptCFB(t *testing.T) {
+	des := New([]byte("12345678"))
+	iv := []byte("87654321")
+
+	cases := map[string]string{
+		"":      string([]byte{}),
+		"123":   string([]byte{9, 102, 3}),
+		"你好，世界": string([]byte{220, 233, 144, 205, 62, 200, 123, 152, 231, 237, 219, 68, 211, 43, 255}),
+	}
+
+	for plain, expect := range cases {
+		crypted, err := des.EncryptCFB([]byte(plain), iv, cryptox.NoPadding())
+		if err != nil {
+			t.Error(err)
+		}
+
+		cryptoStr := string(crypted)
+		if cryptoStr != expect {
+			t.Errorf("plain %s: cryptoStr %+v != expect %+v", plain, crypted, []byte(expect))
+		}
+	}
+}
+
+// go test -v -cover -run=^TestEncryptCFBHex$
+func TestEncryptCFBHex(t *testing.T) {
+	des := New([]byte("12345678"))
+	iv := []byte("87654321")
+
+	cases := map[string]string{
+		"":      "",
+		"123":   "096603",
+		"你好，世界": "dce990cd3ec87b98e7eddb44d32bff",
+	}
+
+	for plain, expect := range cases {
+		crypted, err := des.EncryptCFBHex([]byte(plain), iv, cryptox.NoPadding())
+		if err != nil {
+			t.Error(err)
+		}
+
+		if crypted != expect {
+			t.Errorf("plain %s: crypted %s != expect %s", plain, crypted, expect)
+		}
+	}
+}
+
+// go test -v -cover -run=^TestEncryptCFBBase64$
+func TestEncryptCFBBase64(t *testing.T) {
+	des := New([]byte("12345678"))
+	iv := []byte("87654321")
+
+	cases := map[string]string{
+		"":      "",
+		"123":   "CWYD",
+		"你好，世界": "3OmQzT7Ie5jn7dtE0yv/",
+	}
+
+	for plain, expect := range cases {
+		crypted, err := des.EncryptCFBBase64([]byte(plain), iv, cryptox.NoPadding())
+		if err != nil {
+			t.Error(err)
+		}
+
+		if crypted != expect {
+			t.Errorf("plain %s: crypted %s != expect %s", plain, crypted, expect)
+		}
+	}
+}
+
+// go test -v -cover -run=^TestDecryptCFB$
+func TestDecryptCFB(t *testing.T) {
+	des := New([]byte("12345678"))
+	iv := []byte("87654321")
+
+	cases := map[string]string{
+		string([]byte{}):          "",
+		string([]byte{9, 102, 3}): "123",
+		string([]byte{220, 233, 144, 205, 62, 200, 123, 152, 231, 237, 219, 68, 211, 43, 255}): "你好，世界",
+	}
+
+	for crypted, expect := range cases {
+		plain, err := des.DecryptCFB([]byte(crypted), iv, cryptox.NoPadding())
+		if err != nil {
+			t.Error(err)
+		}
+
+		plainStr := string(plain)
+		if plainStr != expect {
+			t.Errorf("crypted %s: plainStr %s != expect %s", crypted, plainStr, expect)
+		}
+	}
+}
+
+// go test -v -cover -run=^TestDecryptCFBHex$
+func TestDecryptCFBHex(t *testing.T) {
+	des := New([]byte("12345678"))
+	iv := []byte("87654321")
+
+	cases := map[string]string{
+		"":                               "",
+		"096603":                         "123",
+		"dce990cd3ec87b98e7eddb44d32bff": "你好，世界",
+	}
+
+	for crypted, expect := range cases {
+		plain, err := des.DecryptCFBHex(crypted, iv, cryptox.NoPadding())
+		if err != nil {
+			t.Error(err)
+		}
+
+		plainStr := string(plain)
+		if plainStr != expect {
+			t.Errorf("crypted %s: plainStr %s != expect %s", crypted, plainStr, expect)
+		}
+	}
+}
+
+// go test -v -cover -run=^TestDecryptCFBBase64$
+func TestDecryptCFBBase64(t *testing.T) {
+	des := New([]byte("12345678"))
+	iv := []byte("87654321")
+
+	cases := map[string]string{
+		"":                     "",
+		"CWYD":                 "123",
+		"3OmQzT7Ie5jn7dtE0yv/": "你好，世界",
+	}
+
+	for crypted, expect := range cases {
+		plain, err := des.DecryptCFBBase64(crypted, iv, cryptox.NoPadding())
+		if err != nil {
+			t.Error(err)
+		}
+
+		plainStr := string(plain)
+		if plainStr != expect {
+			t.Errorf("crypted %s: plainStr %s != expect %s", crypted, plainStr, expect)
+		}
+	}
+}

@@ -5,37 +5,43 @@ import "crypto/cipher"
 type EncryptCFB struct {
 	blockSize int
 	stream    cipher.Stream
+	padder    Padder
 }
 
-func NewEncryptCFB(block cipher.Block, iv []byte) *EncryptCFB {
+func NewEncryptCFB(block cipher.Block, iv []byte, padder Padder) *EncryptCFB {
 	return &EncryptCFB{
 		blockSize: block.BlockSize(),
 		stream:    cipher.NewCFBEncrypter(block, iv),
+		padder:    padder,
 	}
 }
 
-func (ec *EncryptCFB) Encrypt(plain []byte) []byte {
+func (ec *EncryptCFB) Encrypt(plain []byte) ([]byte, error) {
+	plain = ec.padder.Padding(plain, ec.blockSize)
+
 	crypted := plain
 	ec.stream.XORKeyStream(crypted, plain)
 
-	return crypted
+	return crypted, nil
 }
 
 type DecryptCFB struct {
 	blockSize int
 	stream    cipher.Stream
+	padder    Padder
 }
 
-func NewDecryptCFB(block cipher.Block, iv []byte) *DecryptCFB {
+func NewDecryptCFB(block cipher.Block, iv []byte, padder Padder) *DecryptCFB {
 	return &DecryptCFB{
 		blockSize: block.BlockSize(),
 		stream:    cipher.NewCFBDecrypter(block, iv),
+		padder:    padder,
 	}
 }
 
-func (dc *DecryptCFB) Decrypt(crypted []byte) []byte {
+func (dc *DecryptCFB) Decrypt(crypted []byte) ([]byte, error) {
 	plain := crypted
 	dc.stream.XORKeyStream(plain, crypted)
 
-	return plain
+	return dc.padder.UnPadding(plain, dc.blockSize)
 }

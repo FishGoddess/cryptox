@@ -21,6 +21,7 @@ func (ec *EncryptCBC) Encrypt(plain []byte) ([]byte, error) {
 
 	crypted := plain
 	ec.mode.CryptBlocks(crypted, plain)
+
 	return crypted, nil
 }
 

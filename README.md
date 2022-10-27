@@ -12,7 +12,7 @@
 ### 💡 功能特性
 
 * 支持 DES/3DES/AES 等对称加密算法。
-* 支持 RSA 等非对称加密算法。
+* 支持 RSA/ECC 等非对称加密算法。
 * 支持 ECB/CBC/OFB/CFB/CTR 等分组模式。
 * 支持 PKCS5/PKCS7/ZERO 等填充方式。
 * 支持 MD5/SHA1/SHA256/SHA512/HMAC 等散列算法。
