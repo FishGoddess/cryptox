@@ -16,13 +16,13 @@ func NewEncryptCTR(block cipher.Block, iv []byte, padder Padder) *EncryptCTR {
 	}
 }
 
-func (ec *EncryptCTR) Encrypt(plain []byte) []byte {
+func (ec *EncryptCTR) Encrypt(plain []byte) ([]byte, error) {
 	plain = ec.padder.Padding(plain, ec.blockSize)
 
 	crypted := plain
 	ec.stream.XORKeyStream(crypted, plain)
 
-	return crypted
+	return crypted, nil
 }
 
 type DecryptCTR struct {
