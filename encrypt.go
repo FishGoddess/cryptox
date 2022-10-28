@@ -5,7 +5,8 @@
 package cryptox
 
 import (
-	"github.com/FishGoddess/cryptox/pkg/bytes"
+	"github.com/FishGoddess/cryptox/base64"
+	"github.com/FishGoddess/cryptox/hex"
 )
 
 type Encryptor struct {
@@ -34,7 +35,7 @@ func (e Encryptor) Encrypt(plain []byte) ([]byte, error) {
 
 	blockSize := block.BlockSize()
 
-	plain = bytes.Copy(plain)
+	plain = copyBytes(plain)
 	plain = e.padding(plain, blockSize)
 
 	crypted := plain
@@ -45,4 +46,22 @@ func (e Encryptor) Encrypt(plain []byte) ([]byte, error) {
 	}
 
 	return crypted, nil
+}
+
+func (e Encryptor) EncryptHex(plain []byte) (string, error) {
+	crypted, err := e.Encrypt(plain)
+	if err != nil {
+		return "", err
+	}
+
+	return hex.Encode(crypted), nil
+}
+
+func (e Encryptor) EncryptBase64(plain []byte) (string, error) {
+	crypted, err := e.Encrypt(plain)
+	if err != nil {
+		return "", err
+	}
+
+	return base64.Encode(crypted), nil
 }

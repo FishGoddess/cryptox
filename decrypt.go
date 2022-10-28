@@ -5,7 +5,8 @@
 package cryptox
 
 import (
-	"github.com/FishGoddess/cryptox/pkg/bytes"
+	"github.com/FishGoddess/cryptox/base64"
+	"github.com/FishGoddess/cryptox/hex"
 )
 
 type Decryptor struct {
@@ -32,7 +33,7 @@ func (d Decryptor) Decrypt(crypted []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	crypted = bytes.Copy(crypted)
+	crypted = copyBytes(crypted)
 	plain := crypted
 
 	err = d.mode.Crypt(block, d.iv, crypted, plain)
@@ -41,4 +42,22 @@ func (d Decryptor) Decrypt(crypted []byte) ([]byte, error) {
 	}
 
 	return d.unPadding(plain, block.BlockSize())
+}
+
+func (d Decryptor) DecryptHex(crypted string) ([]byte, error) {
+	decoded, err := hex.Decode(crypted)
+	if err != nil {
+		return nil, err
+	}
+
+	return d.Decrypt(decoded)
+}
+
+func (d Decryptor) DecryptBase64(crypted string) ([]byte, error) {
+	decoded, err := base64.Decode(crypted)
+	if err != nil {
+		return nil, err
+	}
+
+	return d.Decrypt(decoded)
 }

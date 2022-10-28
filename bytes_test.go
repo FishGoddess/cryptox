@@ -2,14 +2,14 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
-package bytes
+package cryptox
 
 import "testing"
 
-// go test -v -cover -run=^TestCopy$
-func TestCopy(t *testing.T) {
+// go test -v -cover -run=^TestCopyBytes$
+func TestCopyBytes(t *testing.T) {
 	bs := []byte("Hello World")
-	newSlice := Copy(bs)
+	newSlice := copyBytes(bs)
 
 	if string(newSlice) != string(bs) {
 		t.Errorf("newSlice %s != bs %s", string(newSlice), string(bs))

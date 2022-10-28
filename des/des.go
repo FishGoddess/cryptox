@@ -11,10 +11,10 @@ type DES struct {
 	cryptox.Decryptor
 }
 
-func WithECB(key []byte, iv []byte, padding cryptox.Padding, unPadding cryptox.UnPadding) DES {
+func WithECB(key []byte, padding cryptox.Padding, unPadding cryptox.UnPadding) DES {
 	return DES{
-		Encryptor: cryptox.NewEncryptor(cryptox.DES, key, cryptox.EncryptECB, iv, padding),
-		Decryptor: cryptox.NewDecryptor(cryptox.DES, key, cryptox.DecryptECB, iv, unPadding),
+		Encryptor: cryptox.NewEncryptor(cryptox.DES, key, cryptox.EncryptECB, nil, padding),
+		Decryptor: cryptox.NewDecryptor(cryptox.DES, key, cryptox.DecryptECB, nil, unPadding),
 	}
 }
 

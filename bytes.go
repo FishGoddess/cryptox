@@ -2,10 +2,10 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
-package bytes
+package cryptox
 
-// Copy copies bs to a new byte slice.
-func Copy(bs []byte) []byte {
+// copyBytes copies bs to a new byte slice.
+func copyBytes(bs []byte) []byte {
 	newSlice := make([]byte, len(bs))
 	copy(newSlice, bs)
 
