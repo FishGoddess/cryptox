@@ -9,7 +9,13 @@ import (
 	"github.com/FishGoddess/cryptox/hex"
 )
 
-type Encrypter struct {
+type Encrypter interface {
+	Encrypt(plain []byte) ([]byte, error)
+	EncryptHex(plain []byte) (string, error)
+	EncryptBase64(plain []byte) (string, error)
+}
+
+type encrypter struct {
 	cipher  Cipher
 	key     []byte
 	mode    EncryptMode
@@ -18,7 +24,7 @@ type Encrypter struct {
 }
 
 func NewEncrypter(cipher Cipher, key []byte, mode EncryptMode, iv []byte, padding Padding) Encrypter {
-	return Encrypter{
+	return encrypter{
 		cipher:  cipher,
 		key:     key,
 		mode:    mode,
@@ -27,7 +33,7 @@ func NewEncrypter(cipher Cipher, key []byte, mode EncryptMode, iv []byte, paddin
 	}
 }
 
-func (e Encrypter) Encrypt(plain []byte) ([]byte, error) {
+func (e encrypter) Encrypt(plain []byte) ([]byte, error) {
 	block, err := e.cipher(e.key)
 	if err != nil {
 		return nil, err
@@ -48,7 +54,7 @@ func (e Encrypter) Encrypt(plain []byte) ([]byte, error) {
 	return crypted, nil
 }
 
-func (e Encrypter) EncryptHex(plain []byte) (string, error) {
+func (e encrypter) EncryptHex(plain []byte) (string, error) {
 	crypted, err := e.Encrypt(plain)
 	if err != nil {
 		return "", err
@@ -57,7 +63,7 @@ func (e Encrypter) EncryptHex(plain []byte) (string, error) {
 	return hex.Encode(crypted), nil
 }
 
-func (e Encrypter) EncryptBase64(plain []byte) (string, error) {
+func (e encrypter) EncryptBase64(plain []byte) (string, error) {
 	crypted, err := e.Encrypt(plain)
 	if err != nil {
 		return "", err

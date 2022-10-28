@@ -15,3 +15,21 @@ func TestCopyBytes(t *testing.T) {
 		t.Errorf("newSlice %s != bs %s", string(newSlice), string(bs))
 	}
 }
+
+// go test -v -cover -run=^TestRandomBytes$
+func TestRandomBytes(t *testing.T) {
+	for i := 0; i < 16; i++ {
+		n := i
+
+		bs, err := RandomBytes(n)
+		if err != nil {
+			t.Error(err)
+		}
+
+		if len(bs) != n {
+			t.Errorf("len(bs) %d != n %d", len(bs), n)
+		}
+
+		t.Log(bs)
+	}
+}

@@ -20,7 +20,7 @@ func main() {
 	plain := []byte("你好，世界")
 	fmt.Println("plain:", string(plain))
 
-	// We use cbc mode and pkcs7 padding to encrypt data.
+	// We use ctr mode and no padding to encrypt data.
 	// Of course, you can choose ecb/cbc/cfb/ofb/ctr if you want.
 	// Also, you can choose no/zero/pkcs5/pkcs7 to padding data.
 	crypted, err := aes.CTREncrypter(key, iv, cryptox.PaddingNone).Encrypt(plain)
@@ -44,7 +44,7 @@ func main() {
 	fmt.Println("cryptedHex:", cryptedHex)
 	fmt.Println("cryptedBase64:", cryptedBase64)
 
-	// We use cbc mode and pkcs7 unPadding to decrypt data.
+	// We use ctr mode and no unPadding to decrypt data.
 	// Of course, you can choose ecb/cbc/cfb/ofb/ctr if you want.
 	// Also, you can choose no/zero/pkcs5/pkcs7 to unPadding data.
 	plain, err = aes.CTRDecrypter(key, iv, cryptox.UnPaddingNone).Decrypt(crypted)
