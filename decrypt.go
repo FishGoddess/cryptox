@@ -9,6 +9,7 @@ import (
 	"github.com/FishGoddess/cryptox/hex"
 )
 
+// Decrypter decrypts data from bytes, hex, and base64.
 type Decrypter struct {
 	cipher    Cipher
 	key       []byte
@@ -17,6 +18,7 @@ type Decrypter struct {
 	unPadding UnPadding
 }
 
+// NewDecrypter returns a new decrypter.
 func NewDecrypter(cipher Cipher, key []byte, mode DecryptMode, iv []byte, unPadding UnPadding) Decrypter {
 	return Decrypter{
 		cipher:    cipher,
@@ -27,6 +29,7 @@ func NewDecrypter(cipher Cipher, key []byte, mode DecryptMode, iv []byte, unPadd
 	}
 }
 
+// Decrypt decrypts data to bytes.
 func (d Decrypter) Decrypt(crypted []byte) ([]byte, error) {
 	block, err := d.cipher(d.key)
 	if err != nil {
@@ -44,6 +47,7 @@ func (d Decrypter) Decrypt(crypted []byte) ([]byte, error) {
 	return d.unPadding(plain, block.BlockSize())
 }
 
+// DecryptHex decrypts data in hex to bytes.
 func (d Decrypter) DecryptHex(crypted string) ([]byte, error) {
 	decoded, err := hex.Decode(crypted)
 	if err != nil {
@@ -53,6 +57,7 @@ func (d Decrypter) DecryptHex(crypted string) ([]byte, error) {
 	return d.Decrypt(decoded)
 }
 
+// DecryptBase64 decrypts base64 in hex to bytes.
 func (d Decrypter) DecryptBase64(crypted string) ([]byte, error) {
 	decoded, err := base64.Decode(crypted)
 	if err != nil {

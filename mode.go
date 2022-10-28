@@ -25,19 +25,24 @@ var (
 	_ DecryptMode = DecryptCTR
 )
 
+// EncryptMode is a function using one mode to encrypt src to dst.
 type EncryptMode func(block cipher.Block, iv []byte, src []byte, dst []byte) error
 
+// Crypt crypts src to dst.
 func (em EncryptMode) Crypt(block cipher.Block, iv []byte, src []byte, dst []byte) error {
 	return em(block, iv, src, dst)
 }
 
+// DecryptMode is a function using one mode to encrypt src to dst.
 type DecryptMode func(block cipher.Block, iv []byte, src []byte, dst []byte) error
 
+// Crypt crypts src to dst.
 func (dm DecryptMode) Crypt(block cipher.Block, iv []byte, src []byte, dst []byte) error {
 	return dm(block, iv, src, dst)
 }
 
-func EncryptECB(block cipher.Block, iv []byte, src []byte, dst []byte) error {
+// EncryptECB is ecb encrypting mode.
+func EncryptECB(block cipher.Block, _ []byte, src []byte, dst []byte) error {
 	blockSize := block.BlockSize()
 
 	if len(src)%blockSize != 0 {
@@ -57,7 +62,8 @@ func EncryptECB(block cipher.Block, iv []byte, src []byte, dst []byte) error {
 	return nil
 }
 
-func DecryptECB(block cipher.Block, iv []byte, src []byte, dst []byte) error {
+// DecryptECB is ecb decrypting mode.
+func DecryptECB(block cipher.Block, _ []byte, src []byte, dst []byte) error {
 	blockSize := block.BlockSize()
 
 	if len(src)%blockSize != 0 {
@@ -77,41 +83,49 @@ func DecryptECB(block cipher.Block, iv []byte, src []byte, dst []byte) error {
 	return nil
 }
 
+// EncryptCBC is cbc encrypting mode.
 func EncryptCBC(block cipher.Block, iv []byte, src []byte, dst []byte) error {
 	cipher.NewCBCEncrypter(block, iv).CryptBlocks(dst, src)
 	return nil
 }
 
+// DecryptCBC is cbc decrypting mode.
 func DecryptCBC(block cipher.Block, iv []byte, src []byte, dst []byte) error {
 	cipher.NewCBCDecrypter(block, iv).CryptBlocks(dst, src)
 	return nil
 }
 
+// EncryptCFB is cfb encrypting mode.
 func EncryptCFB(block cipher.Block, iv []byte, src []byte, dst []byte) error {
 	cipher.NewCFBEncrypter(block, iv).XORKeyStream(dst, src)
 	return nil
 }
 
+// DecryptCFB is cfb decrypting mode.
 func DecryptCFB(block cipher.Block, iv []byte, src []byte, dst []byte) error {
 	cipher.NewCFBDecrypter(block, iv).XORKeyStream(dst, src)
 	return nil
 }
 
+// EncryptOFB is ofb encrypting mode.
 func EncryptOFB(block cipher.Block, iv []byte, src []byte, dst []byte) error {
 	cipher.NewOFB(block, iv).XORKeyStream(dst, src)
 	return nil
 }
 
+// DecryptOFB is ofb decrypting mode.
 func DecryptOFB(block cipher.Block, iv []byte, src []byte, dst []byte) error {
 	cipher.NewOFB(block, iv).XORKeyStream(dst, src)
 	return nil
 }
 
+// EncryptCTR is ctr encrypting mode.
 func EncryptCTR(block cipher.Block, iv []byte, src []byte, dst []byte) error {
 	cipher.NewCTR(block, iv).XORKeyStream(dst, src)
 	return nil
 }
 
+// DecryptCTR is ctr decrypting mode.
 func DecryptCTR(block cipher.Block, iv []byte, src []byte, dst []byte) error {
 	cipher.NewCTR(block, iv).XORKeyStream(dst, src)
 	return nil

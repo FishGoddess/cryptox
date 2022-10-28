@@ -22,18 +22,23 @@ var (
 	_ UnPadding = UnPaddingPKCS7
 )
 
+// Padding paddings data with blockSize.
 type Padding func(data []byte, blockSize int) []byte
 
+// UnPadding unPaddings data with blockSize.
 type UnPadding func(data []byte, blockSize int) ([]byte, error)
 
+// PaddingNone won't padding anything to data.
 func PaddingNone(data []byte, blockSize int) []byte {
 	return data
 }
 
+// UnPaddingNone won't unPadding anything from data.
 func UnPaddingNone(data []byte, blockSize int) ([]byte, error) {
 	return data, nil
 }
 
+// PaddingZero paddings zero to data.
 func PaddingZero(data []byte, blockSize int) []byte {
 	padding := blockSize - (len(data) % blockSize)
 
@@ -44,6 +49,7 @@ func PaddingZero(data []byte, blockSize int) []byte {
 	return data
 }
 
+// UnPaddingZero unPaddings zero from data.
 func UnPaddingZero(data []byte, blockSize int) ([]byte, error) {
 	length := len(data)
 
@@ -57,14 +63,17 @@ func UnPaddingZero(data []byte, blockSize int) ([]byte, error) {
 	return data[:i+1], nil
 }
 
+// PaddingPKCS5 paddings data using pkcs5.
 func PaddingPKCS5(data []byte, blockSize int) []byte {
 	return PaddingPKCS7(data, blockSize)
 }
 
+// UnPaddingPKCS5 unPaddings data using pkcs5.
 func UnPaddingPKCS5(data []byte, blockSize int) ([]byte, error) {
 	return UnPaddingPKCS7(data, blockSize)
 }
 
+// PaddingPKCS7 paddings data using pkcs7.
 func PaddingPKCS7(data []byte, blockSize int) []byte {
 	padding := blockSize - (len(data) % blockSize)
 
@@ -75,6 +84,7 @@ func PaddingPKCS7(data []byte, blockSize int) []byte {
 	return data
 }
 
+// UnPaddingPKCS7 unPaddings data using pkcs7.
 func UnPaddingPKCS7(data []byte, blockSize int) ([]byte, error) {
 	length := len(data)
 	number := int(data[length-1])

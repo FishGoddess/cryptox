@@ -6,10 +6,12 @@ package hex
 
 import "encoding/hex"
 
-func Encode(plain []byte) string {
-	return hex.EncodeToString(plain)
+// Encode encodes data to string in hex.
+func Encode(data []byte) string {
+	return hex.EncodeToString(data)
 }
 
-func Decode(encoded string) ([]byte, error) {
-	return hex.DecodeString(encoded)
+// Decode decodes data in hex to byte and returns an error if failed.
+func Decode(data string) ([]byte, error) {
+	return hex.DecodeString(data)
 }
