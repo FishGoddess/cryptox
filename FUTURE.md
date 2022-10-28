@@ -15,7 +15,7 @@
 
 ### v0.0.x
 
-* [ ] 支持 DES/3DES/AES 对称加密算法
+* [x] 支持 DES/3DES/AES 对称加密算法
 * [x] 支持 ECB/CBC/OFB/CFB/CTR 等分组模式
-* [x] 支持 PKCS5/PKCS7/ZERO 等填充方式
+* [x] 支持 PKCS5/PKCS7/ZERO/NO 等填充方式
 * [x] 支持 HEX/BASE64 等编解码算法
