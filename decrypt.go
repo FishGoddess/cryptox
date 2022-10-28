@@ -9,7 +9,7 @@ import (
 	"github.com/FishGoddess/cryptox/hex"
 )
 
-type Decryptor struct {
+type Decrypter struct {
 	cipher    Cipher
 	key       []byte
 	mode      DecryptMode
@@ -17,8 +17,8 @@ type Decryptor struct {
 	unPadding UnPadding
 }
 
-func NewDecryptor(cipher Cipher, key []byte, mode DecryptMode, iv []byte, unPadding UnPadding) Decryptor {
-	return Decryptor{
+func NewDecrypter(cipher Cipher, key []byte, mode DecryptMode, iv []byte, unPadding UnPadding) Decrypter {
+	return Decrypter{
 		cipher:    cipher,
 		key:       key,
 		mode:      mode,
@@ -27,7 +27,7 @@ func NewDecryptor(cipher Cipher, key []byte, mode DecryptMode, iv []byte, unPadd
 	}
 }
 
-func (d Decryptor) Decrypt(crypted []byte) ([]byte, error) {
+func (d Decrypter) Decrypt(crypted []byte) ([]byte, error) {
 	block, err := d.cipher(d.key)
 	if err != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func (d Decryptor) Decrypt(crypted []byte) ([]byte, error) {
 	return d.unPadding(plain, block.BlockSize())
 }
 
-func (d Decryptor) DecryptHex(crypted string) ([]byte, error) {
+func (d Decrypter) DecryptHex(crypted string) ([]byte, error) {
 	decoded, err := hex.Decode(crypted)
 	if err != nil {
 		return nil, err
@@ -53,7 +53,7 @@ func (d Decryptor) DecryptHex(crypted string) ([]byte, error) {
 	return d.Decrypt(decoded)
 }
 
-func (d Decryptor) DecryptBase64(crypted string) ([]byte, error) {
+func (d Decrypter) DecryptBase64(crypted string) ([]byte, error) {
 	decoded, err := base64.Decode(crypted)
 	if err != nil {
 		return nil, err

@@ -22,7 +22,13 @@ _Check [HISTORY.md](./HISTORY.md) and [FUTURE.md](./FUTURE.md) to know about mor
 
 ### ⚙ How to use
 
+```shell
 $ go get -u github.com/FishGoddess/cryptox
+```
+
+* [des](_examples/des.go)
+* [triple_des](_examples/triple_des.go)
+* [aes](_examples/aes.go)
 
 ### 🎨 Contributing
 

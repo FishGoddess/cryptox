@@ -17,8 +17,8 @@ var (
 
 // go test -v -cover -run=^TestTripleECB$
 func TestTripleECB(t *testing.T) {
-	encryptor := EncryptTripleECB(testTripleKey, cryptox.PaddingPKCS7)
-	decryptor := DecryptTripleECB(testTripleKey, cryptox.UnPaddingPKCS7)
+	encrypter := TripleECBEncrypter(testTripleKey, cryptox.PaddingPKCS7)
+	decrypter := TripleECBDecrypter(testTripleKey, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      string([]byte{163, 133, 24, 236, 31, 63, 147, 38}),
@@ -27,7 +27,7 @@ func TestTripleECB(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crypted, err := encryptor.Encrypt([]byte(input))
+		crypted, err := encrypter.Encrypt([]byte(input))
 		if err != nil {
 			t.Error(err)
 		}
@@ -36,7 +36,7 @@ func TestTripleECB(t *testing.T) {
 			t.Errorf("input %s: crypted %+v != expect %+v", input, crypted, []byte(expect))
 		}
 
-		plain, err := decryptor.Decrypt(crypted)
+		plain, err := decrypter.Decrypt(crypted)
 		if err != nil {
 			t.Error(err)
 		}
@@ -49,8 +49,8 @@ func TestTripleECB(t *testing.T) {
 
 // go test -v -cover -run=^TestTripleECBHex$
 func TestTripleECBHex(t *testing.T) {
-	encryptor := EncryptTripleECB(testTripleKey, cryptox.PaddingPKCS7)
-	decryptor := DecryptTripleECB(testTripleKey, cryptox.UnPaddingPKCS7)
+	encrypter := TripleECBEncrypter(testTripleKey, cryptox.PaddingPKCS7)
+	decrypter := TripleECBDecrypter(testTripleKey, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      "a38518ec1f3f9326",
@@ -59,7 +59,7 @@ func TestTripleECBHex(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crypted, err := encryptor.EncryptHex([]byte(input))
+		crypted, err := encrypter.EncryptHex([]byte(input))
 		if err != nil {
 			t.Error(err)
 		}
@@ -68,7 +68,7 @@ func TestTripleECBHex(t *testing.T) {
 			t.Errorf("input %s: crypted %s != expect %+v", input, crypted, expect)
 		}
 
-		plain, err := decryptor.DecryptHex(crypted)
+		plain, err := decrypter.DecryptHex(crypted)
 		if err != nil {
 			t.Error(err)
 		}
@@ -81,8 +81,8 @@ func TestTripleECBHex(t *testing.T) {
 
 // go test -v -cover -run=^TestTripleECBBase64$
 func TestTripleECBBase64(t *testing.T) {
-	encryptor := EncryptTripleECB(testTripleKey, cryptox.PaddingPKCS7)
-	decryptor := DecryptTripleECB(testTripleKey, cryptox.UnPaddingPKCS7)
+	encrypter := TripleECBEncrypter(testTripleKey, cryptox.PaddingPKCS7)
+	decrypter := TripleECBDecrypter(testTripleKey, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      "o4UY7B8/kyY=",
@@ -91,7 +91,7 @@ func TestTripleECBBase64(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crypted, err := encryptor.EncryptBase64([]byte(input))
+		crypted, err := encrypter.EncryptBase64([]byte(input))
 		if err != nil {
 			t.Error(err)
 		}
@@ -100,7 +100,7 @@ func TestTripleECBBase64(t *testing.T) {
 			t.Errorf("input %s: crypted %s != expect %+v", input, crypted, expect)
 		}
 
-		plain, err := decryptor.DecryptBase64(crypted)
+		plain, err := decrypter.DecryptBase64(crypted)
 		if err != nil {
 			t.Error(err)
 		}
@@ -113,8 +113,8 @@ func TestTripleECBBase64(t *testing.T) {
 
 // go test -v -cover -run=^TestTripleCBC$
 func TestTripleCBC(t *testing.T) {
-	encryptor := EncryptTripleCBC(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
-	decryptor := DecryptTripleCBC(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
+	encrypter := TripleCBCEncrypter(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
+	decrypter := TripleCBCDecrypter(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      string([]byte{39, 65, 204, 186, 76, 78, 149, 112}),
@@ -123,7 +123,7 @@ func TestTripleCBC(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crypted, err := encryptor.Encrypt([]byte(input))
+		crypted, err := encrypter.Encrypt([]byte(input))
 		if err != nil {
 			t.Error(err)
 		}
@@ -132,7 +132,7 @@ func TestTripleCBC(t *testing.T) {
 			t.Errorf("input %s: crypted %+v != expect %+v", input, crypted, []byte(expect))
 		}
 
-		plain, err := decryptor.Decrypt(crypted)
+		plain, err := decrypter.Decrypt(crypted)
 		if err != nil {
 			t.Error(err)
 		}
@@ -145,8 +145,8 @@ func TestTripleCBC(t *testing.T) {
 
 // go test -v -cover -run=^TestTripleCBCHex$
 func TestTripleCBCHex(t *testing.T) {
-	encryptor := EncryptTripleCBC(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
-	decryptor := DecryptTripleCBC(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
+	encrypter := TripleCBCEncrypter(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
+	decrypter := TripleCBCDecrypter(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      "2741ccba4c4e9570",
@@ -155,7 +155,7 @@ func TestTripleCBCHex(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crypted, err := encryptor.EncryptHex([]byte(input))
+		crypted, err := encrypter.EncryptHex([]byte(input))
 		if err != nil {
 			t.Error(err)
 		}
@@ -164,7 +164,7 @@ func TestTripleCBCHex(t *testing.T) {
 			t.Errorf("input %s: crypted %s != expect %+v", input, crypted, expect)
 		}
 
-		plain, err := decryptor.DecryptHex(crypted)
+		plain, err := decrypter.DecryptHex(crypted)
 		if err != nil {
 			t.Error(err)
 		}
@@ -177,8 +177,8 @@ func TestTripleCBCHex(t *testing.T) {
 
 // go test -v -cover -run=^TestTripleCBCBase64$
 func TestTripleCBCBase64(t *testing.T) {
-	encryptor := EncryptTripleCBC(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
-	decryptor := DecryptTripleCBC(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
+	encrypter := TripleCBCEncrypter(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
+	decrypter := TripleCBCDecrypter(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      "J0HMukxOlXA=",
@@ -187,7 +187,7 @@ func TestTripleCBCBase64(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crypted, err := encryptor.EncryptBase64([]byte(input))
+		crypted, err := encrypter.EncryptBase64([]byte(input))
 		if err != nil {
 			t.Error(err)
 		}
@@ -196,7 +196,7 @@ func TestTripleCBCBase64(t *testing.T) {
 			t.Errorf("input %s: crypted %s != expect %+v", input, crypted, expect)
 		}
 
-		plain, err := decryptor.DecryptBase64(crypted)
+		plain, err := decrypter.DecryptBase64(crypted)
 		if err != nil {
 			t.Error(err)
 		}
@@ -209,8 +209,8 @@ func TestTripleCBCBase64(t *testing.T) {
 
 // go test -v -cover -run=^TestTripleCFB$
 func TestTripleCFB(t *testing.T) {
-	encryptor := EncryptTripleCFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
-	decryptor := DecryptTripleCFB(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
+	encrypter := TripleCFBEncrypter(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
+	decrypter := TripleCFBDecrypter(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      string([]byte{92, 169, 236, 137, 11, 246, 123, 32}),
@@ -219,7 +219,7 @@ func TestTripleCFB(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crypted, err := encryptor.Encrypt([]byte(input))
+		crypted, err := encrypter.Encrypt([]byte(input))
 		if err != nil {
 			t.Error(err)
 		}
@@ -228,7 +228,7 @@ func TestTripleCFB(t *testing.T) {
 			t.Errorf("input %s: crypted %+v != expect %+v", input, crypted, []byte(expect))
 		}
 
-		plain, err := decryptor.Decrypt(crypted)
+		plain, err := decrypter.Decrypt(crypted)
 		if err != nil {
 			t.Error(err)
 		}
@@ -241,8 +241,8 @@ func TestTripleCFB(t *testing.T) {
 
 // go test -v -cover -run=^TestTripleCFBHex$
 func TestTripleCFBHex(t *testing.T) {
-	encryptor := EncryptTripleCFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
-	decryptor := DecryptTripleCFB(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
+	encrypter := TripleCFBEncrypter(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
+	decrypter := TripleCFBDecrypter(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      "5ca9ec890bf67b20",
@@ -251,7 +251,7 @@ func TestTripleCFBHex(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crypted, err := encryptor.EncryptHex([]byte(input))
+		crypted, err := encrypter.EncryptHex([]byte(input))
 		if err != nil {
 			t.Error(err)
 		}
@@ -260,7 +260,7 @@ func TestTripleCFBHex(t *testing.T) {
 			t.Errorf("input %s: crypted %s != expect %+v", input, crypted, expect)
 		}
 
-		plain, err := decryptor.DecryptHex(crypted)
+		plain, err := decrypter.DecryptHex(crypted)
 		if err != nil {
 			t.Error(err)
 		}
@@ -273,8 +273,8 @@ func TestTripleCFBHex(t *testing.T) {
 
 // go test -v -cover -run=^TestTripleCFBBase64$
 func TestTripleCFBBase64(t *testing.T) {
-	encryptor := EncryptTripleCFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
-	decryptor := DecryptTripleCFB(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
+	encrypter := TripleCFBEncrypter(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
+	decrypter := TripleCFBDecrypter(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      "XKnsiQv2eyA=",
@@ -283,7 +283,7 @@ func TestTripleCFBBase64(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crypted, err := encryptor.EncryptBase64([]byte(input))
+		crypted, err := encrypter.EncryptBase64([]byte(input))
 		if err != nil {
 			t.Error(err)
 		}
@@ -292,7 +292,7 @@ func TestTripleCFBBase64(t *testing.T) {
 			t.Errorf("input %s: crypted %s != expect %+v", input, crypted, expect)
 		}
 
-		plain, err := decryptor.DecryptBase64(crypted)
+		plain, err := decrypter.DecryptBase64(crypted)
 		if err != nil {
 			t.Error(err)
 		}
@@ -305,8 +305,8 @@ func TestTripleCFBBase64(t *testing.T) {
 
 // go test -v -cover -run=^TestTripleOFB$
 func TestTripleOFB(t *testing.T) {
-	encryptor := EncryptTripleOFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
-	decryptor := DecryptTripleOFB(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
+	encrypter := TripleOFBEncrypter(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
+	decrypter := TripleOFBDecrypter(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      string([]byte{92, 169, 236, 137, 11, 246, 123, 32}),
@@ -315,7 +315,7 @@ func TestTripleOFB(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crypted, err := encryptor.Encrypt([]byte(input))
+		crypted, err := encrypter.Encrypt([]byte(input))
 		if err != nil {
 			t.Error(err)
 		}
@@ -324,7 +324,7 @@ func TestTripleOFB(t *testing.T) {
 			t.Errorf("input %s: crypted %+v != expect %+v", input, crypted, []byte(expect))
 		}
 
-		plain, err := decryptor.Decrypt(crypted)
+		plain, err := decrypter.Decrypt(crypted)
 		if err != nil {
 			t.Error(err)
 		}
@@ -337,8 +337,8 @@ func TestTripleOFB(t *testing.T) {
 
 // go test -v -cover -run=^TestTripleOFBHex$
 func TestTripleOFBHex(t *testing.T) {
-	encryptor := EncryptTripleOFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
-	decryptor := DecryptTripleOFB(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
+	encrypter := TripleOFBEncrypter(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
+	decrypter := TripleOFBDecrypter(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      "5ca9ec890bf67b20",
@@ -347,7 +347,7 @@ func TestTripleOFBHex(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crypted, err := encryptor.EncryptHex([]byte(input))
+		crypted, err := encrypter.EncryptHex([]byte(input))
 		if err != nil {
 			t.Error(err)
 		}
@@ -356,7 +356,7 @@ func TestTripleOFBHex(t *testing.T) {
 			t.Errorf("input %s: crypted %s != expect %+v", input, crypted, expect)
 		}
 
-		plain, err := decryptor.DecryptHex(crypted)
+		plain, err := decrypter.DecryptHex(crypted)
 		if err != nil {
 			t.Error(err)
 		}
@@ -369,8 +369,8 @@ func TestTripleOFBHex(t *testing.T) {
 
 // go test -v -cover -run=^TestTripleOFBBase64$
 func TestTripleOFBBase64(t *testing.T) {
-	encryptor := EncryptTripleOFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
-	decryptor := DecryptTripleOFB(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
+	encrypter := TripleOFBEncrypter(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
+	decrypter := TripleOFBDecrypter(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      "XKnsiQv2eyA=",
@@ -379,7 +379,7 @@ func TestTripleOFBBase64(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crypted, err := encryptor.EncryptBase64([]byte(input))
+		crypted, err := encrypter.EncryptBase64([]byte(input))
 		if err != nil {
 			t.Error(err)
 		}
@@ -388,7 +388,7 @@ func TestTripleOFBBase64(t *testing.T) {
 			t.Errorf("input %s: crypted %s != expect %+v", input, crypted, expect)
 		}
 
-		plain, err := decryptor.DecryptBase64(crypted)
+		plain, err := decrypter.DecryptBase64(crypted)
 		if err != nil {
 			t.Error(err)
 		}
@@ -401,8 +401,8 @@ func TestTripleOFBBase64(t *testing.T) {
 
 // go test -v -cover -run=^TestTripleCTR$
 func TestTripleCTR(t *testing.T) {
-	encryptor := EncryptTripleCTR(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
-	decryptor := DecryptTripleCTR(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
+	encrypter := TripleCTREncrypter(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
+	decrypter := TripleCTRDecrypter(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      string([]byte{92, 169, 236, 137, 11, 246, 123, 32}),
@@ -411,7 +411,7 @@ func TestTripleCTR(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crypted, err := encryptor.Encrypt([]byte(input))
+		crypted, err := encrypter.Encrypt([]byte(input))
 		if err != nil {
 			t.Error(err)
 		}
@@ -420,7 +420,7 @@ func TestTripleCTR(t *testing.T) {
 			t.Errorf("input %s: crypted %+v != expect %+v", input, crypted, []byte(expect))
 		}
 
-		plain, err := decryptor.Decrypt(crypted)
+		plain, err := decrypter.Decrypt(crypted)
 		if err != nil {
 			t.Error(err)
 		}
@@ -433,8 +433,8 @@ func TestTripleCTR(t *testing.T) {
 
 // go test -v -cover -run=^TestTripleCTRHex$
 func TestTripleCTRHex(t *testing.T) {
-	encryptor := EncryptTripleCTR(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
-	decryptor := DecryptTripleCTR(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
+	encrypter := TripleCTREncrypter(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
+	decrypter := TripleCTRDecrypter(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      "5ca9ec890bf67b20",
@@ -443,7 +443,7 @@ func TestTripleCTRHex(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crypted, err := encryptor.EncryptHex([]byte(input))
+		crypted, err := encrypter.EncryptHex([]byte(input))
 		if err != nil {
 			t.Error(err)
 		}
@@ -452,7 +452,7 @@ func TestTripleCTRHex(t *testing.T) {
 			t.Errorf("input %s: crypted %s != expect %+v", input, crypted, expect)
 		}
 
-		plain, err := decryptor.DecryptHex(crypted)
+		plain, err := decrypter.DecryptHex(crypted)
 		if err != nil {
 			t.Error(err)
 		}
@@ -465,8 +465,8 @@ func TestTripleCTRHex(t *testing.T) {
 
 // go test -v -cover -run=^TestTripleCTRBase64$
 func TestTripleCTRBase64(t *testing.T) {
-	encryptor := EncryptTripleCTR(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
-	decryptor := DecryptTripleCTR(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
+	encrypter := TripleCTREncrypter(testTripleKey, testTripleIV, cryptox.PaddingPKCS7)
+	decrypter := TripleCTRDecrypter(testTripleKey, testTripleIV, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      "XKnsiQv2eyA=",
@@ -475,7 +475,7 @@ func TestTripleCTRBase64(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crypted, err := encryptor.EncryptBase64([]byte(input))
+		crypted, err := encrypter.EncryptBase64([]byte(input))
 		if err != nil {
 			t.Error(err)
 		}
@@ -484,7 +484,7 @@ func TestTripleCTRBase64(t *testing.T) {
 			t.Errorf("input %s: crypted %s != expect %+v", input, crypted, expect)
 		}
 
-		plain, err := decryptor.DecryptBase64(crypted)
+		plain, err := decrypter.DecryptBase64(crypted)
 		if err != nil {
 			t.Error(err)
 		}
