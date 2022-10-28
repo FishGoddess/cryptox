@@ -15,9 +15,9 @@ var (
 	testTripleIV  = []byte("87654321")
 )
 
-// go test -v -cover -run=^TestWithTripleECB$
-func TestWithTripleECB(t *testing.T) {
-	des := WithTripleECB(testTripleKey, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestTripleECB$
+func TestTripleECB(t *testing.T) {
+	des := TripleECB(testTripleKey, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      string([]byte{163, 133, 24, 236, 31, 63, 147, 38}),
@@ -46,9 +46,9 @@ func TestWithTripleECB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithTripleECBHex$
-func TestWithTripleECBHex(t *testing.T) {
-	des := WithTripleECB(testTripleKey, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestTripleECBHex$
+func TestTripleECBHex(t *testing.T) {
+	des := TripleECB(testTripleKey, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      "a38518ec1f3f9326",
@@ -77,9 +77,9 @@ func TestWithTripleECBHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithTripleECBBase64$
-func TestWithTripleECBBase64(t *testing.T) {
-	des := WithTripleECB(testTripleKey, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestTripleECBBase64$
+func TestTripleECBBase64(t *testing.T) {
+	des := TripleECB(testTripleKey, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      "o4UY7B8/kyY=",
@@ -108,9 +108,9 @@ func TestWithTripleECBBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithTripleCBC$
-func TestWithTripleCBC(t *testing.T) {
-	des := WithTripleCBC(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestTripleCBC$
+func TestTripleCBC(t *testing.T) {
+	des := TripleCBC(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      string([]byte{39, 65, 204, 186, 76, 78, 149, 112}),
@@ -139,9 +139,9 @@ func TestWithTripleCBC(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithTripleCBCHex$
-func TestWithTripleCBCHex(t *testing.T) {
-	des := WithTripleCBC(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestTripleCBCHex$
+func TestTripleCBCHex(t *testing.T) {
+	des := TripleCBC(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      "2741ccba4c4e9570",
@@ -170,9 +170,9 @@ func TestWithTripleCBCHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithTripleCBCBase64$
-func TestWithTripleCBCBase64(t *testing.T) {
-	des := WithTripleCBC(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestTripleCBCBase64$
+func TestTripleCBCBase64(t *testing.T) {
+	des := TripleCBC(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      "J0HMukxOlXA=",
@@ -201,9 +201,9 @@ func TestWithTripleCBCBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithTripleCFB$
-func TestWithTripleCFB(t *testing.T) {
-	des := WithTripleCFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestTripleCFB$
+func TestTripleCFB(t *testing.T) {
+	des := TripleCFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      string([]byte{92, 169, 236, 137, 11, 246, 123, 32}),
@@ -232,9 +232,9 @@ func TestWithTripleCFB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithTripleCFBHex$
-func TestWithTripleCFBHex(t *testing.T) {
-	des := WithTripleCFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestTripleCFBHex$
+func TestTripleCFBHex(t *testing.T) {
+	des := TripleCFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      "5ca9ec890bf67b20",
@@ -263,9 +263,9 @@ func TestWithTripleCFBHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithTripleCFBBase64$
-func TestWithTripleCFBBase64(t *testing.T) {
-	des := WithTripleCFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestTripleCFBBase64$
+func TestTripleCFBBase64(t *testing.T) {
+	des := TripleCFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      "XKnsiQv2eyA=",
@@ -294,9 +294,9 @@ func TestWithTripleCFBBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithTripleOFB$
-func TestWithTripleOFB(t *testing.T) {
-	des := WithTripleOFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestTripleOFB$
+func TestTripleOFB(t *testing.T) {
+	des := TripleOFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      string([]byte{92, 169, 236, 137, 11, 246, 123, 32}),
@@ -325,9 +325,9 @@ func TestWithTripleOFB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithTripleOFBHex$
-func TestWithTripleOFBHex(t *testing.T) {
-	des := WithTripleOFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestTripleOFBHex$
+func TestTripleOFBHex(t *testing.T) {
+	des := TripleOFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      "5ca9ec890bf67b20",
@@ -356,9 +356,9 @@ func TestWithTripleOFBHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithTripleOFBBase64$
-func TestWithTripleOFBBase64(t *testing.T) {
-	des := WithTripleOFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestTripleOFBBase64$
+func TestTripleOFBBase64(t *testing.T) {
+	des := TripleOFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      "XKnsiQv2eyA=",
@@ -387,9 +387,9 @@ func TestWithTripleOFBBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithTripleCTR$
-func TestWithTripleCTR(t *testing.T) {
-	des := WithTripleCTR(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestTripleCTR$
+func TestTripleCTR(t *testing.T) {
+	des := TripleCTR(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      string([]byte{92, 169, 236, 137, 11, 246, 123, 32}),
@@ -418,9 +418,9 @@ func TestWithTripleCTR(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithTripleCTRHex$
-func TestWithTripleCTRHex(t *testing.T) {
-	des := WithTripleCTR(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestTripleCTRHex$
+func TestTripleCTRHex(t *testing.T) {
+	des := TripleCTR(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      "5ca9ec890bf67b20",
@@ -449,9 +449,9 @@ func TestWithTripleCTRHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithTripleCTRBase64$
-func TestWithTripleCTRBase64(t *testing.T) {
-	des := WithTripleCTR(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestTripleCTRBase64$
+func TestTripleCTRBase64(t *testing.T) {
+	des := TripleCTR(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
 		"":      "XKnsiQv2eyA=",
