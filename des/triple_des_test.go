@@ -11,18 +11,18 @@ import (
 )
 
 var (
-	testKey = []byte("12345678")
-	testIV  = []byte("87654321")
+	testTripleKey = []byte("123456788765432112345678")
+	testTripleIV  = []byte("87654321")
 )
 
-// go test -v -cover -run=^TestWithECB$
-func TestWithECB(t *testing.T) {
-	des := WithECB(testKey, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestWithTripleECB$
+func TestWithTripleECB(t *testing.T) {
+	des := WithTripleECB(testTripleKey, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
-		"":      string([]byte{254, 185, 89, 183, 212, 100, 47, 203}),
-		"123":   string([]byte{44, 56, 133, 81, 215, 244, 137, 236}),
-		"你好，世界": string([]byte{109, 82, 56, 231, 116, 36, 60, 100, 116, 149, 15, 240, 198, 38, 198, 204}),
+		"":      string([]byte{163, 133, 24, 236, 31, 63, 147, 38}),
+		"123":   string([]byte{185, 2, 158, 11, 229, 10, 126, 217}),
+		"你好，世界": string([]byte{224, 251, 123, 121, 70, 219, 201, 188, 14, 248, 74, 206, 42, 34, 16, 102}),
 	}
 
 	for input, expect := range cases {
@@ -46,14 +46,14 @@ func TestWithECB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithECBHex$
-func TestWithECBHex(t *testing.T) {
-	des := WithECB(testKey, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestWithTripleECBHex$
+func TestWithTripleECBHex(t *testing.T) {
+	des := WithTripleECB(testTripleKey, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
-		"":      "feb959b7d4642fcb",
-		"123":   "2c388551d7f489ec",
-		"你好，世界": "6d5238e774243c6474950ff0c626c6cc",
+		"":      "a38518ec1f3f9326",
+		"123":   "b9029e0be50a7ed9",
+		"你好，世界": "e0fb7b7946dbc9bc0ef84ace2a221066",
 	}
 
 	for input, expect := range cases {
@@ -77,14 +77,14 @@ func TestWithECBHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithECBBase64$
-func TestWithECBBase64(t *testing.T) {
-	des := WithECB(testKey, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestWithTripleECBBase64$
+func TestWithTripleECBBase64(t *testing.T) {
+	des := WithTripleECB(testTripleKey, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
-		"":      "/rlZt9RkL8s=",
-		"123":   "LDiFUdf0iew=",
-		"你好，世界": "bVI453QkPGR0lQ/wxibGzA==",
+		"":      "o4UY7B8/kyY=",
+		"123":   "uQKeC+UKftk=",
+		"你好，世界": "4Pt7eUbbybwO+ErOKiIQZg==",
 	}
 
 	for input, expect := range cases {
@@ -108,14 +108,14 @@ func TestWithECBBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithCBC$
-func TestWithCBC(t *testing.T) {
-	des := WithCBC(testKey, testIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestWithTripleCBC$
+func TestWithTripleCBC(t *testing.T) {
+	des := WithTripleCBC(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
-		"":      string([]byte{205, 172, 198, 131, 218, 176, 175, 188}),
-		"123":   string([]byte{243, 126, 30, 174, 181, 95, 17, 128}),
-		"你好，世界": string([]byte{185, 108, 29, 112, 42, 71, 169, 240, 62, 215, 156, 154, 145, 88, 110, 10}),
+		"":      string([]byte{39, 65, 204, 186, 76, 78, 149, 112}),
+		"123":   string([]byte{0, 247, 123, 125, 239, 59, 132, 68}),
+		"你好，世界": string([]byte{153, 124, 242, 118, 122, 226, 179, 98, 152, 158, 80, 119, 178, 247, 19, 62}),
 	}
 
 	for input, expect := range cases {
@@ -139,14 +139,14 @@ func TestWithCBC(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithCBCHex$
-func TestWithCBCHex(t *testing.T) {
-	des := WithCBC(testKey, testIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestWithTripleCBCHex$
+func TestWithTripleCBCHex(t *testing.T) {
+	des := WithTripleCBC(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
-		"":      "cdacc683dab0afbc",
-		"123":   "f37e1eaeb55f1180",
-		"你好，世界": "b96c1d702a47a9f03ed79c9a91586e0a",
+		"":      "2741ccba4c4e9570",
+		"123":   "00f77b7def3b8444",
+		"你好，世界": "997cf2767ae2b362989e5077b2f7133e",
 	}
 
 	for input, expect := range cases {
@@ -170,14 +170,14 @@ func TestWithCBCHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithCBCBase64$
-func TestWithCBCBase64(t *testing.T) {
-	des := WithCBC(testKey, testIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestWithTripleCBCBase64$
+func TestWithTripleCBCBase64(t *testing.T) {
+	des := WithTripleCBC(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
-		"":      "zazGg9qwr7w=",
-		"123":   "834errVfEYA=",
-		"你好，世界": "uWwdcCpHqfA+15yakVhuCg==",
+		"":      "J0HMukxOlXA=",
+		"123":   "APd7fe87hEQ=",
+		"你好，世界": "mXzydnris2KYnlB3svcTPg==",
 	}
 
 	for input, expect := range cases {
@@ -201,14 +201,14 @@ func TestWithCBCBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithCFB$
-func TestWithCFB(t *testing.T) {
-	des := WithCFB(testKey, testIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestWithTripleCFB$
+func TestWithTripleCFB(t *testing.T) {
+	des := WithTripleCFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
-		"":      string([]byte{48, 92, 56, 32, 147, 125, 156, 44}),
-		"123":   string([]byte{9, 102, 3, 45, 158, 112, 145, 33}),
-		"你好，世界": string([]byte{220, 233, 144, 205, 62, 200, 123, 152, 231, 237, 219, 68, 211, 43, 255, 25}),
+		"":      string([]byte{92, 169, 236, 137, 11, 246, 123, 32}),
+		"123":   string([]byte{101, 147, 215, 132, 6, 251, 118, 45}),
+		"你好，世界": string([]byte{176, 28, 68, 100, 166, 67, 156, 148, 85, 69, 217, 58, 184, 136, 197, 51}),
 	}
 
 	for input, expect := range cases {
@@ -232,14 +232,14 @@ func TestWithCFB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithCFBHex$
-func TestWithCFBHex(t *testing.T) {
-	des := WithCFB(testKey, testIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestWithTripleCFBHex$
+func TestWithTripleCFBHex(t *testing.T) {
+	des := WithTripleCFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
-		"":      "305c3820937d9c2c",
-		"123":   "0966032d9e709121",
-		"你好，世界": "dce990cd3ec87b98e7eddb44d32bff19",
+		"":      "5ca9ec890bf67b20",
+		"123":   "6593d78406fb762d",
+		"你好，世界": "b01c4464a6439c945545d93ab888c533",
 	}
 
 	for input, expect := range cases {
@@ -263,14 +263,14 @@ func TestWithCFBHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithCFBBase64$
-func TestWithCFBBase64(t *testing.T) {
-	des := WithCFB(testKey, testIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestWithTripleCFBBase64$
+func TestWithTripleCFBBase64(t *testing.T) {
+	des := WithTripleCFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
-		"":      "MFw4IJN9nCw=",
-		"123":   "CWYDLZ5wkSE=",
-		"你好，世界": "3OmQzT7Ie5jn7dtE0yv/GQ==",
+		"":      "XKnsiQv2eyA=",
+		"123":   "ZZPXhAb7di0=",
+		"你好，世界": "sBxEZKZDnJRVRdk6uIjFMw==",
 	}
 
 	for input, expect := range cases {
@@ -294,14 +294,14 @@ func TestWithCFBBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithOFB$
-func TestWithOFB(t *testing.T) {
-	des := WithOFB(testKey, testIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestWithTripleOFB$
+func TestWithTripleOFB(t *testing.T) {
+	des := WithTripleOFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
-		"":      string([]byte{48, 92, 56, 32, 147, 125, 156, 44}),
-		"123":   string([]byte{9, 102, 3, 45, 158, 112, 145, 33}),
-		"你好，世界": string([]byte{220, 233, 144, 205, 62, 200, 123, 152, 169, 42, 97, 1, 193, 120, 15, 149}),
+		"":      string([]byte{92, 169, 236, 137, 11, 246, 123, 32}),
+		"123":   string([]byte{101, 147, 215, 132, 6, 251, 118, 45}),
+		"你好，世界": string([]byte{176, 28, 68, 100, 166, 67, 156, 148, 46, 244, 26, 37, 38, 97, 62, 68}),
 	}
 
 	for input, expect := range cases {
@@ -325,14 +325,14 @@ func TestWithOFB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithOFBHex$
-func TestWithOFBHex(t *testing.T) {
-	des := WithOFB(testKey, testIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestWithTripleOFBHex$
+func TestWithTripleOFBHex(t *testing.T) {
+	des := WithTripleOFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
-		"":      "305c3820937d9c2c",
-		"123":   "0966032d9e709121",
-		"你好，世界": "dce990cd3ec87b98a92a6101c1780f95",
+		"":      "5ca9ec890bf67b20",
+		"123":   "6593d78406fb762d",
+		"你好，世界": "b01c4464a6439c942ef41a2526613e44",
 	}
 
 	for input, expect := range cases {
@@ -356,14 +356,14 @@ func TestWithOFBHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithOFBBase64$
-func TestWithOFBBase64(t *testing.T) {
-	des := WithOFB(testKey, testIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestWithTripleOFBBase64$
+func TestWithTripleOFBBase64(t *testing.T) {
+	des := WithTripleOFB(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
-		"":      "MFw4IJN9nCw=",
-		"123":   "CWYDLZ5wkSE=",
-		"你好，世界": "3OmQzT7Ie5ipKmEBwXgPlQ==",
+		"":      "XKnsiQv2eyA=",
+		"123":   "ZZPXhAb7di0=",
+		"你好，世界": "sBxEZKZDnJQu9BolJmE+RA==",
 	}
 
 	for input, expect := range cases {
@@ -387,14 +387,14 @@ func TestWithOFBBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithCTR$
-func TestWithCTR(t *testing.T) {
-	des := WithCTR(testKey, testIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestWithTripleCTR$
+func TestWithTripleCTR(t *testing.T) {
+	des := WithTripleCTR(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
-		"":      string([]byte{48, 92, 56, 32, 147, 125, 156, 44}),
-		"123":   string([]byte{9, 102, 3, 45, 158, 112, 145, 33}),
-		"你好，世界": string([]byte{220, 233, 144, 205, 62, 200, 123, 152, 82, 201, 236, 67, 30, 240, 63, 228}),
+		"":      string([]byte{92, 169, 236, 137, 11, 246, 123, 32}),
+		"123":   string([]byte{101, 147, 215, 132, 6, 251, 118, 45}),
+		"你好，世界": string([]byte{176, 28, 68, 100, 166, 67, 156, 148, 76, 184, 154, 31, 42, 134, 28, 205}),
 	}
 
 	for input, expect := range cases {
@@ -418,14 +418,14 @@ func TestWithCTR(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithCTRHex$
-func TestWithCTRHex(t *testing.T) {
-	des := WithCTR(testKey, testIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestWithTripleCTRHex$
+func TestWithTripleCTRHex(t *testing.T) {
+	des := WithTripleCTR(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
-		"":      "305c3820937d9c2c",
-		"123":   "0966032d9e709121",
-		"你好，世界": "dce990cd3ec87b9852c9ec431ef03fe4",
+		"":      "5ca9ec890bf67b20",
+		"123":   "6593d78406fb762d",
+		"你好，世界": "b01c4464a6439c944cb89a1f2a861ccd",
 	}
 
 	for input, expect := range cases {
@@ -449,14 +449,14 @@ func TestWithCTRHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithCTRBase64$
-func TestWithCTRBase64(t *testing.T) {
-	des := WithCTR(testKey, testIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
+// go test -v -cover -run=^TestWithTripleCTRBase64$
+func TestWithTripleCTRBase64(t *testing.T) {
+	des := WithTripleCTR(testTripleKey, testTripleIV, cryptox.PaddingPKCS7, cryptox.UnPaddingPKCS7)
 
 	cases := map[string]string{
-		"":      "MFw4IJN9nCw=",
-		"123":   "CWYDLZ5wkSE=",
-		"你好，世界": "3OmQzT7Ie5hSyexDHvA/5A==",
+		"":      "XKnsiQv2eyA=",
+		"123":   "ZZPXhAb7di0=",
+		"你好，世界": "sBxEZKZDnJRMuJofKoYczQ==",
 	}
 
 	for input, expect := range cases {
