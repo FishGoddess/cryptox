@@ -6,42 +6,42 @@ package des
 
 import "github.com/FishGoddess/cryptox"
 
-type TripleDES struct {
-	cryptox.Encryptor
-	cryptox.Decryptor
+func EncryptTripleECB(key []byte, padding cryptox.Padding) cryptox.Encryptor {
+	return cryptox.NewEncryptor(cryptox.TripleDES, key, cryptox.EncryptECB, nil, padding)
 }
 
-func TripleECB(key []byte, padding cryptox.Padding, unPadding cryptox.UnPadding) TripleDES {
-	return TripleDES{
-		Encryptor: cryptox.NewEncryptor(cryptox.TripleDES, key, cryptox.EncryptECB, nil, padding),
-		Decryptor: cryptox.NewDecryptor(cryptox.TripleDES, key, cryptox.DecryptECB, nil, unPadding),
-	}
+func DecryptTripleECB(key []byte, unPadding cryptox.UnPadding) cryptox.Decryptor {
+	return cryptox.NewDecryptor(cryptox.TripleDES, key, cryptox.DecryptECB, nil, unPadding)
 }
 
-func TripleCBC(key []byte, iv []byte, padding cryptox.Padding, unPadding cryptox.UnPadding) TripleDES {
-	return TripleDES{
-		Encryptor: cryptox.NewEncryptor(cryptox.TripleDES, key, cryptox.EncryptCBC, iv, padding),
-		Decryptor: cryptox.NewDecryptor(cryptox.TripleDES, key, cryptox.DecryptCBC, iv, unPadding),
-	}
+func EncryptTripleCBC(key []byte, iv []byte, padding cryptox.Padding) cryptox.Encryptor {
+	return cryptox.NewEncryptor(cryptox.TripleDES, key, cryptox.EncryptCBC, iv, padding)
 }
 
-func TripleCFB(key []byte, iv []byte, padding cryptox.Padding, unPadding cryptox.UnPadding) TripleDES {
-	return TripleDES{
-		Encryptor: cryptox.NewEncryptor(cryptox.TripleDES, key, cryptox.EncryptCFB, iv, padding),
-		Decryptor: cryptox.NewDecryptor(cryptox.TripleDES, key, cryptox.DecryptCFB, iv, unPadding),
-	}
+func DecryptTripleCBC(key []byte, iv []byte, unPadding cryptox.UnPadding) cryptox.Decryptor {
+	return cryptox.NewDecryptor(cryptox.TripleDES, key, cryptox.DecryptCBC, iv, unPadding)
 }
 
-func TripleOFB(key []byte, iv []byte, padding cryptox.Padding, unPadding cryptox.UnPadding) TripleDES {
-	return TripleDES{
-		Encryptor: cryptox.NewEncryptor(cryptox.TripleDES, key, cryptox.EncryptOFB, iv, padding),
-		Decryptor: cryptox.NewDecryptor(cryptox.TripleDES, key, cryptox.DecryptOFB, iv, unPadding),
-	}
+func EncryptTripleCFB(key []byte, iv []byte, padding cryptox.Padding) cryptox.Encryptor {
+	return cryptox.NewEncryptor(cryptox.TripleDES, key, cryptox.EncryptCFB, iv, padding)
 }
 
-func TripleCTR(key []byte, iv []byte, padding cryptox.Padding, unPadding cryptox.UnPadding) TripleDES {
-	return TripleDES{
-		Encryptor: cryptox.NewEncryptor(cryptox.TripleDES, key, cryptox.EncryptCTR, iv, padding),
-		Decryptor: cryptox.NewDecryptor(cryptox.TripleDES, key, cryptox.DecryptCTR, iv, unPadding),
-	}
+func DecryptTripleCFB(key []byte, iv []byte, unPadding cryptox.UnPadding) cryptox.Decryptor {
+	return cryptox.NewDecryptor(cryptox.TripleDES, key, cryptox.DecryptCFB, iv, unPadding)
+}
+
+func EncryptTripleOFB(key []byte, iv []byte, padding cryptox.Padding) cryptox.Encryptor {
+	return cryptox.NewEncryptor(cryptox.TripleDES, key, cryptox.EncryptOFB, iv, padding)
+}
+
+func DecryptTripleOFB(key []byte, iv []byte, unPadding cryptox.UnPadding) cryptox.Decryptor {
+	return cryptox.NewDecryptor(cryptox.TripleDES, key, cryptox.DecryptOFB, iv, unPadding)
+}
+
+func EncryptTripleCTR(key []byte, iv []byte, padding cryptox.Padding) cryptox.Encryptor {
+	return cryptox.NewEncryptor(cryptox.TripleDES, key, cryptox.EncryptCTR, iv, padding)
+}
+
+func DecryptTripleCTR(key []byte, iv []byte, unPadding cryptox.UnPadding) cryptox.Decryptor {
+	return cryptox.NewDecryptor(cryptox.TripleDES, key, cryptox.DecryptCTR, iv, unPadding)
 }

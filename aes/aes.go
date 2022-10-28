@@ -6,42 +6,42 @@ package aes
 
 import "github.com/FishGoddess/cryptox"
 
-type AES struct {
-	cryptox.Encryptor
-	cryptox.Decryptor
+func EncryptECB(key []byte, padding cryptox.Padding) cryptox.Encryptor {
+	return cryptox.NewEncryptor(cryptox.AES, key, cryptox.EncryptECB, nil, padding)
 }
 
-func ECB(key []byte, padding cryptox.Padding, unPadding cryptox.UnPadding) AES {
-	return AES{
-		Encryptor: cryptox.NewEncryptor(cryptox.AES, key, cryptox.EncryptECB, nil, padding),
-		Decryptor: cryptox.NewDecryptor(cryptox.AES, key, cryptox.DecryptECB, nil, unPadding),
-	}
+func DecryptECB(key []byte, unPadding cryptox.UnPadding) cryptox.Decryptor {
+	return cryptox.NewDecryptor(cryptox.AES, key, cryptox.DecryptECB, nil, unPadding)
 }
 
-func CBC(key []byte, iv []byte, padding cryptox.Padding, unPadding cryptox.UnPadding) AES {
-	return AES{
-		Encryptor: cryptox.NewEncryptor(cryptox.AES, key, cryptox.EncryptCBC, iv, padding),
-		Decryptor: cryptox.NewDecryptor(cryptox.AES, key, cryptox.DecryptCBC, iv, unPadding),
-	}
+func EncryptCBC(key []byte, iv []byte, padding cryptox.Padding) cryptox.Encryptor {
+	return cryptox.NewEncryptor(cryptox.AES, key, cryptox.EncryptCBC, iv, padding)
 }
 
-func CFB(key []byte, iv []byte, padding cryptox.Padding, unPadding cryptox.UnPadding) AES {
-	return AES{
-		Encryptor: cryptox.NewEncryptor(cryptox.AES, key, cryptox.EncryptCFB, iv, padding),
-		Decryptor: cryptox.NewDecryptor(cryptox.AES, key, cryptox.DecryptCFB, iv, unPadding),
-	}
+func DecryptCBC(key []byte, iv []byte, unPadding cryptox.UnPadding) cryptox.Decryptor {
+	return cryptox.NewDecryptor(cryptox.AES, key, cryptox.DecryptCBC, iv, unPadding)
 }
 
-func OFB(key []byte, iv []byte, padding cryptox.Padding, unPadding cryptox.UnPadding) AES {
-	return AES{
-		Encryptor: cryptox.NewEncryptor(cryptox.AES, key, cryptox.EncryptOFB, iv, padding),
-		Decryptor: cryptox.NewDecryptor(cryptox.AES, key, cryptox.DecryptOFB, iv, unPadding),
-	}
+func EncryptCFB(key []byte, iv []byte, padding cryptox.Padding) cryptox.Encryptor {
+	return cryptox.NewEncryptor(cryptox.AES, key, cryptox.EncryptCFB, iv, padding)
 }
 
-func CTR(key []byte, iv []byte, padding cryptox.Padding, unPadding cryptox.UnPadding) AES {
-	return AES{
-		Encryptor: cryptox.NewEncryptor(cryptox.AES, key, cryptox.EncryptCTR, iv, padding),
-		Decryptor: cryptox.NewDecryptor(cryptox.AES, key, cryptox.DecryptCTR, iv, unPadding),
-	}
+func DecryptCFB(key []byte, iv []byte, unPadding cryptox.UnPadding) cryptox.Decryptor {
+	return cryptox.NewDecryptor(cryptox.AES, key, cryptox.DecryptCFB, iv, unPadding)
+}
+
+func EncryptOFB(key []byte, iv []byte, padding cryptox.Padding) cryptox.Encryptor {
+	return cryptox.NewEncryptor(cryptox.AES, key, cryptox.EncryptOFB, iv, padding)
+}
+
+func DecryptOFB(key []byte, iv []byte, unPadding cryptox.UnPadding) cryptox.Decryptor {
+	return cryptox.NewDecryptor(cryptox.AES, key, cryptox.DecryptOFB, iv, unPadding)
+}
+
+func EncryptCTR(key []byte, iv []byte, padding cryptox.Padding) cryptox.Encryptor {
+	return cryptox.NewEncryptor(cryptox.AES, key, cryptox.EncryptCTR, iv, padding)
+}
+
+func DecryptCTR(key []byte, iv []byte, unPadding cryptox.UnPadding) cryptox.Decryptor {
+	return cryptox.NewDecryptor(cryptox.AES, key, cryptox.DecryptCTR, iv, unPadding)
 }
