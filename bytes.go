@@ -7,7 +7,28 @@ package cryptox
 import (
 	"crypto/rand"
 	"fmt"
+
+	"github.com/FishGoddess/cryptox/base64"
+	"github.com/FishGoddess/cryptox/hex"
 )
+
+// Bytes is an alias of []byte.
+type Bytes []byte
+
+// String returns Bytes in string.
+func (bs Bytes) String() string {
+	return string(bs)
+}
+
+// Hex returns Bytes in hex.
+func (bs Bytes) Hex() string {
+	return hex.Encode(bs)
+}
+
+// Base64 returns Bytes in base64.
+func (bs Bytes) Base64() string {
+	return base64.Encode(bs)
+}
 
 // copyBytes copies bs to a new byte slice.
 func copyBytes(bs []byte) []byte {
