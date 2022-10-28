@@ -23,19 +23,19 @@ func main() {
 	// We use cbc mode and pkcs7 padding to encrypt data.
 	// Of course, you can choose ecb/cbc/cfb/ofb/ctr if you want.
 	// Also, you can choose no/zero/pkcs5/pkcs7 to padding data.
-	crypted, err := aes.CBCEncrypter(key, iv, cryptox.PaddingPKCS7).Encrypt(plain)
+	crypted, err := aes.CTREncrypter(key, iv, cryptox.PaddingNone).Encrypt(plain)
 	if err != nil {
 		panic(err)
 	}
 
 	// Use EncryptHex if you want your output is hex.
-	cryptedHex, err := aes.CBCEncrypter(key, iv, cryptox.PaddingPKCS7).EncryptHex(plain)
+	cryptedHex, err := aes.CTREncrypter(key, iv, cryptox.PaddingNone).EncryptHex(plain)
 	if err != nil {
 		panic(err)
 	}
 
 	// Use EncryptBase64 if you want your output is base64.
-	cryptedBase64, err := aes.CBCEncrypter(key, iv, cryptox.PaddingPKCS7).EncryptBase64(plain)
+	cryptedBase64, err := aes.CTREncrypter(key, iv, cryptox.PaddingNone).EncryptBase64(plain)
 	if err != nil {
 		panic(err)
 	}
@@ -47,19 +47,19 @@ func main() {
 	// We use cbc mode and pkcs7 unPadding to decrypt data.
 	// Of course, you can choose ecb/cbc/cfb/ofb/ctr if you want.
 	// Also, you can choose no/zero/pkcs5/pkcs7 to unPadding data.
-	plain, err = aes.CBCDecrypter(key, iv, cryptox.UnPaddingPKCS7).Decrypt(crypted)
+	plain, err = aes.CTRDecrypter(key, iv, cryptox.UnPaddingNone).Decrypt(crypted)
 	if err != nil {
 		panic(err)
 	}
 
 	// Use DecryptHex if your input is hex.
-	plain, err = aes.CBCDecrypter(key, iv, cryptox.UnPaddingPKCS7).DecryptHex(cryptedHex)
+	plain, err = aes.CTRDecrypter(key, iv, cryptox.UnPaddingNone).DecryptHex(cryptedHex)
 	if err != nil {
 		panic(err)
 	}
 
 	// Use DecryptBase64 if your input is base64.
-	plain, err = aes.CBCDecrypter(key, iv, cryptox.UnPaddingPKCS7).DecryptBase64(cryptedBase64)
+	plain, err = aes.CTRDecrypter(key, iv, cryptox.UnPaddingNone).DecryptBase64(cryptedBase64)
 	if err != nil {
 		panic(err)
 	}
