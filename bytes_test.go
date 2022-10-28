@@ -4,12 +4,35 @@
 
 package cryptox
 
-import "testing"
+import (
+	"testing"
 
-// go test -v -cover -run=^TestCopyBytes$
-func TestCopyBytes(t *testing.T) {
-	bs := []byte("Hello World")
-	newSlice := copyBytes(bs)
+	"github.com/FishGoddess/cryptox/base64"
+	"github.com/FishGoddess/cryptox/hex"
+)
+
+// go test -v -cover -run=^TestBytes$
+func TestBytes(t *testing.T) {
+	str := "Hello World"
+
+	bs := Bytes(str)
+	if bs.String() != str {
+		t.Errorf("bs.String() %s != str %s", bs.String(), str)
+	}
+
+	if bs.Hex() != hex.Encode(bs) {
+		t.Errorf("bs.String() %s != hex.Encode(bs) %s", bs.String(), hex.Encode(bs))
+	}
+
+	if bs.Base64() != base64.Encode(bs) {
+		t.Errorf("bs.String() %s != base64.Encode(bs) %s", bs.String(), base64.Encode(bs))
+	}
+}
+
+// go test -v -cover -run=^TestBytesClone$
+func TestBytesClone(t *testing.T) {
+	bs := Bytes("Hello World")
+	newSlice := bs.Clone()
 
 	if string(newSlice) != string(bs) {
 		t.Errorf("newSlice %s != bs %s", string(newSlice), string(bs))

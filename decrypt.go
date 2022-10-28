@@ -30,13 +30,13 @@ func NewDecrypter(cipher Cipher, key []byte, mode DecryptMode, iv []byte, unPadd
 }
 
 // Decrypt decrypts data to bytes.
-func (d Decrypter) Decrypt(crypted []byte) ([]byte, error) {
+func (d Decrypter) Decrypt(crypted Bytes) (Bytes, error) {
 	block, err := d.cipher(d.key)
 	if err != nil {
 		return nil, err
 	}
 
-	crypted = copyBytes(crypted)
+	crypted = crypted.Clone()
 	plain := crypted
 
 	err = d.mode.Crypt(block, d.iv, crypted, plain)

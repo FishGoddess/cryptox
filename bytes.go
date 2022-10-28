@@ -30,8 +30,8 @@ func (bs Bytes) Base64() string {
 	return base64.Encode(bs)
 }
 
-// copyBytes copies bs to a new byte slice.
-func copyBytes(bs []byte) []byte {
+// Clone clones bs to new slice.
+func (bs Bytes) Clone() Bytes {
 	newSlice := make([]byte, len(bs))
 	copy(newSlice, bs)
 
@@ -45,7 +45,7 @@ func copyBytes(bs []byte) []byte {
 // When you need to decrypt data, parse iv from the "crypted" slice including raw-crypted slice and iv slice first.
 // Then you can pass this iv to decrypter and decrypt data as usual.
 // However, you should know that the crypted data of the same plain data will be different every time because of different ivs.
-func RandomBytes(n int) ([]byte, error) {
+func RandomBytes(n int) (Bytes, error) {
 	bs := make([]byte, n)
 
 	read, err := rand.Read(bs)

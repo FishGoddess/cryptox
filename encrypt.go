@@ -30,7 +30,7 @@ func NewEncrypter(cipher Cipher, key []byte, mode EncryptMode, iv []byte, paddin
 }
 
 // Encrypt encrypts data to bytes.
-func (e Encrypter) Encrypt(plain []byte) ([]byte, error) {
+func (e Encrypter) Encrypt(plain Bytes) (Bytes, error) {
 	block, err := e.cipher(e.key)
 	if err != nil {
 		return nil, err
@@ -38,7 +38,7 @@ func (e Encrypter) Encrypt(plain []byte) ([]byte, error) {
 
 	blockSize := block.BlockSize()
 
-	plain = copyBytes(plain)
+	plain = plain.Clone()
 	plain = e.padding(plain, blockSize)
 
 	crypted := plain
