@@ -52,7 +52,7 @@ func (e Encrypter) Encrypt(plain Bytes) (Bytes, error) {
 }
 
 // EncryptHex encrypts data to string in hex.
-func (e Encrypter) EncryptHex(plain []byte) (string, error) {
+func (e Encrypter) EncryptHex(plain Bytes) (string, error) {
 	crypted, err := e.Encrypt(plain)
 	if err != nil {
 		return "", err
@@ -62,7 +62,7 @@ func (e Encrypter) EncryptHex(plain []byte) (string, error) {
 }
 
 // EncryptBase64 encrypts data to string in base64.
-func (e Encrypter) EncryptBase64(plain []byte) (string, error) {
+func (e Encrypter) EncryptBase64(plain Bytes) (string, error) {
 	crypted, err := e.Encrypt(plain)
 	if err != nil {
 		return "", err

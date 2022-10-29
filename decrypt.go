@@ -48,7 +48,7 @@ func (d Decrypter) Decrypt(crypted Bytes) (Bytes, error) {
 }
 
 // DecryptHex decrypts data in hex to bytes.
-func (d Decrypter) DecryptHex(crypted string) ([]byte, error) {
+func (d Decrypter) DecryptHex(crypted string) (Bytes, error) {
 	decoded, err := hex.Decode(crypted)
 	if err != nil {
 		return nil, err
@@ -58,7 +58,7 @@ func (d Decrypter) DecryptHex(crypted string) ([]byte, error) {
 }
 
 // DecryptBase64 decrypts base64 in hex to bytes.
-func (d Decrypter) DecryptBase64(crypted string) ([]byte, error) {
+func (d Decrypter) DecryptBase64(crypted string) (Bytes, error) {
 	decoded, err := base64.Decode(crypted)
 	if err != nil {
 		return nil, err
