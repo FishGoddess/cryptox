@@ -22,32 +22,40 @@ var (
 	_ Hash = SHA512
 )
 
+// Hash is a function returning hash.Hash.
 type Hash func() hash.Hash
 
+// MD5 returns md5 hash.
 func MD5() hash.Hash {
 	return md5.New()
 }
 
+// SHA1 returns sha1 hash.
 func SHA1() hash.Hash {
 	return sha1.New()
 }
 
+// SHA224 returns sha224 hash.
 func SHA224() hash.Hash {
 	return sha256.New224()
 }
 
+// SHA256 returns sha256 hash.
 func SHA256() hash.Hash {
 	return sha256.New()
 }
 
+// SHA384 returns sha384 hash.
 func SHA384() hash.Hash {
 	return sha512.New384()
 }
 
+// SHA512 returns sha512 hash.
 func SHA512() hash.Hash {
 	return sha512.New()
 }
 
+// Hasher hashes data with inside hash.
 type Hasher struct {
 	hash hash.Hash
 }
