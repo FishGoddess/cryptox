@@ -16,6 +16,7 @@
 * 支持 ECB/CBC/OFB/CFB/CTR 等分组模式。
 * 支持 PKCS5/PKCS7/ZERO/NO 等填充方式。
 * 支持 MD5/SHA1/SHA256/SHA512/HMAC 等散列算法。
+* 支持 CRC/FNV 等散列算法。
 * 支持 HEX/BASE64 等编解码算法。
 
 _历史版本的特性请查看 [HISTORY.md](./HISTORY.md)。未来版本的新特性和计划请查看 [FUTURE.md](./FUTURE.md)。_
@@ -73,6 +74,14 @@ BenchmarkTripleDESDecryptWithCBC-12       117877              9483 ns/op        
 BenchmarkTripleDESDecryptWithCFB-12       129415              9064 ns/op             608 B/op          5 allocs/op
 BenchmarkTripleDESDecryptWithOFB-12        56397             20979 ns/op            1112 B/op          5 allocs/op
 BenchmarkTripleDESDecryptWithCTR-12        56103             21694 ns/op            1112 B/op          5 allocs/op
+
+BenchmarkMD5-12          7764662               154.4 ns/op           112 B/op          2 allocs/op
+BenchmarkSHA1-12         6569348               183.8 ns/op           136 B/op          2 allocs/op
+BenchmarkSHA224-12       4909758               244.2 ns/op           160 B/op          2 allocs/op
+BenchmarkSHA256-12       4922395               244.9 ns/op           160 B/op          2 allocs/op
+BenchmarkSHA384-12       3663837               321.4 ns/op           272 B/op          2 allocs/op
+BenchmarkSHA512-12       3637156               328.8 ns/op           288 B/op          2 allocs/op
+BenchmarkHMAC-12         1236666               981.8 ns/op           512 B/op          6 allocs/op
 ```
 
 ### 🎨 贡献者
