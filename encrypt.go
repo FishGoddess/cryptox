@@ -4,11 +4,6 @@
 
 package cryptox
 
-import (
-	"github.com/FishGoddess/cryptox/base64"
-	"github.com/FishGoddess/cryptox/hex"
-)
-
 // Encrypter encrypts data to bytes, hex, and base64.
 type Encrypter struct {
 	cipher  Cipher
@@ -58,7 +53,7 @@ func (e Encrypter) EncryptHex(plain Bytes) (string, error) {
 		return "", err
 	}
 
-	return hex.Encode(crypted), nil
+	return crypted.Hex(), nil
 }
 
 // EncryptBase64 encrypts data to string in base64.
@@ -68,5 +63,5 @@ func (e Encrypter) EncryptBase64(plain Bytes) (string, error) {
 		return "", err
 	}
 
-	return base64.Encode(crypted), nil
+	return crypted.Base64(), nil
 }

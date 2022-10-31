@@ -5,10 +5,10 @@
 package cryptox
 
 import (
+	"bytes"
+	"encoding/base64"
+	"encoding/hex"
 	"testing"
-
-	"github.com/FishGoddess/cryptox/base64"
-	"github.com/FishGoddess/cryptox/hex"
 )
 
 // go test -v -cover -run=^TestBytes$
@@ -16,16 +16,22 @@ func TestBytes(t *testing.T) {
 	str := "Hello World"
 
 	bs := Bytes(str)
+	if !bytes.Equal(bs.Bytes(), bs) {
+		t.Errorf("bs.Bytes() %+v != []byte(str) %+v", bs.Bytes(), []byte(str))
+	}
+
 	if bs.String() != str {
 		t.Errorf("bs.String() %s != str %s", bs.String(), str)
 	}
 
-	if bs.Hex() != hex.Encode(bs) {
-		t.Errorf("bs.String() %s != hex.Encode(bs) %s", bs.String(), hex.Encode(bs))
+	expect := hex.EncodeToString(bs)
+	if bs.Hex() != expect {
+		t.Errorf("bs.String() %s != expect %s", bs.String(), expect)
 	}
 
-	if bs.Base64() != base64.Encode(bs) {
-		t.Errorf("bs.String() %s != base64.Encode(bs) %s", bs.String(), base64.Encode(bs))
+	expect = base64.StdEncoding.EncodeToString(bs)
+	if bs.Base64() != base64.StdEncoding.EncodeToString(bs) {
+		t.Errorf("bs.String() %s != expect %s", bs.String(), expect)
 	}
 }
 
@@ -36,6 +42,48 @@ func TestBytesClone(t *testing.T) {
 
 	if string(newSlice) != string(bs) {
 		t.Errorf("newSlice %s != bs %s", string(newSlice), string(bs))
+	}
+}
+
+// go test -v -cover -run=^TestParseHex$
+func TestParseHex(t *testing.T) {
+	cases := map[string]string{
+		"":                               "",
+		"313233":                         "123",
+		"e4bda0e5a5bdefbc8ce4b896e7958c": "你好，世界",
+	}
+
+	for encoded, expect := range cases {
+		plain, err := ParseHex(encoded)
+		if err != nil {
+			t.Error(err)
+		}
+
+		plainStr := string(plain)
+		if plainStr != expect {
+			t.Errorf("encoded %s: plainStr %s != expect %s", encoded, plainStr, expect)
+		}
+	}
+}
+
+// go test -v -cover -run=^TestParseBase64$
+func TestParseBase64(t *testing.T) {
+	cases := map[string]string{
+		"":                     "",
+		"MTIz":                 "123",
+		"5L2g5aW977yM5LiW55WM": "你好，世界",
+	}
+
+	for encoded, expect := range cases {
+		plain, err := ParseBase64(encoded)
+		if err != nil {
+			t.Error(err)
+		}
+
+		plainStr := string(plain)
+		if plainStr != expect {
+			t.Errorf("encoded %s: plainStr %s != expect %s", encoded, plainStr, expect)
+		}
 	}
 }
 

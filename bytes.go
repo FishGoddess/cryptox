@@ -6,14 +6,18 @@ package cryptox
 
 import (
 	"crypto/rand"
+	"encoding/base64"
+	"encoding/hex"
 	"fmt"
-
-	"github.com/FishGoddess/cryptox/base64"
-	"github.com/FishGoddess/cryptox/hex"
 )
 
 // Bytes is an alias of []byte.
 type Bytes []byte
+
+// Bytes returns Bytes in []byte.
+func (bs Bytes) Bytes() []byte {
+	return bs
+}
 
 // String returns Bytes in string.
 func (bs Bytes) String() string {
@@ -22,12 +26,12 @@ func (bs Bytes) String() string {
 
 // Hex returns Bytes in hex.
 func (bs Bytes) Hex() string {
-	return hex.Encode(bs)
+	return hex.EncodeToString(bs)
 }
 
 // Base64 returns Bytes in base64.
 func (bs Bytes) Base64() string {
-	return base64.Encode(bs)
+	return base64.StdEncoding.EncodeToString(bs)
 }
 
 // Clone clones bs to new slice.
@@ -36,6 +40,16 @@ func (bs Bytes) Clone() Bytes {
 	copy(newSlice, bs)
 
 	return newSlice
+}
+
+// ParseHex uses hex to parse string to Bytes.
+func ParseHex(str string) (Bytes, error) {
+	return hex.DecodeString(str)
+}
+
+// ParseBase64 uses base64 to parse string to Bytes.
+func ParseBase64(str string) (Bytes, error) {
+	return base64.StdEncoding.DecodeString(str)
 }
 
 // RandomBytes returns a byte slice filled with random byte.

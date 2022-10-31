@@ -4,11 +4,6 @@
 
 package cryptox
 
-import (
-	"github.com/FishGoddess/cryptox/base64"
-	"github.com/FishGoddess/cryptox/hex"
-)
-
 // Decrypter decrypts data from bytes, hex, and base64.
 type Decrypter struct {
 	cipher    Cipher
@@ -49,7 +44,7 @@ func (d Decrypter) Decrypt(crypted Bytes) (Bytes, error) {
 
 // DecryptHex decrypts data in hex to bytes.
 func (d Decrypter) DecryptHex(crypted string) (Bytes, error) {
-	decoded, err := hex.Decode(crypted)
+	decoded, err := ParseHex(crypted)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +54,7 @@ func (d Decrypter) DecryptHex(crypted string) (Bytes, error) {
 
 // DecryptBase64 decrypts base64 in hex to bytes.
 func (d Decrypter) DecryptBase64(crypted string) (Bytes, error) {
-	decoded, err := base64.Decode(crypted)
+	decoded, err := ParseBase64(crypted)
 	if err != nil {
 		return nil, err
 	}

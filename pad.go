@@ -29,12 +29,12 @@ type Padding func(data []byte, blockSize int) []byte
 type UnPadding func(data []byte, blockSize int) ([]byte, error)
 
 // PaddingNone won't padding anything to data.
-func PaddingNone(data []byte, blockSize int) []byte {
+func PaddingNone(data []byte, _ int) []byte {
 	return data
 }
 
 // UnPaddingNone won't unPadding anything from data.
-func UnPaddingNone(data []byte, blockSize int) ([]byte, error) {
+func UnPaddingNone(data []byte, _ int) ([]byte, error) {
 	return data, nil
 }
 
@@ -54,13 +54,18 @@ func UnPaddingZero(data []byte, blockSize int) ([]byte, error) {
 	length := len(data)
 
 	var i int
-	for i = length - 1; i >= 0; i-- {
-		if data[i] != 0 {
+	for i = length; i > 0; i-- {
+		if data[i-1] != 0 {
+			break
+		}
+
+		// Remove blockSize of bytes at most due to padding blockSize of bytes at most.
+		if length-i >= blockSize {
 			break
 		}
 	}
 
-	return data[:i+1], nil
+	return data[:i], nil
 }
 
 // PaddingPKCS5 paddings data using pkcs5.

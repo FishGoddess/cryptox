@@ -9,10 +9,12 @@ import "testing"
 // go test -v -cover -run=^TestPaddingAndUnPaddingNone$
 func TestPaddingAndUnPaddingNone(t *testing.T) {
 	blockSize := 8
+
 	cases := map[string]string{
-		string([]byte{}):                       string([]byte{}),
-		string([]byte{1, 2, 3, 4, 5}):          string([]byte{1, 2, 3, 4, 5}),
-		string([]byte{1, 2, 3, 4, 5, 6, 7, 8}): string([]byte{1, 2, 3, 4, 5, 6, 7, 8}),
+		string([]byte{}):                                               string([]byte{}),
+		string([]byte{1, 2, 3, 4, 5}):                                  string([]byte{1, 2, 3, 4, 5}),
+		string([]byte{1, 2, 3, 4, 5, 6, 7, 8}):                         string([]byte{1, 2, 3, 4, 5, 6, 7, 8}),
+		string([]byte{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0}): string([]byte{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0}),
 	}
 
 	for data, expect := range cases {
@@ -37,10 +39,12 @@ func TestPaddingAndUnPaddingNone(t *testing.T) {
 // go test -v -cover -run=^TestPaddingAndUnPaddingZero$
 func TestPaddingAndUnPaddingZero(t *testing.T) {
 	blockSize := 8
+
 	cases := map[string]string{
-		string([]byte{}):                       string([]byte{0, 0, 0, 0, 0, 0, 0, 0}),
-		string([]byte{1, 2, 3, 4, 5}):          string([]byte{1, 2, 3, 4, 5, 0, 0, 0}),
-		string([]byte{1, 2, 3, 4, 5, 6, 7, 8}): string([]byte{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0}),
+		string([]byte{}):                                               string([]byte{0, 0, 0, 0, 0, 0, 0, 0}),
+		string([]byte{1, 2, 3, 4, 5}):                                  string([]byte{1, 2, 3, 4, 5, 0, 0, 0}),
+		string([]byte{1, 2, 3, 4, 5, 6, 7, 8}):                         string([]byte{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0}),
+		string([]byte{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0}): string([]byte{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}),
 	}
 
 	for data, expect := range cases {
@@ -65,10 +69,12 @@ func TestPaddingAndUnPaddingZero(t *testing.T) {
 // go test -v -cover -run=^TestPaddingAndUnPaddingPKCS5$
 func TestPaddingAndUnPaddingPKCS5(t *testing.T) {
 	blockSize := 8
+
 	cases := map[string]string{
-		string([]byte{}):                       string([]byte{8, 8, 8, 8, 8, 8, 8, 8}),
-		string([]byte{1, 2, 3, 4, 5}):          string([]byte{1, 2, 3, 4, 5, 3, 3, 3}),
-		string([]byte{1, 2, 3, 4, 5, 6, 7, 8}): string([]byte{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8}),
+		string([]byte{}):                                               string([]byte{8, 8, 8, 8, 8, 8, 8, 8}),
+		string([]byte{1, 2, 3, 4, 5}):                                  string([]byte{1, 2, 3, 4, 5, 3, 3, 3}),
+		string([]byte{1, 2, 3, 4, 5, 6, 7, 8}):                         string([]byte{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8}),
+		string([]byte{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8}): string([]byte{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8}),
 	}
 
 	for data, expect := range cases {
@@ -93,10 +99,12 @@ func TestPaddingAndUnPaddingPKCS5(t *testing.T) {
 // go test -v -cover -run=^TestPaddingAndUnPaddingPKCS7$
 func TestPaddingAndUnPaddingPKCS7(t *testing.T) {
 	blockSize := 8
+
 	cases := map[string]string{
-		string([]byte{}):                       string([]byte{8, 8, 8, 8, 8, 8, 8, 8}),
-		string([]byte{1, 2, 3, 4, 5}):          string([]byte{1, 2, 3, 4, 5, 3, 3, 3}),
-		string([]byte{1, 2, 3, 4, 5, 6, 7, 8}): string([]byte{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8}),
+		string([]byte{}):                                               string([]byte{8, 8, 8, 8, 8, 8, 8, 8}),
+		string([]byte{1, 2, 3, 4, 5}):                                  string([]byte{1, 2, 3, 4, 5, 3, 3, 3}),
+		string([]byte{1, 2, 3, 4, 5, 6, 7, 8}):                         string([]byte{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8}),
+		string([]byte{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8}): string([]byte{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8}),
 	}
 
 	for data, expect := range cases {
