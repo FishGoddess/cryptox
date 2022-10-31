@@ -86,3 +86,93 @@ func BenchmarkHMAC(b *testing.B) {
 		hash.HMAC(cryptox.SHA256, key, benchData)
 	}
 }
+
+// go test -v -bench=^BenchmarkCRC32IEEE$ -benchtime=1s hash_test.go
+func BenchmarkCRC32IEEE(b *testing.B) {
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		hash.CRC32IEEE(benchData)
+	}
+}
+
+// go test -v -bench=^BenchmarkCRC64ISO$ -benchtime=1s hash_test.go
+func BenchmarkCRC64ISO(b *testing.B) {
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		hash.CRC64ISO(benchData)
+	}
+}
+
+// go test -v -bench=^BenchmarkCRC64ECMA$ -benchtime=1s hash_test.go
+func BenchmarkCRC64ECMA(b *testing.B) {
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		hash.CRC64ECMA(benchData)
+	}
+}
+
+// go test -v -bench=^BenchmarkFnv32$ -benchtime=1s hash_test.go
+func BenchmarkFnv32(b *testing.B) {
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		hash.Fnv32(benchData)
+	}
+}
+
+// go test -v -bench=^BenchmarkFnv32a$ -benchtime=1s hash_test.go
+func BenchmarkFnv32a(b *testing.B) {
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		hash.Fnv32a(benchData)
+	}
+}
+
+// go test -v -bench=^BenchmarkFnv64$ -benchtime=1s hash_test.go
+func BenchmarkFnv64(b *testing.B) {
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		hash.Fnv64(benchData)
+	}
+}
+
+// go test -v -bench=^BenchmarkFnv64a$ -benchtime=1s hash_test.go
+func BenchmarkFnv64a(b *testing.B) {
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		hash.Fnv64a(benchData)
+	}
+}
+
+// go test -v -bench=^BenchmarkFnv128$ -benchtime=1s hash_test.go
+func BenchmarkFnv128(b *testing.B) {
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		hash.Fnv128(benchData)
+	}
+}
+
+// go test -v -bench=^BenchmarkFnv128a$ -benchtime=1s hash_test.go
+func BenchmarkFnv128a(b *testing.B) {
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		hash.Fnv128a(benchData)
+	}
+}

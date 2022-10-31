@@ -76,13 +76,22 @@ BenchmarkTripleDESDecryptWithCFB-12       129415              9064 ns/op        
 BenchmarkTripleDESDecryptWithOFB-12        56397             20979 ns/op            1112 B/op          5 allocs/op
 BenchmarkTripleDESDecryptWithCTR-12        56103             21694 ns/op            1112 B/op          5 allocs/op
 
-BenchmarkMD5-12          7764662               154.4 ns/op           112 B/op          2 allocs/op
-BenchmarkSHA1-12         6569348               183.8 ns/op           136 B/op          2 allocs/op
-BenchmarkSHA224-12       4909758               244.2 ns/op           160 B/op          2 allocs/op
-BenchmarkSHA256-12       4922395               244.9 ns/op           160 B/op          2 allocs/op
-BenchmarkSHA384-12       3663837               321.4 ns/op           272 B/op          2 allocs/op
-BenchmarkSHA512-12       3637156               328.8 ns/op           288 B/op          2 allocs/op
-BenchmarkHMAC-12         1236666               981.8 ns/op           512 B/op          6 allocs/op
+BenchmarkMD5-12                  7447408               156.3 ns/op           112 B/op          2 allocs/op
+BenchmarkSHA1-12                 6629499               184.2 ns/op           136 B/op          2 allocs/op
+BenchmarkSHA224-12               4768708               249.6 ns/op           160 B/op          2 allocs/op
+BenchmarkSHA256-12               4755806               256.2 ns/op           160 B/op          2 allocs/op
+BenchmarkSHA384-12               3717706               329.8 ns/op           272 B/op          2 allocs/op
+BenchmarkSHA512-12               3679125               325.5 ns/op           288 B/op          2 allocs/op
+BenchmarkHMAC-12                 1215033               988.4 ns/op           512 B/op          6 allocs/op
+BenchmarkCRC32IEEE-12           17037747                70.4 ns/op            24 B/op          2 allocs/op
+BenchmarkCRC64ISO-12            26904604                44.8 ns/op             8 B/op          1 allocs/op
+BenchmarkCRC64ECMA-12           26632101                44.4 ns/op             8 B/op          1 allocs/op
+BenchmarkFnv32-12               41738200                28.2 ns/op             8 B/op          1 allocs/op
+BenchmarkFnv32a-12              42062208                29.0 ns/op             8 B/op          1 allocs/op
+BenchmarkFnv64-12               39065052                29.9 ns/op             8 B/op          1 allocs/op
+BenchmarkFnv64a-12              39740802                29.9 ns/op             8 B/op          1 allocs/op
+BenchmarkFnv128-12              23474830                50.2 ns/op            16 B/op          1 allocs/op
+BenchmarkFnv128a-12             24201123                50.3 ns/op            16 B/op          1 allocs/op
 ```
 
 ### 🎨 贡献者

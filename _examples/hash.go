@@ -46,4 +46,47 @@ func main() {
 	hmac := hash.HMAC(cryptox.SHA256, []byte(key), data)
 	fmt.Printf("hmac with key %s hex: %s\n", key, hmac.Hex())
 	fmt.Printf("hmac with key %s base64: %s\n", key, hmac.Base64())
+
+	crc, crc32 := hash.CRC32IEEE(data)
+	fmt.Printf("crc32 with ieee: %d\n", crc32)
+	fmt.Printf("crc32 with ieee hex: %s\n", crc.Hex())
+	fmt.Printf("crc32 with ieee base64: %s\n", crc.Base64())
+
+	crc, crc64 := hash.CRC64ISO(data)
+	fmt.Printf("crc64 with iso: %d\n", crc64)
+	fmt.Printf("crc64 with iso hex: %s\n", crc.Hex())
+	fmt.Printf("crc64 with iso base64: %s\n", crc.Base64())
+
+	crc, crc64 = hash.CRC64ECMA(data)
+	fmt.Printf("crc64 with ecma: %d\n", crc64)
+	fmt.Printf("crc64 with ecma hex: %s\n", crc.Hex())
+	fmt.Printf("crc64 with ecma base64: %s\n", crc.Base64())
+
+	fnv, fnv32 := hash.Fnv32(data)
+	fmt.Printf("fnv-1/32: %d\n", fnv32)
+	fmt.Printf("fnv-1/32 hex: %s\n", fnv.Hex())
+	fmt.Printf("fnv-1/32 base64: %s\n", fnv.Base64())
+
+	fnv, fnv32 = hash.Fnv32a(data)
+	fmt.Printf("fnv-1/32a: %d\n", fnv32)
+	fmt.Printf("fnv-1/32a hex: %s\n", fnv.Hex())
+	fmt.Printf("fnv-1/32a base64: %s\n", fnv.Base64())
+
+	fnv, fnv64 := hash.Fnv64(data)
+	fmt.Printf("fnv-1/64: %d\n", fnv64)
+	fmt.Printf("fnv-1/64 hex: %s\n", fnv.Hex())
+	fmt.Printf("fnv-1/64 base64: %s\n", fnv.Base64())
+
+	fnv, fnv64 = hash.Fnv64a(data)
+	fmt.Printf("fnv-1/64a: %d\n", fnv64)
+	fmt.Printf("fnv-1/64a hex: %s\n", fnv.Hex())
+	fmt.Printf("fnv-1/64a base64: %s\n", fnv.Base64())
+
+	fnv = hash.Fnv128(data)
+	fmt.Printf("fnv-1/128 hex: %s\n", fnv.Hex())
+	fmt.Printf("fnv-1/128 base64: %s\n", fnv.Base64())
+
+	fnv = hash.Fnv128a(data)
+	fmt.Printf("fnv-1/128a hex: %s\n", fnv.Hex())
+	fmt.Printf("fnv-1/128a base64: %s\n", fnv.Base64())
 }
