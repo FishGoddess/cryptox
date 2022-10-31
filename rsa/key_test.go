@@ -22,6 +22,56 @@ func TestGenerateKey(t *testing.T) {
 	t.Log("Private Key:", key.Private)
 }
 
+// go test -v -cover -run=^TestGeneratePrivateKey$
+func TestGeneratePrivateKey(t *testing.T) {
+	key, keyBytes, err := GeneratePrivateKey(2048)
+	if err != nil {
+		t.Error(err)
+	}
+
+	t.Log("Private Key:", key)
+	t.Log("Private Key Bytes:", keyBytes)
+}
+
+// go test -v -cover -run=^TestGeneratePublicKey$
+func TestGeneratePublicKey(t *testing.T) {
+	privateKey, privateKeyBytes, err := GeneratePrivateKey(2048)
+	if err != nil {
+		t.Error(err)
+	}
+
+	_, publicKeyBytes1, err := GeneratePublicKey(privateKey)
+	if err != nil {
+		t.Error(err)
+	}
+
+	_, publicKeyBytes2, err := GeneratePublicKeyFromPem(privateKeyBytes)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !bytes.Equal(publicKeyBytes1, publicKeyBytes2) {
+		t.Errorf("publicKeyBytes1 %+v != publicKeyBytes2 %+v", publicKeyBytes1, publicKeyBytes2)
+	}
+}
+
+// go test -v -cover -run=^TestGeneratePublicKeyFromPem$
+func TestGeneratePublicKeyFromPem(t *testing.T) {
+	key, err := GenerateKey(2048)
+	if err != nil {
+		t.Error(err)
+	}
+
+	_, publicKeyBytes, err := GeneratePublicKeyFromPem(key.Private)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !bytes.Equal(key.Public, publicKeyBytes) {
+		t.Errorf("key.Public %+v != publicKeyBytes %+v", key.Public, publicKeyBytes)
+	}
+}
+
 // go test -v -cover -run=^TestKeyWriteTo$
 func TestKeyWriteTo(t *testing.T) {
 	key, err := GenerateKey(2048)
@@ -29,22 +79,22 @@ func TestKeyWriteTo(t *testing.T) {
 		t.Error(err)
 	}
 
-	var publicBuffer, privateBuffer bytes.Buffer
-	n, err := key.WriteTo(&publicBuffer, &privateBuffer)
+	var privateBuffer, publicBuffer bytes.Buffer
+	n, err := key.WriteTo(&privateBuffer, &publicBuffer)
 	if err != nil {
 		t.Error(err)
 	}
 
-	if n != len(key.Public)+len(key.Private) {
-		t.Errorf("n %d != len(key.Public) %d + len(key.Private) %d", n, len(key.Public), len(key.Private))
-	}
-
-	if !bytes.Equal(key.Public, publicBuffer.Bytes()) {
-		t.Errorf("key.Public %+v != publicBuffer.Bytes() %+v", key.Public, publicBuffer.Bytes())
+	if n != len(key.Private)+len(key.Public) {
+		t.Errorf("n %d != len(key.Private) %d + len(key.Public) %d", n, len(key.Private), len(key.Public))
 	}
 
 	if !bytes.Equal(key.Private, privateBuffer.Bytes()) {
 		t.Errorf("key.Private %+v != privateBuffer.Bytes() %+v", key.Private, privateBuffer.Bytes())
+	}
+
+	if !bytes.Equal(key.Public, publicBuffer.Bytes()) {
+		t.Errorf("key.Public %+v != publicBuffer.Bytes() %+v", key.Public, publicBuffer.Bytes())
 	}
 }
 
@@ -55,23 +105,18 @@ func TestKeyWriteToFile(t *testing.T) {
 		t.Error(err)
 	}
 
-	publicPath := filepath.Join(t.TempDir(), "public.pem")
-	privatePath := filepath.Join(t.TempDir(), "private.pem")
-	t.Log("public path:", publicPath)
+	privatePath := filepath.Join(t.TempDir(), t.Name()+".pem")
+	publicPath := filepath.Join(t.TempDir(), t.Name()+".pub")
 	t.Log("private path:", privatePath)
+	t.Log("public path:", publicPath)
 
-	n, err := key.WriteToFile(publicPath, privatePath)
+	n, err := key.WriteToFile(privatePath, publicPath)
 	if err != nil {
 		t.Error(err)
 	}
 
-	if n != len(key.Public)+len(key.Private) {
-		t.Errorf("n %d != len(key.Public) %d + len(key.Private) %d", n, len(key.Public), len(key.Private))
-	}
-
-	publicBytes, err := ioutil.ReadFile(publicPath)
-	if err != nil {
-		t.Error(err)
+	if n != len(key.Private)+len(key.Public) {
+		t.Errorf("n %d != len(key.Private) %d + len(key.Public) %d", n, len(key.Private), len(key.Public))
 	}
 
 	privateBytes, err := ioutil.ReadFile(privatePath)
@@ -79,11 +124,16 @@ func TestKeyWriteToFile(t *testing.T) {
 		t.Error(err)
 	}
 
-	if !bytes.Equal(key.Public, publicBytes) {
-		t.Errorf("key.Public %+v != publicBytes %+v", key.Public, publicBytes)
+	publicBytes, err := ioutil.ReadFile(publicPath)
+	if err != nil {
+		t.Error(err)
 	}
 
 	if !bytes.Equal(key.Private, privateBytes) {
 		t.Errorf("key.Private %+v != privateBytes %+v", key.Private, privateBytes)
+	}
+
+	if !bytes.Equal(key.Public, publicBytes) {
+		t.Errorf("key.Public %+v != publicBytes %+v", key.Public, publicBytes)
 	}
 }
