@@ -6,13 +6,107 @@ package rsa
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"path/filepath"
 	"testing"
 )
 
-// go test -v -cover -run=^TestGenerateKey$
-func TestGenerateKey(t *testing.T) {
+// go test -v -cover -run=^TestWithPrivateKeyEncoder$
+func TestWithPrivateKeyEncoder(t *testing.T) {
+	generator := &KeyGenerator{privateKeyEncoder: nil}
+
+	opt := WithPrivateKeyEncoder(PKCS1PrivateKeyEncoder)
+	opt.ApplyTo(generator)
+
+	encoderPointer := fmt.Sprintf("%p", generator.privateKeyEncoder)
+	expectPointer := fmt.Sprintf("%p", PKCS1PrivateKeyEncoder)
+
+	if encoderPointer != expectPointer {
+		t.Errorf("encoderPointer %s != expectPointer %s", encoderPointer, expectPointer)
+	}
+}
+
+// go test -v -cover -run=^TestWithPrivateKeyDecoder$
+func TestWithPrivateKeyDecoder(t *testing.T) {
+	generator := &KeyGenerator{privateKeyDecoder: nil}
+
+	opt := WithPrivateKeyDecoder(PKCS1PrivateKeyDecoder)
+	opt.ApplyTo(generator)
+
+	decoderPointer := fmt.Sprintf("%p", generator.privateKeyDecoder)
+	expectPointer := fmt.Sprintf("%p", PKCS1PrivateKeyDecoder)
+
+	if decoderPointer != expectPointer {
+		t.Errorf("decoderPointer %s != expectPointer %s", decoderPointer, expectPointer)
+	}
+}
+
+// go test -v -cover -run=^TestWithPublicKeyEncoder$
+func TestWithPublicKeyEncoder(t *testing.T) {
+	generator := &KeyGenerator{publicKeyEncoder: nil}
+
+	opt := WithPublicKeyEncoder(PKIXPublicKeyEncoder)
+	opt.ApplyTo(generator)
+
+	encoderPointer := fmt.Sprintf("%p", generator.publicKeyEncoder)
+	expectPointer := fmt.Sprintf("%p", PKIXPublicKeyEncoder)
+
+	if encoderPointer != expectPointer {
+		t.Errorf("encoderPointer %s != expectPointer %s", encoderPointer, expectPointer)
+	}
+}
+
+// go test -v -cover -run=^TestWithPublicKeyDecoder$
+func TestWithPublicKeyDecoder(t *testing.T) {
+	generator := &KeyGenerator{publicKeyDecoder: nil}
+
+	opt := WithPublicKeyDecoder(PKIXPublicKeyDecoder)
+	opt.ApplyTo(generator)
+
+	decoderPointer := fmt.Sprintf("%p", generator.publicKeyDecoder)
+	expectPointer := fmt.Sprintf("%p", PKIXPublicKeyDecoder)
+
+	if decoderPointer != expectPointer {
+		t.Errorf("decoderPointer %s != expectPointer %s", decoderPointer, expectPointer)
+	}
+}
+
+// go test -v -cover -run=^TestNewKeyGenerator$
+func TestNewKeyGenerator(t *testing.T) {
+	generator := NewKeyGenerator()
+
+	coderPointer := fmt.Sprintf("%p", generator.privateKeyEncoder)
+	expectPointer := fmt.Sprintf("%p", PKCS1PrivateKeyEncoder)
+
+	if coderPointer != expectPointer {
+		t.Errorf("coderPointer %s != expectPointer %s", coderPointer, expectPointer)
+	}
+
+	coderPointer = fmt.Sprintf("%p", generator.privateKeyDecoder)
+	expectPointer = fmt.Sprintf("%p", PKCS1PrivateKeyDecoder)
+
+	if coderPointer != expectPointer {
+		t.Errorf("coderPointer %s != expectPointer %s", coderPointer, expectPointer)
+	}
+
+	coderPointer = fmt.Sprintf("%p", generator.publicKeyEncoder)
+	expectPointer = fmt.Sprintf("%p", PKIXPublicKeyEncoder)
+
+	if coderPointer != expectPointer {
+		t.Errorf("coderPointer %s != expectPointer %s", coderPointer, expectPointer)
+	}
+
+	coderPointer = fmt.Sprintf("%p", generator.publicKeyDecoder)
+	expectPointer = fmt.Sprintf("%p", PKIXPublicKeyDecoder)
+
+	if coderPointer != expectPointer {
+		t.Errorf("coderPointer %s != expectPointer %s", coderPointer, expectPointer)
+	}
+}
+
+// go test -v -cover -run=^TestKeyGeneratorGenerateKey$
+func TestKeyGeneratorGenerateKey(t *testing.T) {
 	generator := NewKeyGenerator()
 
 	key, err := generator.GenerateKey(2048)
@@ -24,8 +118,8 @@ func TestGenerateKey(t *testing.T) {
 	t.Log("Private Key:", key.Private)
 }
 
-// go test -v -cover -run=^TestGeneratePrivateKey$
-func TestGeneratePrivateKey(t *testing.T) {
+// go test -v -cover -run=^TestKeyGeneratorGeneratePrivateKey$
+func TestKeyGeneratorGeneratePrivateKey(t *testing.T) {
 	generator := NewKeyGenerator()
 
 	key, keyBytes, err := generator.GeneratePrivateKey(2048)
@@ -37,8 +131,8 @@ func TestGeneratePrivateKey(t *testing.T) {
 	t.Log("Private Key Bytes:", keyBytes)
 }
 
-// go test -v -cover -run=^TestGeneratePublicKey$
-func TestGeneratePublicKey(t *testing.T) {
+// go test -v -cover -run=^TestKeyGeneratorGeneratePublicKey$
+func TestKeyGeneratorGeneratePublicKey(t *testing.T) {
 	generator := NewKeyGenerator()
 
 	privateKey, privateKeyBytes, err := generator.GeneratePrivateKey(2048)
@@ -61,8 +155,8 @@ func TestGeneratePublicKey(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestGeneratePublicKeyFromPem$
-func TestGeneratePublicKeyFromPem(t *testing.T) {
+// go test -v -cover -run=^TestKeyGeneratorGeneratePublicKeyFromPem$
+func TestKeyGeneratorGeneratePublicKeyFromPem(t *testing.T) {
 	generator := NewKeyGenerator()
 
 	key, err := generator.GenerateKey(2048)
@@ -77,6 +171,49 @@ func TestGeneratePublicKeyFromPem(t *testing.T) {
 
 	if !bytes.Equal(key.Public, publicKeyBytes) {
 		t.Errorf("key.Public %+v != publicKeyBytes %+v", key.Public, publicKeyBytes)
+	}
+}
+
+// go test -v -cover -run=^TestKeyGeneratorParsePrivateKey$
+func TestKeyGeneratorParsePrivateKey(t *testing.T) {
+	generator := NewKeyGenerator()
+
+	privateKey, privateKeyBytes, err := generator.GeneratePrivateKey(2048)
+	if err != nil {
+		t.Error(err)
+	}
+
+	parsedPrivateKey, err := generator.ParsePrivateKey(privateKeyBytes)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !parsedPrivateKey.Equal(privateKey) {
+		t.Errorf("parsedPrivateKey %+v != privateKey %+v", parsedPrivateKey, privateKey)
+	}
+}
+
+// go test -v -cover -run=^TestKeyGeneratorParsePublicKey$
+func TestKeyGeneratorParsePublicKey(t *testing.T) {
+	generator := NewKeyGenerator()
+
+	privateKey, _, err := generator.GeneratePrivateKey(2048)
+	if err != nil {
+		t.Error(err)
+	}
+
+	publicKey, publicKeyBytes, err := generator.GeneratePublicKey(privateKey)
+	if err != nil {
+		t.Error(err)
+	}
+
+	parsedPublicKey, err := generator.ParsePublicKey(publicKeyBytes)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !parsedPublicKey.Equal(publicKey) {
+		t.Errorf("parsedPublicKey %+v != publicKey %+v", parsedPublicKey, publicKey)
 	}
 }
 
