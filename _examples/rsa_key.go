@@ -12,15 +12,13 @@ import (
 
 func main() {
 	// Use NewKeyGenerator to generate a key including private and public.
+	// Also, you can use options to choose your encoder and decoder.
+	//generator := rsa.NewKeyGenerator(
+	//	rsa.WithGeneratePrivateKeyEncoder(rsa.PKCS1PrivateKeyEncoder),
+	//	rsa.WithGeneratePublicKeyEncoder(rsa.PKIXPublicKeyEncoder),
+	//	rsa.WithGeneratePrivateKeyDecoder(rsa.PKCS1PrivateKeyDecoder),
+	//)
 	generator := rsa.NewKeyGenerator()
-
-	// Also, you can use an option to choose your encoder and decoder.
-	generator = rsa.NewKeyGenerator(
-		rsa.WithPrivateKeyEncoder(rsa.PKCS1PrivateKeyEncoder),
-		rsa.WithPrivateKeyDecoder(rsa.PKCS1PrivateKeyDecoder),
-		rsa.WithPublicKeyEncoder(rsa.PKIXPublicKeyEncoder),
-		rsa.WithPublicKeyDecoder(rsa.PKIXPublicKeyDecoder),
-	)
 
 	// Generate a 2048 bits key.
 	key, err := generator.GenerateKey(2048)

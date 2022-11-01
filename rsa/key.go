@@ -8,6 +8,7 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"io"
+	"io/ioutil"
 	"os"
 
 	"github.com/FishGoddess/cryptox"
@@ -66,59 +67,21 @@ func (k Key) WriteToFile(privatePath string, publicPath string) (n int, err erro
 	return k.WriteTo(privateFile, publicFile)
 }
 
-// Option is a function for setting key generator.
-type Option func(generator *KeyGenerator)
-
-// ApplyTo applies option to generator.
-func (o Option) ApplyTo(generator *KeyGenerator) {
-	o(generator)
-}
-
-// WithPrivateKeyEncoder sets private key encoder to generator.
-func WithPrivateKeyEncoder(encoder PrivateKeyEncoder) Option {
-	return func(generator *KeyGenerator) {
-		generator.privateKeyEncoder = encoder
-	}
-}
-
-// WithPrivateKeyDecoder sets private key decoder to generator.
-func WithPrivateKeyDecoder(decoder PrivateKeyDecoder) Option {
-	return func(generator *KeyGenerator) {
-		generator.privateKeyDecoder = decoder
-	}
-}
-
-// WithPublicKeyEncoder sets public key encoder to generator.
-func WithPublicKeyEncoder(encoder PublicKeyEncoder) Option {
-	return func(generator *KeyGenerator) {
-		generator.publicKeyEncoder = encoder
-	}
-}
-
-// WithPublicKeyDecoder sets public key decoder to generator.
-func WithPublicKeyDecoder(decoder PublicKeyDecoder) Option {
-	return func(generator *KeyGenerator) {
-		generator.publicKeyDecoder = decoder
-	}
-}
-
 // KeyGenerator is a generator for generating rsa key including private and public.
 type KeyGenerator struct {
 	privateKeyEncoder PrivateKeyEncoder
-	privateKeyDecoder PrivateKeyDecoder
 	publicKeyEncoder  PublicKeyEncoder
-	publicKeyDecoder  PublicKeyDecoder
+	privateKeyDecoder PrivateKeyDecoder
 }
 
 // NewKeyGenerator returns a key generator with given options.
 // By default, it uses pkcs1 to encode/decode private key and pkix to encode/decode public key.
-// You can specify your encoder or decode.
-func NewKeyGenerator(opts ...Option) *KeyGenerator {
+// You can specify your encoder or decoder.
+func NewKeyGenerator(opts ...GeneratorOption) *KeyGenerator {
 	generator := &KeyGenerator{
 		privateKeyEncoder: PKCS1PrivateKeyEncoder,
-		privateKeyDecoder: PKCS1PrivateKeyDecoder,
 		publicKeyEncoder:  PKIXPublicKeyEncoder,
-		publicKeyDecoder:  PKIXPublicKeyDecoder,
+		privateKeyDecoder: PKCS1PrivateKeyDecoder,
 	}
 
 	for _, opt := range opts {
@@ -175,7 +138,7 @@ func (kg *KeyGenerator) GeneratePublicKey(privateKey *rsa.PrivateKey) (*rsa.Publ
 // GeneratePublicKeyFromPem generates a public key from private key pem.
 // It returns an original key struct (*rsa.PublicKey) and a completing key bytes (cryptox.Bytes).
 func (kg *KeyGenerator) GeneratePublicKeyFromPem(privateKeyPem cryptox.Bytes) (*rsa.PublicKey, cryptox.Bytes, error) {
-	privateKey, err := kg.ParsePrivateKey(privateKeyPem)
+	privateKey, err := kg.privateKeyDecoder.Decode(privateKeyPem)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -183,12 +146,74 @@ func (kg *KeyGenerator) GeneratePublicKeyFromPem(privateKeyPem cryptox.Bytes) (*
 	return kg.GeneratePublicKey(privateKey)
 }
 
+// KeyLoader is a loader for loading rsa key including private and public.
+type KeyLoader struct {
+	privateKeyDecoder PrivateKeyDecoder
+	publicKeyDecoder  PublicKeyDecoder
+}
+
+// NewKeyLoader returns a key loader with given options.
+// By default, it uses pkcs1 to decode private key and pkix to decode public key.
+// You can specify your decoder.
+func NewKeyLoader(opts ...LoaderOption) *KeyLoader {
+	loader := &KeyLoader{
+		privateKeyDecoder: PKCS1PrivateKeyDecoder,
+		publicKeyDecoder:  PKIXPublicKeyDecoder,
+	}
+
+	for _, opt := range opts {
+		opt.ApplyTo(loader)
+	}
+
+	return loader
+}
+
 // ParsePrivateKey parses private key from pem.
-func (kg *KeyGenerator) ParsePrivateKey(keyPem cryptox.Bytes) (*rsa.PrivateKey, error) {
-	return kg.privateKeyDecoder.Decode(keyPem)
+func (kl *KeyLoader) ParsePrivateKey(keyPem cryptox.Bytes) (*rsa.PrivateKey, error) {
+	return kl.privateKeyDecoder.Decode(keyPem)
 }
 
 // ParsePublicKey parses public key from pem.
-func (kg *KeyGenerator) ParsePublicKey(keyPem cryptox.Bytes) (*rsa.PublicKey, error) {
-	return kg.publicKeyDecoder.Decode(keyPem)
+func (kl *KeyLoader) ParsePublicKey(keyPem cryptox.Bytes) (*rsa.PublicKey, error) {
+	return kl.publicKeyDecoder.Decode(keyPem)
+}
+
+// LoadPrivateKey loads private key from a reader.
+func (kl *KeyLoader) LoadPrivateKey(keyReader io.Reader) (*rsa.PrivateKey, error) {
+	keyPem, err := ioutil.ReadAll(keyReader)
+	if err != nil {
+		return nil, err
+	}
+
+	return kl.ParsePrivateKey(keyPem)
+}
+
+// LoadPublicKey loads public key from a reader.
+func (kl *KeyLoader) LoadPublicKey(keyReader io.Reader) (*rsa.PublicKey, error) {
+	keyPem, err := ioutil.ReadAll(keyReader)
+	if err != nil {
+		return nil, err
+	}
+
+	return kl.ParsePublicKey(keyPem)
+}
+
+// LoadPrivateKeyFromFile loads private key from a file.
+func (kl *KeyLoader) LoadPrivateKeyFromFile(keyFile string) (*rsa.PrivateKey, error) {
+	keyPem, err := ioutil.ReadFile(keyFile)
+	if err != nil {
+		return nil, err
+	}
+
+	return kl.ParsePrivateKey(keyPem)
+}
+
+// LoadPublicKeyFromFile loads public key from a file.
+func (kl *KeyLoader) LoadPublicKeyFromFile(keyFile string) (*rsa.PublicKey, error) {
+	keyPem, err := ioutil.ReadFile(keyFile)
+	if err != nil {
+		return nil, err
+	}
+
+	return kl.ParsePublicKey(keyPem)
 }

@@ -12,63 +12,69 @@ import (
 	"testing"
 )
 
-// go test -v -cover -run=^TestWithPrivateKeyEncoder$
-func TestWithPrivateKeyEncoder(t *testing.T) {
-	generator := &KeyGenerator{privateKeyEncoder: nil}
+// go test -v -cover -run=^TestKeyWriteTo$
+func TestKeyWriteTo(t *testing.T) {
+	key := Key{
+		Private: []byte("private"),
+		Public:  []byte("public"),
+	}
 
-	opt := WithPrivateKeyEncoder(PKCS1PrivateKeyEncoder)
-	opt.ApplyTo(generator)
+	var privateBuffer, publicBuffer bytes.Buffer
+	n, err := key.WriteTo(&privateBuffer, &publicBuffer)
+	if err != nil {
+		t.Error(err)
+	}
 
-	encoderPointer := fmt.Sprintf("%p", generator.privateKeyEncoder)
-	expectPointer := fmt.Sprintf("%p", PKCS1PrivateKeyEncoder)
+	if n != len(key.Private)+len(key.Public) {
+		t.Errorf("n %d != len(key.Private) %d + len(key.Public) %d", n, len(key.Private), len(key.Public))
+	}
 
-	if encoderPointer != expectPointer {
-		t.Errorf("encoderPointer %s != expectPointer %s", encoderPointer, expectPointer)
+	if !bytes.Equal(key.Private, privateBuffer.Bytes()) {
+		t.Errorf("key.Private %+v != privateBuffer.Bytes() %+v", key.Private, privateBuffer.Bytes())
+	}
+
+	if !bytes.Equal(key.Public, publicBuffer.Bytes()) {
+		t.Errorf("key.Public %+v != publicBuffer.Bytes() %+v", key.Public, publicBuffer.Bytes())
 	}
 }
 
-// go test -v -cover -run=^TestWithPrivateKeyDecoder$
-func TestWithPrivateKeyDecoder(t *testing.T) {
-	generator := &KeyGenerator{privateKeyDecoder: nil}
-
-	opt := WithPrivateKeyDecoder(PKCS1PrivateKeyDecoder)
-	opt.ApplyTo(generator)
-
-	decoderPointer := fmt.Sprintf("%p", generator.privateKeyDecoder)
-	expectPointer := fmt.Sprintf("%p", PKCS1PrivateKeyDecoder)
-
-	if decoderPointer != expectPointer {
-		t.Errorf("decoderPointer %s != expectPointer %s", decoderPointer, expectPointer)
+// go test -v -cover -run=^TestKeyWriteToFile$
+func TestKeyWriteToFile(t *testing.T) {
+	key := Key{
+		Private: []byte("private"),
+		Public:  []byte("public"),
 	}
-}
 
-// go test -v -cover -run=^TestWithPublicKeyEncoder$
-func TestWithPublicKeyEncoder(t *testing.T) {
-	generator := &KeyGenerator{publicKeyEncoder: nil}
+	privatePath := filepath.Join(t.TempDir(), t.Name()+".key")
+	publicPath := filepath.Join(t.TempDir(), t.Name()+".pub")
+	t.Log("private path:", privatePath)
+	t.Log("public path:", publicPath)
 
-	opt := WithPublicKeyEncoder(PKIXPublicKeyEncoder)
-	opt.ApplyTo(generator)
-
-	encoderPointer := fmt.Sprintf("%p", generator.publicKeyEncoder)
-	expectPointer := fmt.Sprintf("%p", PKIXPublicKeyEncoder)
-
-	if encoderPointer != expectPointer {
-		t.Errorf("encoderPointer %s != expectPointer %s", encoderPointer, expectPointer)
+	n, err := key.WriteToFile(privatePath, publicPath)
+	if err != nil {
+		t.Error(err)
 	}
-}
 
-// go test -v -cover -run=^TestWithPublicKeyDecoder$
-func TestWithPublicKeyDecoder(t *testing.T) {
-	generator := &KeyGenerator{publicKeyDecoder: nil}
+	if n != len(key.Private)+len(key.Public) {
+		t.Errorf("n %d != len(key.Private) %d + len(key.Public) %d", n, len(key.Private), len(key.Public))
+	}
 
-	opt := WithPublicKeyDecoder(PKIXPublicKeyDecoder)
-	opt.ApplyTo(generator)
+	privateBytes, err := ioutil.ReadFile(privatePath)
+	if err != nil {
+		t.Error(err)
+	}
 
-	decoderPointer := fmt.Sprintf("%p", generator.publicKeyDecoder)
-	expectPointer := fmt.Sprintf("%p", PKIXPublicKeyDecoder)
+	publicBytes, err := ioutil.ReadFile(publicPath)
+	if err != nil {
+		t.Error(err)
+	}
 
-	if decoderPointer != expectPointer {
-		t.Errorf("decoderPointer %s != expectPointer %s", decoderPointer, expectPointer)
+	if !bytes.Equal(key.Private, privateBytes) {
+		t.Errorf("key.Private %+v != privateBytes %+v", key.Private, privateBytes)
+	}
+
+	if !bytes.Equal(key.Public, publicBytes) {
+		t.Errorf("key.Public %+v != publicBytes %+v", key.Public, publicBytes)
 	}
 }
 
@@ -83,13 +89,6 @@ func TestNewKeyGenerator(t *testing.T) {
 		t.Errorf("coderPointer %s != expectPointer %s", coderPointer, expectPointer)
 	}
 
-	coderPointer = fmt.Sprintf("%p", generator.privateKeyDecoder)
-	expectPointer = fmt.Sprintf("%p", PKCS1PrivateKeyDecoder)
-
-	if coderPointer != expectPointer {
-		t.Errorf("coderPointer %s != expectPointer %s", coderPointer, expectPointer)
-	}
-
 	coderPointer = fmt.Sprintf("%p", generator.publicKeyEncoder)
 	expectPointer = fmt.Sprintf("%p", PKIXPublicKeyEncoder)
 
@@ -97,8 +96,8 @@ func TestNewKeyGenerator(t *testing.T) {
 		t.Errorf("coderPointer %s != expectPointer %s", coderPointer, expectPointer)
 	}
 
-	coderPointer = fmt.Sprintf("%p", generator.publicKeyDecoder)
-	expectPointer = fmt.Sprintf("%p", PKIXPublicKeyDecoder)
+	coderPointer = fmt.Sprintf("%p", generator.privateKeyDecoder)
+	expectPointer = fmt.Sprintf("%p", PKCS1PrivateKeyDecoder)
 
 	if coderPointer != expectPointer {
 		t.Errorf("coderPointer %s != expectPointer %s", coderPointer, expectPointer)
@@ -174,16 +173,36 @@ func TestKeyGeneratorGeneratePublicKeyFromPem(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestKeyGeneratorParsePrivateKey$
-func TestKeyGeneratorParsePrivateKey(t *testing.T) {
+// go test -v -cover -run=^TestNewKeyLoader$
+func TestNewKeyLoader(t *testing.T) {
+	loader := NewKeyLoader()
+
+	coderPointer := fmt.Sprintf("%p", loader.privateKeyDecoder)
+	expectPointer := fmt.Sprintf("%p", PKCS1PrivateKeyDecoder)
+
+	if coderPointer != expectPointer {
+		t.Errorf("coderPointer %s != expectPointer %s", coderPointer, expectPointer)
+	}
+
+	coderPointer = fmt.Sprintf("%p", loader.publicKeyDecoder)
+	expectPointer = fmt.Sprintf("%p", PKIXPublicKeyDecoder)
+
+	if coderPointer != expectPointer {
+		t.Errorf("coderPointer %s != expectPointer %s", coderPointer, expectPointer)
+	}
+}
+
+// go test -v -cover -run=^TestKeyLoaderParsePrivateKey$
+func TestKeyLoaderParsePrivateKey(t *testing.T) {
 	generator := NewKeyGenerator()
+	loader := NewKeyLoader()
 
 	privateKey, privateKeyBytes, err := generator.GeneratePrivateKey(2048)
 	if err != nil {
 		t.Error(err)
 	}
 
-	parsedPrivateKey, err := generator.ParsePrivateKey(privateKeyBytes)
+	parsedPrivateKey, err := loader.ParsePrivateKey(privateKeyBytes)
 	if err != nil {
 		t.Error(err)
 	}
@@ -193,9 +212,10 @@ func TestKeyGeneratorParsePrivateKey(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestKeyGeneratorParsePublicKey$
-func TestKeyGeneratorParsePublicKey(t *testing.T) {
+// go test -v -cover -run=^TestKeyLoaderParsePublicKey$
+func TestKeyLoaderParsePublicKey(t *testing.T) {
 	generator := NewKeyGenerator()
+	loader := NewKeyLoader()
 
 	privateKey, _, err := generator.GeneratePrivateKey(2048)
 	if err != nil {
@@ -207,7 +227,7 @@ func TestKeyGeneratorParsePublicKey(t *testing.T) {
 		t.Error(err)
 	}
 
-	parsedPublicKey, err := generator.ParsePublicKey(publicKeyBytes)
+	parsedPublicKey, err := loader.ParsePublicKey(publicKeyBytes)
 	if err != nil {
 		t.Error(err)
 	}
@@ -217,72 +237,4 @@ func TestKeyGeneratorParsePublicKey(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestKeyWriteTo$
-func TestKeyWriteTo(t *testing.T) {
-	generator := NewKeyGenerator()
-
-	key, err := generator.GenerateKey(2048)
-	if err != nil {
-		t.Error(err)
-	}
-
-	var privateBuffer, publicBuffer bytes.Buffer
-	n, err := key.WriteTo(&privateBuffer, &publicBuffer)
-	if err != nil {
-		t.Error(err)
-	}
-
-	if n != len(key.Private)+len(key.Public) {
-		t.Errorf("n %d != len(key.Private) %d + len(key.Public) %d", n, len(key.Private), len(key.Public))
-	}
-
-	if !bytes.Equal(key.Private, privateBuffer.Bytes()) {
-		t.Errorf("key.Private %+v != privateBuffer.Bytes() %+v", key.Private, privateBuffer.Bytes())
-	}
-
-	if !bytes.Equal(key.Public, publicBuffer.Bytes()) {
-		t.Errorf("key.Public %+v != publicBuffer.Bytes() %+v", key.Public, publicBuffer.Bytes())
-	}
-}
-
-// go test -v -cover -run=^TestKeyWriteToFile$
-func TestKeyWriteToFile(t *testing.T) {
-	generator := NewKeyGenerator()
-
-	key, err := generator.GenerateKey(2048)
-	if err != nil {
-		t.Error(err)
-	}
-
-	privatePath := filepath.Join(t.TempDir(), t.Name()+".pem")
-	publicPath := filepath.Join(t.TempDir(), t.Name()+".pub")
-	t.Log("private path:", privatePath)
-	t.Log("public path:", publicPath)
-
-	n, err := key.WriteToFile(privatePath, publicPath)
-	if err != nil {
-		t.Error(err)
-	}
-
-	if n != len(key.Private)+len(key.Public) {
-		t.Errorf("n %d != len(key.Private) %d + len(key.Public) %d", n, len(key.Private), len(key.Public))
-	}
-
-	privateBytes, err := ioutil.ReadFile(privatePath)
-	if err != nil {
-		t.Error(err)
-	}
-
-	publicBytes, err := ioutil.ReadFile(publicPath)
-	if err != nil {
-		t.Error(err)
-	}
-
-	if !bytes.Equal(key.Private, privateBytes) {
-		t.Errorf("key.Private %+v != privateBytes %+v", key.Private, privateBytes)
-	}
-
-	if !bytes.Equal(key.Public, publicBytes) {
-		t.Errorf("key.Public %+v != publicBytes %+v", key.Public, publicBytes)
-	}
-}
+// TODO 测试 loader 的几个 load 方法
