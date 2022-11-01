@@ -23,34 +23,47 @@ const (
 var (
 	_ PrivateKeyEncoder = PKCS1PrivateKeyEncoder
 	_ PrivateKeyDecoder = PKCS1PrivateKeyDecoder
+	_ PrivateKeyEncoder = PKCS8PrivateKeyEncoder
+	_ PrivateKeyDecoder = PKCS8PrivateKeyDecoder
 	_ PublicKeyEncoder  = PKIXPublicKeyEncoder
 	_ PublicKeyDecoder  = PKIXPublicKeyDecoder
+	_ PublicKeyEncoder  = PKCS1PublicKeyEncoder
+	_ PublicKeyDecoder  = PKCS1PublicKeyDecoder
 )
 
+// PrivateKeyEncoder encodes private key to pem bytes.
 type PrivateKeyEncoder func(key *rsa.PrivateKey) (cryptox.Bytes, error)
 
+// Encode encodes private key to pem bytes.
 func (pke PrivateKeyEncoder) Encode(key *rsa.PrivateKey) (cryptox.Bytes, error) {
 	return pke(key)
 }
 
+// PrivateKeyDecoder decodes private key from pem bytes.
 type PrivateKeyDecoder func(keyPem cryptox.Bytes) (*rsa.PrivateKey, error)
 
+// Decode decodes private key from pem bytes.
 func (pke PrivateKeyDecoder) Decode(keyPem cryptox.Bytes) (*rsa.PrivateKey, error) {
 	return pke(keyPem)
 }
 
+// PublicKeyEncoder encodes public key to pem bytes.
 type PublicKeyEncoder func(key *rsa.PublicKey) (cryptox.Bytes, error)
 
+// Encode encodes public key to pem bytes.
 func (pke PublicKeyEncoder) Encode(key *rsa.PublicKey) (cryptox.Bytes, error) {
 	return pke(key)
 }
 
+// PublicKeyDecoder decodes public key from pem bytes.
 type PublicKeyDecoder func(keyPem cryptox.Bytes) (*rsa.PublicKey, error)
 
+// Decode decodes public key from pem bytes.
 func (pke PublicKeyDecoder) Decode(keyPem cryptox.Bytes) (*rsa.PublicKey, error) {
 	return pke(keyPem)
 }
 
+// encode encodes block to pem bytes.
 func encode(blockType string, blockBytes cryptox.Bytes) (cryptox.Bytes, error) {
 	block := &pem.Block{
 		Type:  blockType,
@@ -65,6 +78,7 @@ func encode(blockType string, blockBytes cryptox.Bytes) (cryptox.Bytes, error) {
 	return keyPem.Bytes(), nil
 }
 
+// decode decodes block from pem bytes.
 func decode(blockType string, keyPem cryptox.Bytes) (*pem.Block, error) {
 	block, _ := pem.Decode(keyPem)
 	if block == nil {
@@ -88,6 +102,36 @@ func PKCS1PrivateKeyDecoder(privateKeyPem cryptox.Bytes) (*rsa.PrivateKey, error
 	}
 
 	return x509.ParsePKCS1PrivateKey(block.Bytes)
+}
+
+// PKCS8PrivateKeyEncoder encodes private key to bytes using pkcs8.
+func PKCS8PrivateKeyEncoder(key *rsa.PrivateKey) (cryptox.Bytes, error) {
+	privateKeyBytes, err := x509.MarshalPKCS8PrivateKey(key)
+	if err != nil {
+		return nil, err
+	}
+
+	return encode(blockTypePrivate, privateKeyBytes)
+}
+
+// PKCS8PrivateKeyDecoder decodes private key from data using pkcs1.
+func PKCS8PrivateKeyDecoder(privateKeyPem cryptox.Bytes) (*rsa.PrivateKey, error) {
+	block, err := decode(blockTypePrivate, privateKeyPem)
+	if err != nil {
+		return nil, err
+	}
+
+	key, err := x509.ParsePKCS8PrivateKey(block.Bytes)
+	if err != nil {
+		return nil, err
+	}
+
+	privateKey, ok := key.(*rsa.PrivateKey)
+	if !ok {
+		return nil, fmt.Errorf("cryptox.rsa: parsed key %T isn't a *rsa.PrivateKey", key)
+	}
+
+	return privateKey, nil
 }
 
 // PKIXPublicKeyEncoder encodes public key to bytes using pkix.
@@ -118,4 +162,20 @@ func PKIXPublicKeyDecoder(publicKeyPem cryptox.Bytes) (*rsa.PublicKey, error) {
 	}
 
 	return publicKey, nil
+}
+
+// PKCS1PublicKeyEncoder encodes public key to bytes using pkcs1.
+func PKCS1PublicKeyEncoder(key *rsa.PublicKey) (cryptox.Bytes, error) {
+	publicKeyBytes := x509.MarshalPKCS1PublicKey(key)
+	return encode(blockTypePublic, publicKeyBytes)
+}
+
+// PKCS1PublicKeyDecoder encodes public key to bytes using pkcs1.
+func PKCS1PublicKeyDecoder(publicKeyPem cryptox.Bytes) (*rsa.PublicKey, error) {
+	block, err := decode(blockTypePublic, publicKeyPem)
+	if err != nil {
+		return nil, err
+	}
+
+	return x509.ParsePKCS1PublicKey(block.Bytes)
 }
