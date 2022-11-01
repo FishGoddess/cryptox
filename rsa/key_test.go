@@ -13,7 +13,9 @@ import (
 
 // go test -v -cover -run=^TestGenerateKey$
 func TestGenerateKey(t *testing.T) {
-	key, err := GenerateKey(2048)
+	generator := NewKeyGenerator()
+
+	key, err := generator.GenerateKey(2048)
 	if err != nil {
 		t.Error(err)
 	}
@@ -24,7 +26,9 @@ func TestGenerateKey(t *testing.T) {
 
 // go test -v -cover -run=^TestGeneratePrivateKey$
 func TestGeneratePrivateKey(t *testing.T) {
-	key, keyBytes, err := GeneratePrivateKey(2048)
+	generator := NewKeyGenerator()
+
+	key, keyBytes, err := generator.GeneratePrivateKey(2048)
 	if err != nil {
 		t.Error(err)
 	}
@@ -35,17 +39,19 @@ func TestGeneratePrivateKey(t *testing.T) {
 
 // go test -v -cover -run=^TestGeneratePublicKey$
 func TestGeneratePublicKey(t *testing.T) {
-	privateKey, privateKeyBytes, err := GeneratePrivateKey(2048)
+	generator := NewKeyGenerator()
+
+	privateKey, privateKeyBytes, err := generator.GeneratePrivateKey(2048)
 	if err != nil {
 		t.Error(err)
 	}
 
-	_, publicKeyBytes1, err := GeneratePublicKey(privateKey)
+	_, publicKeyBytes1, err := generator.GeneratePublicKey(privateKey)
 	if err != nil {
 		t.Error(err)
 	}
 
-	_, publicKeyBytes2, err := GeneratePublicKeyFromPem(privateKeyBytes)
+	_, publicKeyBytes2, err := generator.GeneratePublicKeyFromPem(privateKeyBytes)
 	if err != nil {
 		t.Error(err)
 	}
@@ -57,12 +63,14 @@ func TestGeneratePublicKey(t *testing.T) {
 
 // go test -v -cover -run=^TestGeneratePublicKeyFromPem$
 func TestGeneratePublicKeyFromPem(t *testing.T) {
-	key, err := GenerateKey(2048)
+	generator := NewKeyGenerator()
+
+	key, err := generator.GenerateKey(2048)
 	if err != nil {
 		t.Error(err)
 	}
 
-	_, publicKeyBytes, err := GeneratePublicKeyFromPem(key.Private)
+	_, publicKeyBytes, err := generator.GeneratePublicKeyFromPem(key.Private)
 	if err != nil {
 		t.Error(err)
 	}
@@ -74,7 +82,9 @@ func TestGeneratePublicKeyFromPem(t *testing.T) {
 
 // go test -v -cover -run=^TestKeyWriteTo$
 func TestKeyWriteTo(t *testing.T) {
-	key, err := GenerateKey(2048)
+	generator := NewKeyGenerator()
+
+	key, err := generator.GenerateKey(2048)
 	if err != nil {
 		t.Error(err)
 	}
@@ -100,7 +110,9 @@ func TestKeyWriteTo(t *testing.T) {
 
 // go test -v -cover -run=^TestKeyWriteToFile$
 func TestKeyWriteToFile(t *testing.T) {
-	key, err := GenerateKey(2048)
+	generator := NewKeyGenerator()
+
+	key, err := generator.GenerateKey(2048)
 	if err != nil {
 		t.Error(err)
 	}
