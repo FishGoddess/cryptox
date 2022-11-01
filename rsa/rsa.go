@@ -13,18 +13,16 @@ import (
 	"github.com/FishGoddess/cryptox"
 )
 
-type OAEP struct {
+type RSA struct {
 	privateKey *rsa.PrivateKey
 	publicKey  *rsa.PublicKey
-	hash       hash.Hash
 	random     io.Reader
 }
 
-func NewOAEP(privateKey *rsa.PrivateKey, publicKey *rsa.PublicKey, opts ...OAEPOption) *OAEP {
-	oaep := &OAEP{
+func New(privateKey *rsa.PrivateKey, publicKey *rsa.PublicKey, opts ...Option) *RSA {
+	oaep := &RSA{
 		privateKey: privateKey,
 		publicKey:  publicKey,
-		hash:       cryptox.SHA256(),
 		random:     rand.Reader,
 	}
 
@@ -35,10 +33,10 @@ func NewOAEP(privateKey *rsa.PrivateKey, publicKey *rsa.PublicKey, opts ...OAEPO
 	return oaep
 }
 
-func (o *OAEP) EncryptWithPublicKey(data cryptox.Bytes, label cryptox.Bytes) (cryptox.Bytes, error) {
-	return rsa.EncryptOAEP(o.hash, o.random, o.publicKey, data, label)
+func (r *RSA) EncryptOAEP(hash hash.Hash, data cryptox.Bytes, label cryptox.Bytes) (cryptox.Bytes, error) {
+	return rsa.EncryptOAEP(hash, r.random, r.publicKey, data, label)
 }
 
-func (o *OAEP) DecryptWithPrivateKey(data cryptox.Bytes, label cryptox.Bytes) (cryptox.Bytes, error) {
-	return rsa.DecryptOAEP(o.hash, o.random, o.privateKey, data, label)
+func (r *RSA) DecryptOAEP(hash hash.Hash, data cryptox.Bytes, label cryptox.Bytes) (cryptox.Bytes, error) {
+	return rsa.DecryptOAEP(hash, r.random, r.privateKey, data, label)
 }

@@ -5,7 +5,6 @@
 package rsa
 
 import (
-	"hash"
 	"io"
 )
 
@@ -60,22 +59,16 @@ func WithLoadPublicKeyDecoder(decoder PublicKeyDecoder) LoaderOption {
 	}
 }
 
-// OAEPOption is a function for setting oaep.
-type OAEPOption func(oaep *OAEP)
+// Option is a function for setting rsa.
+type Option func(rsa *RSA)
 
-// ApplyTo applies oaep option to oaep.
-func (oo OAEPOption) ApplyTo(oaep *OAEP) {
-	oo(oaep)
+// ApplyTo applies rsa option to rsa.
+func (oo Option) ApplyTo(rsa *RSA) {
+	oo(rsa)
 }
 
-func WithOAEPHash(hash hash.Hash) OAEPOption {
-	return func(oaep *OAEP) {
-		oaep.hash = hash
-	}
-}
-
-func WithOAEPRandom(random io.Reader) OAEPOption {
-	return func(oaep *OAEP) {
-		oaep.random = random
+func WithRandom(random io.Reader) Option {
+	return func(rsa *RSA) {
+		rsa.random = random
 	}
 }

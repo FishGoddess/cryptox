@@ -8,8 +8,6 @@ import (
 	"crypto/rand"
 	"fmt"
 	"testing"
-
-	"github.com/FishGoddess/cryptox"
 )
 
 // go test -v -cover -run=^TestWithGeneratePrivateKeyEncoder$
@@ -87,27 +85,11 @@ func TestWithLoadPublicKeyDecoder(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithOAEPHash$
-func TestWithOAEPHash(t *testing.T) {
-	oaep := &OAEP{hash: nil}
+// go test -v -cover -run=^TestWithRandom$
+func TestWithRandom(t *testing.T) {
+	oaep := &RSA{random: nil}
 
-	hash := cryptox.SHA256()
-	opt := WithOAEPHash(hash)
-	opt.ApplyTo(oaep)
-
-	hashPointer := fmt.Sprintf("%p", oaep.hash)
-	expectPointer := fmt.Sprintf("%p", hash)
-
-	if hashPointer != expectPointer {
-		t.Errorf("hashPointer %s != expectPointer %s", hashPointer, expectPointer)
-	}
-}
-
-// go test -v -cover -run=^TestWithOAEPRandom$
-func TestWithOAEPRandom(t *testing.T) {
-	oaep := &OAEP{random: nil}
-
-	opt := WithOAEPRandom(rand.Reader)
+	opt := WithRandom(rand.Reader)
 	opt.ApplyTo(oaep)
 
 	hashPointer := fmt.Sprintf("%p", oaep.random)
