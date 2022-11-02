@@ -67,6 +67,7 @@ func (oo Option) ApplyTo(rsa *RSA) {
 	oo(rsa)
 }
 
+// WithRandom sets random to rsa.
 func WithRandom(random io.Reader) Option {
 	return func(rsa *RSA) {
 		rsa.random = random
