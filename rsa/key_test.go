@@ -12,6 +12,48 @@ import (
 	"testing"
 )
 
+// go test -v -cover -run=^TestKeyWritePrivateTo$
+func TestKeyWritePrivateTo(t *testing.T) {
+	key := Key{
+		Private: []byte("private"),
+	}
+
+	var privateBuffer bytes.Buffer
+	n, err := key.WritePrivateTo(&privateBuffer)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if n != len(key.Private) {
+		t.Errorf("n %d != len(key.Private) %d", n, len(key.Private))
+	}
+
+	if !bytes.Equal(key.Private, privateBuffer.Bytes()) {
+		t.Errorf("key.Private %+v != privateBuffer.Bytes() %+v", key.Private, privateBuffer.Bytes())
+	}
+}
+
+// go test -v -cover -run=^TestKeyWritePublicTo$
+func TestKeyWritePublicTo(t *testing.T) {
+	key := Key{
+		Public: []byte("public"),
+	}
+
+	var publicBuffer bytes.Buffer
+	n, err := key.WritePublicTo(&publicBuffer)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if n != len(key.Public) {
+		t.Errorf("n %d != len(key.Public) %d", n, len(key.Public))
+	}
+
+	if !bytes.Equal(key.Public, publicBuffer.Bytes()) {
+		t.Errorf("key.Public %+v != publicBuffer.Bytes() %+v", key.Public, publicBuffer.Bytes())
+	}
+}
+
 // go test -v -cover -run=^TestKeyWriteTo$
 func TestKeyWriteTo(t *testing.T) {
 	key := Key{
@@ -35,6 +77,62 @@ func TestKeyWriteTo(t *testing.T) {
 
 	if !bytes.Equal(key.Public, publicBuffer.Bytes()) {
 		t.Errorf("key.Public %+v != publicBuffer.Bytes() %+v", key.Public, publicBuffer.Bytes())
+	}
+}
+
+// go test -v -cover -run=^TestKeyWritePrivateToFile$
+func TestKeyWritePrivateToFile(t *testing.T) {
+	key := Key{
+		Private: []byte("private"),
+	}
+
+	privatePath := filepath.Join(t.TempDir(), t.Name()+".key")
+	t.Log("private path:", privatePath)
+
+	n, err := key.WritePrivateToFile(privatePath)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if n != len(key.Private) {
+		t.Errorf("n %d != len(key.Private) %d", n, len(key.Private))
+	}
+
+	privateBytes, err := ioutil.ReadFile(privatePath)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !bytes.Equal(key.Private, privateBytes) {
+		t.Errorf("key.Private %+v != privateBytes %+v", key.Private, privateBytes)
+	}
+}
+
+// go test -v -cover -run=^TestKeyWritePublicToFile$
+func TestKeyWritePublicToFile(t *testing.T) {
+	key := Key{
+		Public: []byte("public"),
+	}
+
+	publicPath := filepath.Join(t.TempDir(), t.Name()+".pub")
+	t.Log("public path:", publicPath)
+
+	n, err := key.WritePublicToFile(publicPath)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if n != len(key.Public) {
+		t.Errorf("n %d != len(key.Public) %d", n, len(key.Public))
+	}
+
+	publicBytes, err := ioutil.ReadFile(publicPath)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !bytes.Equal(key.Public, publicBytes) {
+		t.Errorf("key.Public %+v != publicBytes %+v", key.Public, publicBytes)
 	}
 }
 
@@ -134,17 +232,21 @@ func TestKeyGeneratorGeneratePrivateKey(t *testing.T) {
 func TestKeyGeneratorGeneratePublicKey(t *testing.T) {
 	generator := NewKeyGenerator()
 
-	privateKey, privateKeyBytes, err := generator.GeneratePrivateKey(2048)
+	privateKey, _, err := generator.GeneratePrivateKey(2048)
 	if err != nil {
 		t.Error(err)
 	}
 
-	_, publicKeyBytes1, err := generator.GeneratePublicKey(privateKey)
+	publicKey, publicKeyBytes1, err := generator.GeneratePublicKey(privateKey)
 	if err != nil {
 		t.Error(err)
 	}
 
-	_, publicKeyBytes2, err := generator.GeneratePublicKeyFromPem(privateKeyBytes)
+	if !publicKey.Equal(&privateKey.PublicKey) {
+		t.Errorf("publicKey %+v != privateKey.PublicKey %+v", publicKey, privateKey.PublicKey)
+	}
+
+	publicKeyBytes2, err := generator.publicKeyEncoder.Encode(&privateKey.PublicKey)
 	if err != nil {
 		t.Error(err)
 	}
@@ -154,8 +256,8 @@ func TestKeyGeneratorGeneratePublicKey(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestKeyGeneratorGeneratePublicKeyFromPem$
-func TestKeyGeneratorGeneratePublicKeyFromPem(t *testing.T) {
+// go test -v -cover -run=^TestKeyGeneratorGeneratePublicKeyFromFile$
+func TestKeyGeneratorGeneratePublicKeyFromFile(t *testing.T) {
 	generator := NewKeyGenerator()
 
 	key, err := generator.GenerateKey(2048)
@@ -163,7 +265,22 @@ func TestKeyGeneratorGeneratePublicKeyFromPem(t *testing.T) {
 		t.Error(err)
 	}
 
-	_, publicKeyBytes, err := generator.GeneratePublicKeyFromPem(key.Private)
+	privateKeyFile, err := ioutil.TempFile(t.TempDir(), t.Name()+".key")
+	if err != nil {
+		t.Error(err)
+	}
+
+	err = privateKeyFile.Close()
+	if err != nil {
+		t.Error(err)
+	}
+
+	_, err = key.WritePrivateToFile(privateKeyFile.Name())
+	if err != nil {
+		t.Error(err)
+	}
+
+	_, publicKeyBytes, err := generator.GeneratePublicKeyFromFile(privateKeyFile.Name())
 	if err != nil {
 		t.Error(err)
 	}

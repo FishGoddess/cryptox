@@ -33,14 +33,24 @@ func (k Key) newFile(path string) (*os.File, error) {
 	return os.OpenFile(path, KeyFileFlag, KeyFileMode)
 }
 
+// WritePrivateTo writes private key to writer.
+func (k Key) WritePrivateTo(privateWriter io.Writer) (n int, err error) {
+	return privateWriter.Write(k.Private)
+}
+
+// WritePublicTo writes public key to writer.
+func (k Key) WritePublicTo(publicWriter io.Writer) (n int, err error) {
+	return publicWriter.Write(k.Public)
+}
+
 // WriteTo writes private key and public key to writer.
 func (k Key) WriteTo(privateWriter io.Writer, publicWriter io.Writer) (n int, err error) {
-	n, err = privateWriter.Write(k.Private)
+	n, err = k.WritePrivateTo(privateWriter)
 	if err != nil {
 		return n, err
 	}
 
-	nn, err := publicWriter.Write(k.Public)
+	nn, err := k.WritePublicTo(publicWriter)
 	if err != nil {
 		return n + nn, err
 	}
@@ -48,15 +58,19 @@ func (k Key) WriteTo(privateWriter io.Writer, publicWriter io.Writer) (n int, er
 	return n + nn, nil
 }
 
-// WriteToFile writes private key and public key to file.
-func (k Key) WriteToFile(privatePath string, publicPath string) (n int, err error) {
+// WritePrivateToFile writes private key to file.
+func (k Key) WritePrivateToFile(privatePath string) (n int, err error) {
 	privateFile, err := k.newFile(privatePath)
 	if err != nil {
 		return 0, err
 	}
 
 	defer privateFile.Close()
+	return k.WritePrivateTo(privateFile)
+}
 
+// WritePublicToFile writes public key to file.
+func (k Key) WritePublicToFile(publicPath string) (n int, err error) {
 	publicFile, err := k.newFile(publicPath)
 	if err != nil {
 		return 0, err
@@ -64,7 +78,22 @@ func (k Key) WriteToFile(privatePath string, publicPath string) (n int, err erro
 
 	defer publicFile.Close()
 
-	return k.WriteTo(privateFile, publicFile)
+	return k.WritePublicTo(publicFile)
+}
+
+// WriteToFile writes private key and public key to file.
+func (k Key) WriteToFile(privatePath string, publicPath string) (n int, err error) {
+	n, err = k.WritePrivateToFile(privatePath)
+	if err != nil {
+		return n, err
+	}
+
+	nn, err := k.WritePublicToFile(publicPath)
+	if err != nil {
+		return n + nn, err
+	}
+
+	return n + nn, nil
 }
 
 // KeyGenerator is a generator for generating rsa key including private and public.
@@ -135,9 +164,14 @@ func (kg *KeyGenerator) GeneratePublicKey(privateKey *rsa.PrivateKey) (*rsa.Publ
 	return publicKey, publicKeyBytes, nil
 }
 
-// GeneratePublicKeyFromPem generates a public key from private key pem.
+// GeneratePublicKeyFromFile generates a public key from private key file.
 // It returns an original key struct (*rsa.PublicKey) and a completing key bytes (cryptox.Bytes).
-func (kg *KeyGenerator) GeneratePublicKeyFromPem(privateKeyPem cryptox.Bytes) (*rsa.PublicKey, cryptox.Bytes, error) {
+func (kg *KeyGenerator) GeneratePublicKeyFromFile(privateKeyFile string) (*rsa.PublicKey, cryptox.Bytes, error) {
+	privateKeyPem, err := ioutil.ReadFile(privateKeyFile)
+	if err != nil {
+		return nil, nil, err
+	}
+
 	privateKey, err := kg.privateKeyDecoder.Decode(privateKeyPem)
 	if err != nil {
 		return nil, nil, err
