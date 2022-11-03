@@ -178,28 +178,8 @@ func (kl *KeyLoader) ParsePublicKey(keyPem cryptox.Bytes) (*rsa.PublicKey, error
 	return kl.publicKeyDecoder.Decode(keyPem)
 }
 
-// LoadPrivateKey loads private key from a reader.
-func (kl *KeyLoader) LoadPrivateKey(keyReader io.Reader) (*rsa.PrivateKey, error) {
-	keyPem, err := ioutil.ReadAll(keyReader)
-	if err != nil {
-		return nil, err
-	}
-
-	return kl.ParsePrivateKey(keyPem)
-}
-
-// LoadPublicKey loads public key from a reader.
-func (kl *KeyLoader) LoadPublicKey(keyReader io.Reader) (*rsa.PublicKey, error) {
-	keyPem, err := ioutil.ReadAll(keyReader)
-	if err != nil {
-		return nil, err
-	}
-
-	return kl.ParsePublicKey(keyPem)
-}
-
-// LoadPrivateKeyFromFile loads private key from a file.
-func (kl *KeyLoader) LoadPrivateKeyFromFile(keyFile string) (*rsa.PrivateKey, error) {
+// LoadPrivateKey loads private key from a file.
+func (kl *KeyLoader) LoadPrivateKey(keyFile string) (*rsa.PrivateKey, error) {
 	keyPem, err := ioutil.ReadFile(keyFile)
 	if err != nil {
 		return nil, err
@@ -208,12 +188,52 @@ func (kl *KeyLoader) LoadPrivateKeyFromFile(keyFile string) (*rsa.PrivateKey, er
 	return kl.ParsePrivateKey(keyPem)
 }
 
-// LoadPublicKeyFromFile loads public key from a file.
-func (kl *KeyLoader) LoadPublicKeyFromFile(keyFile string) (*rsa.PublicKey, error) {
+// LoadPublicKey loads public key from a file.
+func (kl *KeyLoader) LoadPublicKey(keyFile string) (*rsa.PublicKey, error) {
 	keyPem, err := ioutil.ReadFile(keyFile)
 	if err != nil {
 		return nil, err
 	}
 
 	return kl.ParsePublicKey(keyPem)
+}
+
+// LoadPrivateKeyFrom loads private key from a reader.
+func (kl *KeyLoader) LoadPrivateKeyFrom(keyReader io.Reader) (*rsa.PrivateKey, error) {
+	keyPem, err := ioutil.ReadAll(keyReader)
+	if err != nil {
+		return nil, err
+	}
+
+	return kl.ParsePrivateKey(keyPem)
+}
+
+// LoadPublicKeyFrom loads public key from a reader.
+func (kl *KeyLoader) LoadPublicKeyFrom(keyReader io.Reader) (*rsa.PublicKey, error) {
+	keyPem, err := ioutil.ReadAll(keyReader)
+	if err != nil {
+		return nil, err
+	}
+
+	return kl.ParsePublicKey(keyPem)
+}
+
+// MustLoadPrivateKey loads private key from a file or panic on failed.
+func (kl *KeyLoader) MustLoadPrivateKey(keyFile string) *rsa.PrivateKey {
+	key, err := kl.LoadPrivateKey(keyFile)
+	if err != nil {
+		panic(err)
+	}
+
+	return key
+}
+
+// MustLoadPublicKey loads public key from a file or panic on failed.
+func (kl *KeyLoader) MustLoadPublicKey(keyFile string) *rsa.PublicKey {
+	key, err := kl.LoadPublicKey(keyFile)
+	if err != nil {
+		panic(err)
+	}
+
+	return key
 }
