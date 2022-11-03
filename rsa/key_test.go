@@ -15,7 +15,7 @@ import (
 // go test -v -cover -run=^TestKeyWritePrivateTo$
 func TestKeyWritePrivateTo(t *testing.T) {
 	key := Key{
-		Private: []byte("private"),
+		PrivateBytes: []byte("private"),
 	}
 
 	var privateBuffer bytes.Buffer
@@ -24,19 +24,19 @@ func TestKeyWritePrivateTo(t *testing.T) {
 		t.Error(err)
 	}
 
-	if n != len(key.Private) {
-		t.Errorf("n %d != len(key.Private) %d", n, len(key.Private))
+	if n != len(key.PrivateBytes) {
+		t.Errorf("n %d != len(key.PrivateBytes) %d", n, len(key.PrivateBytes))
 	}
 
-	if !bytes.Equal(key.Private, privateBuffer.Bytes()) {
-		t.Errorf("key.Private %+v != privateBuffer.Bytes() %+v", key.Private, privateBuffer.Bytes())
+	if !bytes.Equal(key.PrivateBytes, privateBuffer.Bytes()) {
+		t.Errorf("key.PrivateBytes %+v != privateBuffer.Bytes() %+v", key.PrivateBytes, privateBuffer.Bytes())
 	}
 }
 
 // go test -v -cover -run=^TestKeyWritePublicTo$
 func TestKeyWritePublicTo(t *testing.T) {
 	key := Key{
-		Public: []byte("public"),
+		PublicBytes: []byte("public"),
 	}
 
 	var publicBuffer bytes.Buffer
@@ -45,20 +45,20 @@ func TestKeyWritePublicTo(t *testing.T) {
 		t.Error(err)
 	}
 
-	if n != len(key.Public) {
-		t.Errorf("n %d != len(key.Public) %d", n, len(key.Public))
+	if n != len(key.PublicBytes) {
+		t.Errorf("n %d != len(key.PublicBytes) %d", n, len(key.PublicBytes))
 	}
 
-	if !bytes.Equal(key.Public, publicBuffer.Bytes()) {
-		t.Errorf("key.Public %+v != publicBuffer.Bytes() %+v", key.Public, publicBuffer.Bytes())
+	if !bytes.Equal(key.PublicBytes, publicBuffer.Bytes()) {
+		t.Errorf("key.PublicBytes %+v != publicBuffer.Bytes() %+v", key.PublicBytes, publicBuffer.Bytes())
 	}
 }
 
 // go test -v -cover -run=^TestKeyWriteTo$
 func TestKeyWriteTo(t *testing.T) {
 	key := Key{
-		Private: []byte("private"),
-		Public:  []byte("public"),
+		PrivateBytes: []byte("private"),
+		PublicBytes:  []byte("public"),
 	}
 
 	var privateBuffer, publicBuffer bytes.Buffer
@@ -67,23 +67,23 @@ func TestKeyWriteTo(t *testing.T) {
 		t.Error(err)
 	}
 
-	if n != len(key.Private)+len(key.Public) {
-		t.Errorf("n %d != len(key.Private) %d + len(key.Public) %d", n, len(key.Private), len(key.Public))
+	if n != len(key.PrivateBytes)+len(key.PublicBytes) {
+		t.Errorf("n %d != len(key.PrivateBytes) %d + len(key.PublicBytes) %d", n, len(key.PrivateBytes), len(key.PublicBytes))
 	}
 
-	if !bytes.Equal(key.Private, privateBuffer.Bytes()) {
-		t.Errorf("key.Private %+v != privateBuffer.Bytes() %+v", key.Private, privateBuffer.Bytes())
+	if !bytes.Equal(key.PrivateBytes, privateBuffer.Bytes()) {
+		t.Errorf("key.PrivateBytes %+v != privateBuffer.Bytes() %+v", key.PrivateBytes, privateBuffer.Bytes())
 	}
 
-	if !bytes.Equal(key.Public, publicBuffer.Bytes()) {
-		t.Errorf("key.Public %+v != publicBuffer.Bytes() %+v", key.Public, publicBuffer.Bytes())
+	if !bytes.Equal(key.PublicBytes, publicBuffer.Bytes()) {
+		t.Errorf("key.PublicBytes %+v != publicBuffer.Bytes() %+v", key.PublicBytes, publicBuffer.Bytes())
 	}
 }
 
 // go test -v -cover -run=^TestKeyWritePrivateToFile$
 func TestKeyWritePrivateToFile(t *testing.T) {
 	key := Key{
-		Private: []byte("private"),
+		PrivateBytes: []byte("private"),
 	}
 
 	privatePath := filepath.Join(t.TempDir(), t.Name()+".key")
@@ -94,8 +94,8 @@ func TestKeyWritePrivateToFile(t *testing.T) {
 		t.Error(err)
 	}
 
-	if n != len(key.Private) {
-		t.Errorf("n %d != len(key.Private) %d", n, len(key.Private))
+	if n != len(key.PrivateBytes) {
+		t.Errorf("n %d != len(key.PrivateBytes) %d", n, len(key.PrivateBytes))
 	}
 
 	privateBytes, err := ioutil.ReadFile(privatePath)
@@ -103,15 +103,15 @@ func TestKeyWritePrivateToFile(t *testing.T) {
 		t.Error(err)
 	}
 
-	if !bytes.Equal(key.Private, privateBytes) {
-		t.Errorf("key.Private %+v != privateBytes %+v", key.Private, privateBytes)
+	if !bytes.Equal(key.PrivateBytes, privateBytes) {
+		t.Errorf("key.PrivateBytes %+v != privateBytes %+v", key.PrivateBytes, privateBytes)
 	}
 }
 
 // go test -v -cover -run=^TestKeyWritePublicToFile$
 func TestKeyWritePublicToFile(t *testing.T) {
 	key := Key{
-		Public: []byte("public"),
+		PublicBytes: []byte("public"),
 	}
 
 	publicPath := filepath.Join(t.TempDir(), t.Name()+".pub")
@@ -122,8 +122,8 @@ func TestKeyWritePublicToFile(t *testing.T) {
 		t.Error(err)
 	}
 
-	if n != len(key.Public) {
-		t.Errorf("n %d != len(key.Public) %d", n, len(key.Public))
+	if n != len(key.PublicBytes) {
+		t.Errorf("n %d != len(key.PublicBytes) %d", n, len(key.PublicBytes))
 	}
 
 	publicBytes, err := ioutil.ReadFile(publicPath)
@@ -131,16 +131,16 @@ func TestKeyWritePublicToFile(t *testing.T) {
 		t.Error(err)
 	}
 
-	if !bytes.Equal(key.Public, publicBytes) {
-		t.Errorf("key.Public %+v != publicBytes %+v", key.Public, publicBytes)
+	if !bytes.Equal(key.PublicBytes, publicBytes) {
+		t.Errorf("key.PublicBytes %+v != publicBytes %+v", key.PublicBytes, publicBytes)
 	}
 }
 
 // go test -v -cover -run=^TestKeyWriteToFile$
 func TestKeyWriteToFile(t *testing.T) {
 	key := Key{
-		Private: []byte("private"),
-		Public:  []byte("public"),
+		PrivateBytes: []byte("private"),
+		PublicBytes:  []byte("public"),
 	}
 
 	privatePath := filepath.Join(t.TempDir(), t.Name()+".key")
@@ -153,8 +153,8 @@ func TestKeyWriteToFile(t *testing.T) {
 		t.Error(err)
 	}
 
-	if n != len(key.Private)+len(key.Public) {
-		t.Errorf("n %d != len(key.Private) %d + len(key.Public) %d", n, len(key.Private), len(key.Public))
+	if n != len(key.PrivateBytes)+len(key.PublicBytes) {
+		t.Errorf("n %d != len(key.PrivateBytes) %d + len(key.PublicBytes) %d", n, len(key.PrivateBytes), len(key.PublicBytes))
 	}
 
 	privateBytes, err := ioutil.ReadFile(privatePath)
@@ -167,12 +167,12 @@ func TestKeyWriteToFile(t *testing.T) {
 		t.Error(err)
 	}
 
-	if !bytes.Equal(key.Private, privateBytes) {
-		t.Errorf("key.Private %+v != privateBytes %+v", key.Private, privateBytes)
+	if !bytes.Equal(key.PrivateBytes, privateBytes) {
+		t.Errorf("key.PrivateBytes %+v != privateBytes %+v", key.PrivateBytes, privateBytes)
 	}
 
-	if !bytes.Equal(key.Public, publicBytes) {
-		t.Errorf("key.Public %+v != publicBytes %+v", key.Public, publicBytes)
+	if !bytes.Equal(key.PublicBytes, publicBytes) {
+		t.Errorf("key.PublicBytes %+v != publicBytes %+v", key.PublicBytes, publicBytes)
 	}
 }
 
@@ -285,8 +285,8 @@ func TestKeyGeneratorGeneratePublicKeyFromFile(t *testing.T) {
 		t.Error(err)
 	}
 
-	if !bytes.Equal(key.Public, publicKeyBytes) {
-		t.Errorf("key.Public %+v != publicKeyBytes %+v", key.Public, publicKeyBytes)
+	if !bytes.Equal(key.PublicBytes, publicKeyBytes) {
+		t.Errorf("key.PublicBytes %+v != publicKeyBytes %+v", key.PublicBytes, publicKeyBytes)
 	}
 }
 

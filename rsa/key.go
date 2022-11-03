@@ -24,27 +24,29 @@ var (
 
 // Key stores public key and private key of rsa.
 type Key struct {
-	Private cryptox.Bytes
-	Public  cryptox.Bytes
+	Private      *rsa.PrivateKey
+	Public       *rsa.PublicKey
+	PrivateBytes cryptox.Bytes
+	PublicBytes  cryptox.Bytes
 }
 
 // newFile creates a new file of path.
-func (k Key) newFile(path string) (*os.File, error) {
+func (k *Key) newFile(path string) (*os.File, error) {
 	return os.OpenFile(path, KeyFileFlag, KeyFileMode)
 }
 
 // WritePrivateTo writes private key to writer.
-func (k Key) WritePrivateTo(privateWriter io.Writer) (n int, err error) {
-	return privateWriter.Write(k.Private)
+func (k *Key) WritePrivateTo(privateWriter io.Writer) (n int, err error) {
+	return privateWriter.Write(k.PrivateBytes)
 }
 
 // WritePublicTo writes public key to writer.
-func (k Key) WritePublicTo(publicWriter io.Writer) (n int, err error) {
-	return publicWriter.Write(k.Public)
+func (k *Key) WritePublicTo(publicWriter io.Writer) (n int, err error) {
+	return publicWriter.Write(k.PublicBytes)
 }
 
 // WriteTo writes private key and public key to writer.
-func (k Key) WriteTo(privateWriter io.Writer, publicWriter io.Writer) (n int, err error) {
+func (k *Key) WriteTo(privateWriter io.Writer, publicWriter io.Writer) (n int, err error) {
 	n, err = k.WritePrivateTo(privateWriter)
 	if err != nil {
 		return n, err
@@ -59,7 +61,7 @@ func (k Key) WriteTo(privateWriter io.Writer, publicWriter io.Writer) (n int, er
 }
 
 // WritePrivateToFile writes private key to file.
-func (k Key) WritePrivateToFile(privatePath string) (n int, err error) {
+func (k *Key) WritePrivateToFile(privatePath string) (n int, err error) {
 	privateFile, err := k.newFile(privatePath)
 	if err != nil {
 		return 0, err
@@ -70,7 +72,7 @@ func (k Key) WritePrivateToFile(privatePath string) (n int, err error) {
 }
 
 // WritePublicToFile writes public key to file.
-func (k Key) WritePublicToFile(publicPath string) (n int, err error) {
+func (k *Key) WritePublicToFile(publicPath string) (n int, err error) {
 	publicFile, err := k.newFile(publicPath)
 	if err != nil {
 		return 0, err
@@ -82,7 +84,7 @@ func (k Key) WritePublicToFile(publicPath string) (n int, err error) {
 }
 
 // WriteToFile writes private key and public key to file.
-func (k Key) WriteToFile(privatePath string, publicPath string) (n int, err error) {
+func (k *Key) WriteToFile(privatePath string, publicPath string) (n int, err error) {
 	n, err = k.WritePrivateToFile(privatePath)
 	if err != nil {
 		return n, err
@@ -121,18 +123,23 @@ func NewKeyGenerator(opts ...GeneratorOption) *KeyGenerator {
 }
 
 // GenerateKey generates a key set of bits.
-func (kg *KeyGenerator) GenerateKey(bits int) (Key, error) {
+func (kg *KeyGenerator) GenerateKey(bits int) (*Key, error) {
 	privateKey, privateKeyBytes, err := kg.GeneratePrivateKey(bits)
 	if err != nil {
-		return Key{}, err
+		return nil, err
 	}
 
-	_, publicKeyBytes, err := kg.GeneratePublicKey(privateKey)
+	publicKey, publicKeyBytes, err := kg.GeneratePublicKey(privateKey)
 	if err != nil {
-		return Key{}, err
+		return nil, err
 	}
 
-	return Key{Public: publicKeyBytes, Private: privateKeyBytes}, nil
+	return &Key{
+		Private:      privateKey,
+		Public:       publicKey,
+		PublicBytes:  publicKeyBytes,
+		PrivateBytes: privateKeyBytes,
+	}, nil
 }
 
 // GeneratePrivateKey generates a private key of bits.
@@ -212,6 +219,26 @@ func (kl *KeyLoader) ParsePublicKey(keyPem cryptox.Bytes) (*rsa.PublicKey, error
 	return kl.publicKeyDecoder.Decode(keyPem)
 }
 
+// ReadPrivateKey reads private key from a reader.
+func (kl *KeyLoader) ReadPrivateKey(keyReader io.Reader) (*rsa.PrivateKey, error) {
+	keyPem, err := ioutil.ReadAll(keyReader)
+	if err != nil {
+		return nil, err
+	}
+
+	return kl.ParsePrivateKey(keyPem)
+}
+
+// ReadPublicKey reads public key from a reader.
+func (kl *KeyLoader) ReadPublicKey(keyReader io.Reader) (*rsa.PublicKey, error) {
+	keyPem, err := ioutil.ReadAll(keyReader)
+	if err != nil {
+		return nil, err
+	}
+
+	return kl.ParsePublicKey(keyPem)
+}
+
 // LoadPrivateKey loads private key from a file.
 func (kl *KeyLoader) LoadPrivateKey(keyFile string) (*rsa.PrivateKey, error) {
 	keyPem, err := ioutil.ReadFile(keyFile)
@@ -225,26 +252,6 @@ func (kl *KeyLoader) LoadPrivateKey(keyFile string) (*rsa.PrivateKey, error) {
 // LoadPublicKey loads public key from a file.
 func (kl *KeyLoader) LoadPublicKey(keyFile string) (*rsa.PublicKey, error) {
 	keyPem, err := ioutil.ReadFile(keyFile)
-	if err != nil {
-		return nil, err
-	}
-
-	return kl.ParsePublicKey(keyPem)
-}
-
-// LoadPrivateKeyFrom loads private key from a reader.
-func (kl *KeyLoader) LoadPrivateKeyFrom(keyReader io.Reader) (*rsa.PrivateKey, error) {
-	keyPem, err := ioutil.ReadAll(keyReader)
-	if err != nil {
-		return nil, err
-	}
-
-	return kl.ParsePrivateKey(keyPem)
-}
-
-// LoadPublicKeyFrom loads public key from a reader.
-func (kl *KeyLoader) LoadPublicKeyFrom(keyReader io.Reader) (*rsa.PublicKey, error) {
-	keyPem, err := ioutil.ReadAll(keyReader)
 	if err != nil {
 		return nil, err
 	}
