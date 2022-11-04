@@ -33,17 +33,17 @@ func TestKeyLoaderParsePrivateKey(t *testing.T) {
 	generator := NewKeyGenerator()
 	loader := NewKeyLoader()
 
-	privateKey, privateKeyBytes, err := generator.GeneratePrivateKey(2048)
+	privateKey, err := generator.GeneratePrivateKey(2048)
 	if err != nil {
 		t.Error(err)
 	}
 
-	parsedPrivateKey, err := loader.ParsePrivateKey(privateKeyBytes)
+	parsedPrivateKey, err := loader.ParsePrivateKey(privateKey.Encoded())
 	if err != nil {
 		t.Error(err)
 	}
 
-	if !parsedPrivateKey.Equal(privateKey) {
+	if !parsedPrivateKey.Equal(privateKey.Key()) {
 		t.Errorf("parsedPrivateKey %+v != privateKey %+v", parsedPrivateKey, privateKey)
 	}
 }
@@ -53,22 +53,22 @@ func TestKeyLoaderParsePublicKey(t *testing.T) {
 	generator := NewKeyGenerator()
 	loader := NewKeyLoader()
 
-	privateKey, _, err := generator.GeneratePrivateKey(2048)
+	privateKey, err := generator.GeneratePrivateKey(2048)
 	if err != nil {
 		t.Error(err)
 	}
 
-	publicKey, publicKeyBytes, err := generator.GeneratePublicKey(privateKey)
+	publicKey, err := generator.GeneratePublicKey(privateKey)
 	if err != nil {
 		t.Error(err)
 	}
 
-	parsedPublicKey, err := loader.ParsePublicKey(publicKeyBytes)
+	parsedPublicKey, err := loader.ParsePublicKey(publicKey.Encoded())
 	if err != nil {
 		t.Error(err)
 	}
 
-	if !parsedPublicKey.Equal(publicKey) {
+	if !parsedPublicKey.Equal(publicKey.Key()) {
 		t.Errorf("parsedPublicKey %+v != publicKey %+v", parsedPublicKey, publicKey)
 	}
 }

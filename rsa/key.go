@@ -97,19 +97,51 @@ func (k *Key) WriteToFile(privatePath string, publicPath string) (n int, err err
 }
 
 type PrivateKey struct {
-	*rsa.PrivateKey
-	cryptox.Bytes
+	key *rsa.PrivateKey
+	bs  cryptox.Bytes
 }
 
 func newPrivateKey(key *rsa.PrivateKey, bs cryptox.Bytes) PrivateKey {
-	return PrivateKey{PrivateKey: key, Bytes: bs}
+	return PrivateKey{key: key, bs: bs}
+}
+
+func (pk PrivateKey) Key() *rsa.PrivateKey {
+	return pk.key
+}
+
+func (pk PrivateKey) Encoded() cryptox.Bytes {
+	return pk.bs
+}
+
+func (pk PrivateKey) String() string {
+	return pk.bs.String()
+}
+
+func (pk PrivateKey) EqualsTo(privateKey PrivateKey) bool {
+	return pk.key.Equal(privateKey)
 }
 
 type PublicKey struct {
-	*rsa.PublicKey
-	cryptox.Bytes
+	key *rsa.PublicKey
+	bs  cryptox.Bytes
 }
 
 func newPublicKey(key *rsa.PublicKey, bs cryptox.Bytes) PublicKey {
-	return PublicKey{PublicKey: key, Bytes: bs}
+	return PublicKey{key: key, bs: bs}
+}
+
+func (pk PublicKey) Key() *rsa.PublicKey {
+	return pk.key
+}
+
+func (pk PublicKey) Encoded() cryptox.Bytes {
+	return pk.bs
+}
+
+func (pk PublicKey) String() string {
+	return pk.bs.String()
+}
+
+func (pk PublicKey) EqualsTo(publicKey PublicKey) bool {
+	return pk.key.Equal(publicKey.key)
 }

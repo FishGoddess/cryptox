@@ -5,7 +5,6 @@
 package rsa
 
 import (
-	"bytes"
 	"fmt"
 	"io/ioutil"
 	"testing"
@@ -41,53 +40,43 @@ func TestNewKeyGenerator(t *testing.T) {
 func TestKeyGeneratorGenerateKey(t *testing.T) {
 	generator := NewKeyGenerator()
 
-	key, err := generator.GenerateKey(2048)
+	privateKey, publicKey, err := generator.GenerateKeys(2048)
 	if err != nil {
 		t.Error(err)
 	}
 
-	t.Log("Public Key:", key.Public)
-	t.Log("Private Key:", key.Private)
+	t.Log("Public Key:", privateKey)
+	t.Log("Private Key:", publicKey)
 }
 
 // go test -v -cover -run=^TestKeyGeneratorGeneratePrivateKey$
 func TestKeyGeneratorGeneratePrivateKey(t *testing.T) {
 	generator := NewKeyGenerator()
 
-	key, keyBytes, err := generator.GeneratePrivateKey(2048)
+	privateKey, err := generator.GeneratePrivateKey(2048)
 	if err != nil {
 		t.Error(err)
 	}
 
-	t.Log("Private Key:", key)
-	t.Log("Private Key Bytes:", keyBytes)
+	t.Log("Private Key:", privateKey)
 }
 
 // go test -v -cover -run=^TestKeyGeneratorGeneratePublicKey$
 func TestKeyGeneratorGeneratePublicKey(t *testing.T) {
 	generator := NewKeyGenerator()
 
-	privateKey, _, err := generator.GeneratePrivateKey(2048)
+	privateKey, publicKey1, err := generator.GenerateKeys(2048)
 	if err != nil {
 		t.Error(err)
 	}
 
-	publicKey, publicKeyBytes1, err := generator.GeneratePublicKey(privateKey)
+	publicKey2, err := generator.GeneratePublicKey(privateKey)
 	if err != nil {
 		t.Error(err)
 	}
 
-	if !publicKey.Equal(&privateKey.PublicKey) {
-		t.Errorf("publicKey %+v != privateKey.PublicKey %+v", publicKey, privateKey.PublicKey)
-	}
-
-	publicKeyBytes2, err := generator.publicKeyEncoder.Encode(&privateKey.PublicKey)
-	if err != nil {
-		t.Error(err)
-	}
-
-	if !bytes.Equal(publicKeyBytes1, publicKeyBytes2) {
-		t.Errorf("publicKeyBytes1 %+v != publicKeyBytes2 %+v", publicKeyBytes1, publicKeyBytes2)
+	if !publicKey2.EqualsTo(publicKey1) {
+		t.Errorf("publicKey2 %+v != publicKey1 %+v", publicKey2, publicKey1)
 	}
 }
 
@@ -95,7 +84,7 @@ func TestKeyGeneratorGeneratePublicKey(t *testing.T) {
 func TestKeyGeneratorGeneratePublicKeyFromFile(t *testing.T) {
 	generator := NewKeyGenerator()
 
-	key, err := generator.GenerateKey(2048)
+	privateKey, publicKey1, err := generator.GenerateKeys(2048)
 	if err != nil {
 		t.Error(err)
 	}
@@ -110,17 +99,17 @@ func TestKeyGeneratorGeneratePublicKeyFromFile(t *testing.T) {
 		t.Error(err)
 	}
 
-	_, err = key.WritePrivateToFile(privateKeyFile.Name())
+	_, err = privateKey.Encoded().WriteToFile(privateKeyFile.Name())
 	if err != nil {
 		t.Error(err)
 	}
 
-	_, publicKeyBytes, err := generator.GeneratePublicKeyFromFile(privateKeyFile.Name())
+	publicKey2, err := generator.GeneratePublicKeyFromFile(privateKeyFile.Name())
 	if err != nil {
 		t.Error(err)
 	}
 
-	if !bytes.Equal(key.PublicBytes, publicKeyBytes) {
-		t.Errorf("key.PublicBytes %+v != publicKeyBytes %+v", key.PublicBytes, publicKeyBytes)
+	if !publicKey2.EqualsTo(publicKey1) {
+		t.Errorf("publicKey2 %+v != publicKey1 %+v", publicKey2, publicKey1)
 	}
 }
