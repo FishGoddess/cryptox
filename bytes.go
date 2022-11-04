@@ -9,6 +9,21 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
+	"io"
+	"os"
+)
+
+var (
+	// FileFlag is the flag of file.
+	FileFlag = os.O_CREATE | os.O_APPEND | os.O_WRONLY
+
+	// FileMode is the mode of file.
+	FileMode os.FileMode = 0644
+)
+
+var (
+	// Base64 is the encoding of base64.
+	Base64 = base64.StdEncoding
 )
 
 // Bytes is an alias of []byte.
@@ -31,7 +46,7 @@ func (bs Bytes) Hex() string {
 
 // Base64 returns Bytes in base64.
 func (bs Bytes) Base64() string {
-	return base64.StdEncoding.EncodeToString(bs)
+	return Base64.EncodeToString(bs)
 }
 
 // Clone clones bs to new slice.
@@ -42,6 +57,28 @@ func (bs Bytes) Clone() Bytes {
 	return newSlice
 }
 
+// newFile creates a new file of path.
+func (bs Bytes) newFile(path string) (*os.File, error) {
+	return os.OpenFile(path, FileFlag, FileMode)
+}
+
+// WriteTo writes bytes to writer.
+func (bs Bytes) WriteTo(writer io.Writer) (n int64, err error) {
+	nn, err := writer.Write(bs)
+	return int64(nn), err
+}
+
+// WriteToFile writes bytes to file.
+func (bs Bytes) WriteToFile(path string) (n int64, err error) {
+	file, err := bs.newFile(path)
+	if err != nil {
+		return 0, err
+	}
+
+	defer file.Close()
+	return bs.WriteTo(file)
+}
+
 // ParseHex uses hex to parse string to Bytes.
 func ParseHex(str string) (Bytes, error) {
 	return hex.DecodeString(str)
@@ -49,7 +86,7 @@ func ParseHex(str string) (Bytes, error) {
 
 // ParseBase64 uses base64 to parse string to Bytes.
 func ParseBase64(str string) (Bytes, error) {
-	return base64.StdEncoding.DecodeString(str)
+	return Base64.DecodeString(str)
 }
 
 // RandomBytes returns a byte slice filled with random byte.

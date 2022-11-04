@@ -31,6 +31,7 @@ $ go get -u github.com/FishGoddess/cryptox
 * [triple_des](_examples/triple_des.go)
 * [aes](_examples/aes.go)
 * [hash](_examples/hash.go)
+* [rsa_key](_examples/rsa_key.go)
 
 ### 🚴🏻 性能测试
 

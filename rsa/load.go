@@ -23,8 +23,8 @@ type KeyLoader struct {
 // You can specify your decoder.
 func NewKeyLoader(opts ...LoaderOption) *KeyLoader {
 	loader := &KeyLoader{
-		privateKeyDecoder: PKCS1PrivateKeyDecoder,
-		publicKeyDecoder:  PKIXPublicKeyDecoder,
+		privateKeyDecoder: X509.PKCS1PrivateKeyDecoder,
+		publicKeyDecoder:  X509.PKIXPublicKeyDecoder,
 	}
 
 	for _, opt := range opts {

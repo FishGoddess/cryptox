@@ -95,3 +95,21 @@ func (k *Key) WriteToFile(privatePath string, publicPath string) (n int, err err
 
 	return n + nn, nil
 }
+
+type PrivateKey struct {
+	*rsa.PrivateKey
+	cryptox.Bytes
+}
+
+func newPrivateKey(key *rsa.PrivateKey, bs cryptox.Bytes) PrivateKey {
+	return PrivateKey{PrivateKey: key, Bytes: bs}
+}
+
+type PublicKey struct {
+	*rsa.PublicKey
+	cryptox.Bytes
+}
+
+func newPublicKey(key *rsa.PublicKey, bs cryptox.Bytes) PublicKey {
+	return PublicKey{PublicKey: key, Bytes: bs}
+}

@@ -16,21 +16,21 @@ func TestNewKeyGenerator(t *testing.T) {
 	generator := NewKeyGenerator()
 
 	coderPointer := fmt.Sprintf("%p", generator.privateKeyEncoder)
-	expectPointer := fmt.Sprintf("%p", PKCS1PrivateKeyEncoder)
+	expectPointer := fmt.Sprintf("%p", X509.PKCS1PrivateKeyEncoder)
 
 	if coderPointer != expectPointer {
 		t.Errorf("coderPointer %s != expectPointer %s", coderPointer, expectPointer)
 	}
 
 	coderPointer = fmt.Sprintf("%p", generator.publicKeyEncoder)
-	expectPointer = fmt.Sprintf("%p", PKIXPublicKeyEncoder)
+	expectPointer = fmt.Sprintf("%p", X509.PKIXPublicKeyEncoder)
 
 	if coderPointer != expectPointer {
 		t.Errorf("coderPointer %s != expectPointer %s", coderPointer, expectPointer)
 	}
 
 	coderPointer = fmt.Sprintf("%p", generator.privateKeyDecoder)
-	expectPointer = fmt.Sprintf("%p", PKCS1PrivateKeyDecoder)
+	expectPointer = fmt.Sprintf("%p", X509.PKCS1PrivateKeyDecoder)
 
 	if coderPointer != expectPointer {
 		t.Errorf("coderPointer %s != expectPointer %s", coderPointer, expectPointer)

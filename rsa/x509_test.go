@@ -17,12 +17,12 @@ func TestPKCS1PrivateKey(t *testing.T) {
 		t.Error(err)
 	}
 
-	privateKeyBytes, err := PKCS1PrivateKeyEncoder(privateKey)
+	privateKeyBytes, err := X509.PKCS1PrivateKeyEncoder(privateKey)
 	if err != nil {
 		t.Error(err)
 	}
 
-	decodedPrivateKey, err := PKCS1PrivateKeyDecoder(privateKeyBytes)
+	decodedPrivateKey, err := X509.PKCS1PrivateKeyDecoder(privateKeyBytes)
 	if err != nil {
 		t.Error(err)
 	}
@@ -39,12 +39,12 @@ func TestPKCS8PrivateKey(t *testing.T) {
 		t.Error(err)
 	}
 
-	privateKeyBytes, err := PKCS8PrivateKeyEncoder(privateKey)
+	privateKeyBytes, err := X509.PKCS8PrivateKeyEncoder(privateKey)
 	if err != nil {
 		t.Error(err)
 	}
 
-	decodedPrivateKey, err := PKCS8PrivateKeyDecoder(privateKeyBytes)
+	decodedPrivateKey, err := X509.PKCS8PrivateKeyDecoder(privateKeyBytes)
 	if err != nil {
 		t.Error(err)
 	}
@@ -63,12 +63,12 @@ func TestPKIXPublicKey(t *testing.T) {
 
 	publicKey := &privateKey.PublicKey
 
-	publicKeyBytes, err := PKIXPublicKeyEncoder(publicKey)
+	publicKeyBytes, err := X509.PKIXPublicKeyEncoder(publicKey)
 	if err != nil {
 		t.Error(err)
 	}
 
-	decodedPublicKey, err := PKIXPublicKeyDecoder(publicKeyBytes)
+	decodedPublicKey, err := X509.PKIXPublicKeyDecoder(publicKeyBytes)
 	if err != nil {
 		t.Error(err)
 	}
@@ -87,12 +87,12 @@ func TestPKCS1PublicKey(t *testing.T) {
 
 	publicKey := &privateKey.PublicKey
 
-	publicKeyBytes, err := PKCS1PublicKeyEncoder(publicKey)
+	publicKeyBytes, err := X509.PKCS1PublicKeyEncoder(publicKey)
 	if err != nil {
 		t.Error(err)
 	}
 
-	decodedPublicKey, err := PKCS1PublicKeyDecoder(publicKeyBytes)
+	decodedPublicKey, err := X509.PKCS1PublicKeyDecoder(publicKeyBytes)
 	if err != nil {
 		t.Error(err)
 	}

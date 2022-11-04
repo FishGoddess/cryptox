@@ -8,6 +8,8 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/hex"
+	"io/ioutil"
+	"path/filepath"
 	"testing"
 )
 
@@ -42,6 +44,51 @@ func TestBytesClone(t *testing.T) {
 
 	if string(newSlice) != string(bs) {
 		t.Errorf("newSlice %s != bs %s", string(newSlice), string(bs))
+	}
+}
+
+// go test -v -cover -run=^TestBytesWriteTo$
+func TestBytesWriteTo(t *testing.T) {
+	bs := Bytes("你好，世界")
+
+	var buff bytes.Buffer
+	n, err := bs.WriteTo(&buff)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if n != int64(len(bs)) {
+		t.Errorf("n %d != int64(len(bs)) %d", n, int64(len(bs)))
+	}
+
+	if !bytes.Equal(bs, buff.Bytes()) {
+		t.Errorf("bs %+v != buff.Bytes() %+v", bs, buff.Bytes())
+	}
+}
+
+// go test -v -cover -run=^TestBytesWriteToFile$
+func TestBytesWriteToFile(t *testing.T) {
+	bs := Bytes("你好，世界")
+
+	path := filepath.Join(t.TempDir(), t.Name()+".key")
+	t.Log("path:", path)
+
+	n, err := bs.WriteToFile(path)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if n != int64(len(bs)) {
+		t.Errorf("n %d != int64(len(bs)) %d", n, int64(len(bs)))
+	}
+
+	readBytes, err := ioutil.ReadFile(path)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !bytes.Equal(bs, readBytes) {
+		t.Errorf("bs %+v != readBytes %+v", bs, readBytes)
 	}
 }
 

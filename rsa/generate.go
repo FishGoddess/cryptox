@@ -24,9 +24,9 @@ type KeyGenerator struct {
 // You can specify your encoder or decoder.
 func NewKeyGenerator(opts ...GeneratorOption) *KeyGenerator {
 	generator := &KeyGenerator{
-		privateKeyEncoder: PKCS1PrivateKeyEncoder,
-		publicKeyEncoder:  PKIXPublicKeyEncoder,
-		privateKeyDecoder: PKCS1PrivateKeyDecoder,
+		privateKeyEncoder: X509.PKCS1PrivateKeyEncoder,
+		publicKeyEncoder:  X509.PKIXPublicKeyEncoder,
+		privateKeyDecoder: X509.PKCS1PrivateKeyDecoder,
 	}
 
 	for _, opt := range opts {

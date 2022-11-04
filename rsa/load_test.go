@@ -14,14 +14,14 @@ func TestNewKeyLoader(t *testing.T) {
 	loader := NewKeyLoader()
 
 	coderPointer := fmt.Sprintf("%p", loader.privateKeyDecoder)
-	expectPointer := fmt.Sprintf("%p", PKCS1PrivateKeyDecoder)
+	expectPointer := fmt.Sprintf("%p", X509.PKCS1PrivateKeyDecoder)
 
 	if coderPointer != expectPointer {
 		t.Errorf("coderPointer %s != expectPointer %s", coderPointer, expectPointer)
 	}
 
 	coderPointer = fmt.Sprintf("%p", loader.publicKeyDecoder)
-	expectPointer = fmt.Sprintf("%p", PKIXPublicKeyDecoder)
+	expectPointer = fmt.Sprintf("%p", X509.PKIXPublicKeyDecoder)
 
 	if coderPointer != expectPointer {
 		t.Errorf("coderPointer %s != expectPointer %s", coderPointer, expectPointer)

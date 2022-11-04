@@ -14,11 +14,11 @@ import (
 func TestWithGeneratePrivateKeyEncoder(t *testing.T) {
 	generator := &KeyGenerator{privateKeyEncoder: nil}
 
-	opt := WithGeneratePrivateKeyEncoder(PKCS1PrivateKeyEncoder)
+	opt := WithGeneratePrivateKeyEncoder(X509.PKCS1PrivateKeyEncoder)
 	opt.ApplyTo(generator)
 
 	encoderPointer := fmt.Sprintf("%p", generator.privateKeyEncoder)
-	expectPointer := fmt.Sprintf("%p", PKCS1PrivateKeyEncoder)
+	expectPointer := fmt.Sprintf("%p", X509.PKCS1PrivateKeyEncoder)
 
 	if encoderPointer != expectPointer {
 		t.Errorf("encoderPointer %s != expectPointer %s", encoderPointer, expectPointer)
@@ -29,11 +29,11 @@ func TestWithGeneratePrivateKeyEncoder(t *testing.T) {
 func TestWithGeneratePublicKeyEncoder(t *testing.T) {
 	generator := &KeyGenerator{publicKeyEncoder: nil}
 
-	opt := WithGeneratePublicKeyEncoder(PKIXPublicKeyEncoder)
+	opt := WithGeneratePublicKeyEncoder(X509.PKIXPublicKeyEncoder)
 	opt.ApplyTo(generator)
 
 	encoderPointer := fmt.Sprintf("%p", generator.publicKeyEncoder)
-	expectPointer := fmt.Sprintf("%p", PKIXPublicKeyEncoder)
+	expectPointer := fmt.Sprintf("%p", X509.PKIXPublicKeyEncoder)
 
 	if encoderPointer != expectPointer {
 		t.Errorf("encoderPointer %s != expectPointer %s", encoderPointer, expectPointer)
@@ -44,11 +44,11 @@ func TestWithGeneratePublicKeyEncoder(t *testing.T) {
 func TestWithGeneratePrivateKeyDecoder(t *testing.T) {
 	generator := &KeyGenerator{privateKeyDecoder: nil}
 
-	opt := WithGeneratePrivateKeyDecoder(PKCS1PrivateKeyDecoder)
+	opt := WithGeneratePrivateKeyDecoder(X509.PKCS1PrivateKeyDecoder)
 	opt.ApplyTo(generator)
 
 	decoderPointer := fmt.Sprintf("%p", generator.privateKeyDecoder)
-	expectPointer := fmt.Sprintf("%p", PKCS1PrivateKeyDecoder)
+	expectPointer := fmt.Sprintf("%p", X509.PKCS1PrivateKeyDecoder)
 
 	if decoderPointer != expectPointer {
 		t.Errorf("decoderPointer %s != expectPointer %s", decoderPointer, expectPointer)
@@ -59,11 +59,11 @@ func TestWithGeneratePrivateKeyDecoder(t *testing.T) {
 func TestWithLoadPrivateKeyDecoder(t *testing.T) {
 	loader := &KeyLoader{privateKeyDecoder: nil}
 
-	opt := WithLoadPrivateKeyDecoder(PKCS1PrivateKeyDecoder)
+	opt := WithLoadPrivateKeyDecoder(X509.PKCS1PrivateKeyDecoder)
 	opt.ApplyTo(loader)
 
 	decoderPointer := fmt.Sprintf("%p", loader.privateKeyDecoder)
-	expectPointer := fmt.Sprintf("%p", PKCS1PrivateKeyDecoder)
+	expectPointer := fmt.Sprintf("%p", X509.PKCS1PrivateKeyDecoder)
 
 	if decoderPointer != expectPointer {
 		t.Errorf("decoderPointer %s != expectPointer %s", decoderPointer, expectPointer)
@@ -74,11 +74,11 @@ func TestWithLoadPrivateKeyDecoder(t *testing.T) {
 func TestWithLoadPublicKeyDecoder(t *testing.T) {
 	loader := &KeyLoader{publicKeyDecoder: nil}
 
-	opt := WithLoadPublicKeyDecoder(PKIXPublicKeyDecoder)
+	opt := WithLoadPublicKeyDecoder(X509.PKIXPublicKeyDecoder)
 	opt.ApplyTo(loader)
 
 	decoderPointer := fmt.Sprintf("%p", loader.publicKeyDecoder)
-	expectPointer := fmt.Sprintf("%p", PKIXPublicKeyDecoder)
+	expectPointer := fmt.Sprintf("%p", X509.PKIXPublicKeyDecoder)
 
 	if decoderPointer != expectPointer {
 		t.Errorf("decoderPointer %s != expectPointer %s", decoderPointer, expectPointer)
