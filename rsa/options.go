@@ -7,8 +7,8 @@ package rsa
 // KeyConfig stores all configurations of key.
 type KeyConfig struct {
 	privateKeyEncoder PrivateKeyEncoder
-	publicKeyEncoder  PublicKeyEncoder
 	privateKeyDecoder PrivateKeyDecoder
+	publicKeyEncoder  PublicKeyEncoder
 	publicKeyDecoder  PublicKeyDecoder
 }
 
@@ -16,8 +16,8 @@ type KeyConfig struct {
 func fromKeyOptions(opts ...KeyOption) *KeyConfig {
 	cfg := &KeyConfig{
 		privateKeyEncoder: X509.PKCS1PrivateKeyEncoder,
-		publicKeyEncoder:  X509.PKIXPublicKeyEncoder,
 		privateKeyDecoder: X509.PKCS1PrivateKeyDecoder,
+		publicKeyEncoder:  X509.PKIXPublicKeyEncoder,
 		publicKeyDecoder:  X509.PKIXPublicKeyDecoder,
 	}
 

@@ -28,7 +28,7 @@ func (pk PrivateKey) Encoded() cryptox.Bytes {
 }
 
 func (pk PrivateKey) EqualsTo(privateKey PrivateKey) bool {
-	return pk.key.Equal(privateKey)
+	return pk.key.Equal(privateKey.key)
 }
 
 func (pk PrivateKey) String() string {

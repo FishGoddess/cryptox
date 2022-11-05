@@ -58,7 +58,7 @@ func TestParsePrivateKey(t *testing.T) {
 		t.Error(err)
 	}
 
-	if !parsedPrivateKey.Equal(privateKey.Key()) {
+	if !parsedPrivateKey.EqualsTo(privateKey) {
 		t.Errorf("parsedPrivateKey %+v != privateKey %+v", parsedPrivateKey, privateKey)
 	}
 }
@@ -80,7 +80,7 @@ func TestParsePublicKey(t *testing.T) {
 		t.Error(err)
 	}
 
-	if !parsedPublicKey.Equal(publicKey.Key()) {
+	if !parsedPublicKey.EqualsTo(publicKey) {
 		t.Errorf("parsedPublicKey %+v != publicKey %+v", parsedPublicKey, publicKey)
 	}
 }

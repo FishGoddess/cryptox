@@ -29,7 +29,6 @@ func GenerateKeys(bits int, opts ...KeyOption) (PrivateKey, PublicKey, error) {
 }
 
 // GeneratePrivateKey generates a private key of bits.
-// It returns an original key struct (*rsa.PrivateKey) and a completing key bytes (cryptox.Bytes).
 func GeneratePrivateKey(bits int, opts ...KeyOption) (PrivateKey, error) {
 	privateKey, err := rsa.GenerateKey(rand.Reader, bits)
 	if err != nil {
@@ -47,7 +46,6 @@ func GeneratePrivateKey(bits int, opts ...KeyOption) (PrivateKey, error) {
 }
 
 // GeneratePublicKey generates a public key from private key.
-// It returns an original key struct (*rsa.PublicKey) and a completing key bytes (cryptox.Bytes).
 func GeneratePublicKey(privateKey PrivateKey, opts ...KeyOption) (PublicKey, error) {
 	publicKey := &(privateKey.Key().PublicKey)
 	cfg := fromKeyOptions(opts...)
@@ -61,59 +59,71 @@ func GeneratePublicKey(privateKey PrivateKey, opts ...KeyOption) (PublicKey, err
 }
 
 // ParsePrivateKey parses private key from pem.
-func ParsePrivateKey(keyPem cryptox.Bytes, opts ...KeyOption) (*rsa.PrivateKey, error) {
+func ParsePrivateKey(keyPem cryptox.Bytes, opts ...KeyOption) (PrivateKey, error) {
 	cfg := fromKeyOptions(opts...)
-	return cfg.privateKeyDecoder.Decode(keyPem)
+
+	privateKey, err := cfg.privateKeyDecoder.Decode(keyPem)
+	if err != nil {
+		return PrivateKey{}, nil
+	}
+
+	return newPrivateKey(privateKey, keyPem), nil
 }
 
 // ParsePublicKey parses public key from pem.
-func ParsePublicKey(keyPem cryptox.Bytes, opts ...KeyOption) (*rsa.PublicKey, error) {
+func ParsePublicKey(keyPem cryptox.Bytes, opts ...KeyOption) (PublicKey, error) {
 	cfg := fromKeyOptions(opts...)
-	return cfg.publicKeyDecoder.Decode(keyPem)
+
+	publicKey, err := cfg.publicKeyDecoder.Decode(keyPem)
+	if err != nil {
+		return PublicKey{}, nil
+	}
+
+	return newPublicKey(publicKey, keyPem), nil
 }
 
 // ReadPrivateKey reads private key from a reader.
-func ReadPrivateKey(keyReader io.Reader, opts ...KeyOption) (*rsa.PrivateKey, error) {
+func ReadPrivateKey(keyReader io.Reader, opts ...KeyOption) (PrivateKey, error) {
 	keyPem, err := ioutil.ReadAll(keyReader)
 	if err != nil {
-		return nil, err
+		return PrivateKey{}, err
 	}
 
 	return ParsePrivateKey(keyPem, opts...)
 }
 
 // ReadPublicKey reads public key from a reader.
-func ReadPublicKey(keyReader io.Reader, opts ...KeyOption) (*rsa.PublicKey, error) {
+func ReadPublicKey(keyReader io.Reader, opts ...KeyOption) (PublicKey, error) {
 	keyPem, err := ioutil.ReadAll(keyReader)
 	if err != nil {
-		return nil, err
+		return PublicKey{}, err
 	}
 
 	return ParsePublicKey(keyPem, opts...)
 }
 
 // LoadPrivateKey loads private key from a file.
-func LoadPrivateKey(keyFile string, opts ...KeyOption) (*rsa.PrivateKey, error) {
+func LoadPrivateKey(keyFile string, opts ...KeyOption) (PrivateKey, error) {
 	keyPem, err := ioutil.ReadFile(keyFile)
 	if err != nil {
-		return nil, err
+		return PrivateKey{}, err
 	}
 
 	return ParsePrivateKey(keyPem, opts...)
 }
 
 // LoadPublicKey loads public key from a file.
-func LoadPublicKey(keyFile string, opts ...KeyOption) (*rsa.PublicKey, error) {
+func LoadPublicKey(keyFile string, opts ...KeyOption) (PublicKey, error) {
 	keyPem, err := ioutil.ReadFile(keyFile)
 	if err != nil {
-		return nil, err
+		return PublicKey{}, err
 	}
 
 	return ParsePublicKey(keyPem, opts...)
 }
 
 // MustLoadPrivateKey loads private key from a file or panic on failed.
-func MustLoadPrivateKey(keyFile string, opts ...KeyOption) *rsa.PrivateKey {
+func MustLoadPrivateKey(keyFile string, opts ...KeyOption) PrivateKey {
 	key, err := LoadPrivateKey(keyFile, opts...)
 	if err != nil {
 		panic(err)
@@ -123,7 +133,7 @@ func MustLoadPrivateKey(keyFile string, opts ...KeyOption) *rsa.PrivateKey {
 }
 
 // MustLoadPublicKey loads public key from a file or panic on failed.
-func MustLoadPublicKey(keyFile string, opts ...KeyOption) *rsa.PublicKey {
+func MustLoadPublicKey(keyFile string, opts ...KeyOption) PublicKey {
 	key, err := LoadPublicKey(keyFile, opts...)
 	if err != nil {
 		panic(err)
