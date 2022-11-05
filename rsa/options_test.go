@@ -5,19 +5,18 @@
 package rsa
 
 import (
-	"crypto/rand"
 	"fmt"
 	"testing"
 )
 
-// go test -v -cover -run=^TestWithGeneratePrivateKeyEncoder$
-func TestWithGeneratePrivateKeyEncoder(t *testing.T) {
-	generator := &KeyGenerator{privateKeyEncoder: nil}
+// go test -v -cover -run=^TestWithPrivateKeyEncoder$
+func TestWithPrivateKeyEncoder(t *testing.T) {
+	cfg := &KeyConfig{privateKeyEncoder: nil}
 
-	opt := WithGeneratePrivateKeyEncoder(X509.PKCS1PrivateKeyEncoder)
-	opt.ApplyTo(generator)
+	opt := WithPrivateKeyEncoder(X509.PKCS1PrivateKeyEncoder)
+	opt.ApplyTo(cfg)
 
-	encoderPointer := fmt.Sprintf("%p", generator.privateKeyEncoder)
+	encoderPointer := fmt.Sprintf("%p", cfg.privateKeyEncoder)
 	expectPointer := fmt.Sprintf("%p", X509.PKCS1PrivateKeyEncoder)
 
 	if encoderPointer != expectPointer {
@@ -25,14 +24,14 @@ func TestWithGeneratePrivateKeyEncoder(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithGeneratePublicKeyEncoder$
-func TestWithGeneratePublicKeyEncoder(t *testing.T) {
-	generator := &KeyGenerator{publicKeyEncoder: nil}
+// go test -v -cover -run=^TestWithPublicKeyEncoder$
+func TestWithPublicKeyEncoder(t *testing.T) {
+	cfg := &KeyConfig{publicKeyEncoder: nil}
 
-	opt := WithGeneratePublicKeyEncoder(X509.PKIXPublicKeyEncoder)
-	opt.ApplyTo(generator)
+	opt := WithPublicKeyEncoder(X509.PKIXPublicKeyEncoder)
+	opt.ApplyTo(cfg)
 
-	encoderPointer := fmt.Sprintf("%p", generator.publicKeyEncoder)
+	encoderPointer := fmt.Sprintf("%p", cfg.publicKeyEncoder)
 	expectPointer := fmt.Sprintf("%p", X509.PKIXPublicKeyEncoder)
 
 	if encoderPointer != expectPointer {
@@ -40,14 +39,14 @@ func TestWithGeneratePublicKeyEncoder(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithGeneratePrivateKeyDecoder$
-func TestWithGeneratePrivateKeyDecoder(t *testing.T) {
-	generator := &KeyGenerator{privateKeyDecoder: nil}
+// go test -v -cover -run=^TestWithPrivateKeyDecoder$
+func TestWithPrivateKeyDecoder(t *testing.T) {
+	cfg := &KeyConfig{privateKeyDecoder: nil}
 
-	opt := WithGeneratePrivateKeyDecoder(X509.PKCS1PrivateKeyDecoder)
-	opt.ApplyTo(generator)
+	opt := WithPrivateKeyDecoder(X509.PKCS1PrivateKeyDecoder)
+	opt.ApplyTo(cfg)
 
-	decoderPointer := fmt.Sprintf("%p", generator.privateKeyDecoder)
+	decoderPointer := fmt.Sprintf("%p", cfg.privateKeyDecoder)
 	expectPointer := fmt.Sprintf("%p", X509.PKCS1PrivateKeyDecoder)
 
 	if decoderPointer != expectPointer {
@@ -55,47 +54,17 @@ func TestWithGeneratePrivateKeyDecoder(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestWithLoadPrivateKeyDecoder$
-func TestWithLoadPrivateKeyDecoder(t *testing.T) {
-	loader := &KeyLoader{privateKeyDecoder: nil}
+// go test -v -cover -run=^TestWithPublicKeyDecoder$
+func TestWithPublicKeyDecoder(t *testing.T) {
+	cfg := &KeyConfig{publicKeyDecoder: nil}
 
-	opt := WithLoadPrivateKeyDecoder(X509.PKCS1PrivateKeyDecoder)
-	opt.ApplyTo(loader)
+	opt := WithPublicKeyDecoder(X509.PKIXPublicKeyDecoder)
+	opt.ApplyTo(cfg)
 
-	decoderPointer := fmt.Sprintf("%p", loader.privateKeyDecoder)
-	expectPointer := fmt.Sprintf("%p", X509.PKCS1PrivateKeyDecoder)
-
-	if decoderPointer != expectPointer {
-		t.Errorf("decoderPointer %s != expectPointer %s", decoderPointer, expectPointer)
-	}
-}
-
-// go test -v -cover -run=^TestWithLoadPublicKeyDecoder$
-func TestWithLoadPublicKeyDecoder(t *testing.T) {
-	loader := &KeyLoader{publicKeyDecoder: nil}
-
-	opt := WithLoadPublicKeyDecoder(X509.PKIXPublicKeyDecoder)
-	opt.ApplyTo(loader)
-
-	decoderPointer := fmt.Sprintf("%p", loader.publicKeyDecoder)
+	decoderPointer := fmt.Sprintf("%p", cfg.publicKeyDecoder)
 	expectPointer := fmt.Sprintf("%p", X509.PKIXPublicKeyDecoder)
 
 	if decoderPointer != expectPointer {
 		t.Errorf("decoderPointer %s != expectPointer %s", decoderPointer, expectPointer)
-	}
-}
-
-// go test -v -cover -run=^TestWithRandom$
-func TestWithRandom(t *testing.T) {
-	oaep := &RSA{random: nil}
-
-	opt := WithRandom(rand.Reader)
-	opt.ApplyTo(oaep)
-
-	hashPointer := fmt.Sprintf("%p", oaep.random)
-	expectPointer := fmt.Sprintf("%p", rand.Reader)
-
-	if hashPointer != expectPointer {
-		t.Errorf("hashPointer %s != expectPointer %s", hashPointer, expectPointer)
 	}
 }

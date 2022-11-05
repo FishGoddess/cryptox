@@ -11,29 +11,42 @@ import (
 )
 
 func main() {
-	// Use NewKeyGenerator to generate a key including private and public.
-	// Also, you can use options to choose your encoder and decoder.
-	//generator := rsa.NewKeyGenerator(
-	//	rsa.WithGeneratePrivateKeyEncoder(rsa.PKCS1PrivateKeyEncoder),
-	//	rsa.WithGeneratePublicKeyEncoder(rsa.PKIXPublicKeyEncoder),
-	//	rsa.WithGeneratePrivateKeyDecoder(rsa.PKCS1PrivateKeyDecoder),
-	//)
-	generator := rsa.NewKeyGenerator()
-
 	// Generate a 2048 bits key.
-	key, err := generator.GenerateKey(2048)
+	// See rsa.KeyOption.
+	privateKey, publicKey, err := rsa.GenerateKeys(2048)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println(key.Private)
-	fmt.Println(key.Public)
+	fmt.Println(privateKey)
+	fmt.Println(publicKey)
 
 	// Try WriteToFile if you want to write your key to file.
-	n, err := key.WriteToFile("rsa.key", "rsa.pub")
+	n, err := privateKey.Encoded().WriteToFile("rsa.key")
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("Write %d bytes to file\n", n)
+	fmt.Printf("Write %d bytes to private key file\n", n)
+
+	// Try WriteToFile if you want to write your key to file.
+	n, err = publicKey.Encoded().WriteToFile("rsa.pub")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("Write %d bytes to public key file\n", n)
+
+	loadedPrivateKey, err := rsa.LoadPrivateKey("rsa.key")
+	if err != nil {
+		panic(err)
+	}
+
+	loadedPublicKey, err := rsa.LoadPublicKey("rsa.pub")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(loadedPrivateKey)
+	fmt.Println(loadedPublicKey)
 }

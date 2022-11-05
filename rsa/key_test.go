@@ -5,172 +5,84 @@
 package rsa
 
 import (
-	"bytes"
-	"io/ioutil"
-	"path/filepath"
 	"testing"
 )
 
-// go test -v -cover -run=^TestKeyWritePrivateTo$
-func TestKeyWritePrivateTo(t *testing.T) {
-	key := Key{
-		PrivateBytes: []byte("private"),
-	}
-
-	var privateBuffer bytes.Buffer
-	n, err := key.WritePrivateTo(&privateBuffer)
+// go test -v -cover -run=^TestGenerateKeys$
+func TestGenerateKeys(t *testing.T) {
+	privateKey, publicKey, err := GenerateKeys(2048)
 	if err != nil {
 		t.Error(err)
 	}
 
-	if n != len(key.PrivateBytes) {
-		t.Errorf("n %d != len(key.PrivateBytes) %d", n, len(key.PrivateBytes))
+	t.Log("Public Key:", privateKey)
+	t.Log("Private Key:", publicKey)
+}
+
+// go test -v -cover -run=^TestGeneratePrivateKey$
+func TestGeneratePrivateKey(t *testing.T) {
+	privateKey, err := GeneratePrivateKey(2048)
+	if err != nil {
+		t.Error(err)
 	}
 
-	if !bytes.Equal(key.PrivateBytes, privateBuffer.Bytes()) {
-		t.Errorf("key.PrivateBytes %+v != privateBuffer.Bytes() %+v", key.PrivateBytes, privateBuffer.Bytes())
+	t.Log("Private Key:", privateKey)
+}
+
+// go test -v -cover -run=^TestGeneratePublicKey$
+func TestGeneratePublicKey(t *testing.T) {
+	privateKey, publicKey1, err := GenerateKeys(2048)
+	if err != nil {
+		t.Error(err)
+	}
+
+	publicKey2, err := GeneratePublicKey(privateKey)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !publicKey2.EqualsTo(publicKey1) {
+		t.Errorf("publicKey2 %+v != publicKey1 %+v", publicKey2, publicKey1)
 	}
 }
 
-// go test -v -cover -run=^TestKeyWritePublicTo$
-func TestKeyWritePublicTo(t *testing.T) {
-	key := Key{
-		PublicBytes: []byte("public"),
-	}
-
-	var publicBuffer bytes.Buffer
-	n, err := key.WritePublicTo(&publicBuffer)
+// go test -v -cover -run=^TestParsePrivateKey$
+func TestParsePrivateKey(t *testing.T) {
+	privateKey, err := GeneratePrivateKey(2048)
 	if err != nil {
 		t.Error(err)
 	}
 
-	if n != len(key.PublicBytes) {
-		t.Errorf("n %d != len(key.PublicBytes) %d", n, len(key.PublicBytes))
+	parsedPrivateKey, err := ParsePrivateKey(privateKey.Encoded())
+	if err != nil {
+		t.Error(err)
 	}
 
-	if !bytes.Equal(key.PublicBytes, publicBuffer.Bytes()) {
-		t.Errorf("key.PublicBytes %+v != publicBuffer.Bytes() %+v", key.PublicBytes, publicBuffer.Bytes())
+	if !parsedPrivateKey.Equal(privateKey.Key()) {
+		t.Errorf("parsedPrivateKey %+v != privateKey %+v", parsedPrivateKey, privateKey)
 	}
 }
 
-// go test -v -cover -run=^TestKeyWriteTo$
-func TestKeyWriteTo(t *testing.T) {
-	key := Key{
-		PrivateBytes: []byte("private"),
-		PublicBytes:  []byte("public"),
-	}
-
-	var privateBuffer, publicBuffer bytes.Buffer
-	n, err := key.WriteTo(&privateBuffer, &publicBuffer)
+// go test -v -cover -run=^TestParsePublicKey$
+func TestParsePublicKey(t *testing.T) {
+	privateKey, err := GeneratePrivateKey(2048)
 	if err != nil {
 		t.Error(err)
 	}
 
-	if n != len(key.PrivateBytes)+len(key.PublicBytes) {
-		t.Errorf("n %d != len(key.PrivateBytes) %d + len(key.PublicBytes) %d", n, len(key.PrivateBytes), len(key.PublicBytes))
+	publicKey, err := GeneratePublicKey(privateKey)
+	if err != nil {
+		t.Error(err)
 	}
 
-	if !bytes.Equal(key.PrivateBytes, privateBuffer.Bytes()) {
-		t.Errorf("key.PrivateBytes %+v != privateBuffer.Bytes() %+v", key.PrivateBytes, privateBuffer.Bytes())
+	parsedPublicKey, err := ParsePublicKey(publicKey.Encoded())
+	if err != nil {
+		t.Error(err)
 	}
 
-	if !bytes.Equal(key.PublicBytes, publicBuffer.Bytes()) {
-		t.Errorf("key.PublicBytes %+v != publicBuffer.Bytes() %+v", key.PublicBytes, publicBuffer.Bytes())
+	if !parsedPublicKey.Equal(publicKey.Key()) {
+		t.Errorf("parsedPublicKey %+v != publicKey %+v", parsedPublicKey, publicKey)
 	}
 }
 
-// go test -v -cover -run=^TestKeyWritePrivateToFile$
-func TestKeyWritePrivateToFile(t *testing.T) {
-	key := Key{
-		PrivateBytes: []byte("private"),
-	}
-
-	privatePath := filepath.Join(t.TempDir(), t.Name()+".key")
-	t.Log("private path:", privatePath)
-
-	n, err := key.WritePrivateToFile(privatePath)
-	if err != nil {
-		t.Error(err)
-	}
-
-	if n != len(key.PrivateBytes) {
-		t.Errorf("n %d != len(key.PrivateBytes) %d", n, len(key.PrivateBytes))
-	}
-
-	privateBytes, err := ioutil.ReadFile(privatePath)
-	if err != nil {
-		t.Error(err)
-	}
-
-	if !bytes.Equal(key.PrivateBytes, privateBytes) {
-		t.Errorf("key.PrivateBytes %+v != privateBytes %+v", key.PrivateBytes, privateBytes)
-	}
-}
-
-// go test -v -cover -run=^TestKeyWritePublicToFile$
-func TestKeyWritePublicToFile(t *testing.T) {
-	key := Key{
-		PublicBytes: []byte("public"),
-	}
-
-	publicPath := filepath.Join(t.TempDir(), t.Name()+".pub")
-	t.Log("public path:", publicPath)
-
-	n, err := key.WritePublicToFile(publicPath)
-	if err != nil {
-		t.Error(err)
-	}
-
-	if n != len(key.PublicBytes) {
-		t.Errorf("n %d != len(key.PublicBytes) %d", n, len(key.PublicBytes))
-	}
-
-	publicBytes, err := ioutil.ReadFile(publicPath)
-	if err != nil {
-		t.Error(err)
-	}
-
-	if !bytes.Equal(key.PublicBytes, publicBytes) {
-		t.Errorf("key.PublicBytes %+v != publicBytes %+v", key.PublicBytes, publicBytes)
-	}
-}
-
-// go test -v -cover -run=^TestKeyWriteToFile$
-func TestKeyWriteToFile(t *testing.T) {
-	key := Key{
-		PrivateBytes: []byte("private"),
-		PublicBytes:  []byte("public"),
-	}
-
-	privatePath := filepath.Join(t.TempDir(), t.Name()+".key")
-	publicPath := filepath.Join(t.TempDir(), t.Name()+".pub")
-	t.Log("private path:", privatePath)
-	t.Log("public path:", publicPath)
-
-	n, err := key.WriteToFile(privatePath, publicPath)
-	if err != nil {
-		t.Error(err)
-	}
-
-	if n != len(key.PrivateBytes)+len(key.PublicBytes) {
-		t.Errorf("n %d != len(key.PrivateBytes) %d + len(key.PublicBytes) %d", n, len(key.PrivateBytes), len(key.PublicBytes))
-	}
-
-	privateBytes, err := ioutil.ReadFile(privatePath)
-	if err != nil {
-		t.Error(err)
-	}
-
-	publicBytes, err := ioutil.ReadFile(publicPath)
-	if err != nil {
-		t.Error(err)
-	}
-
-	if !bytes.Equal(key.PrivateBytes, privateBytes) {
-		t.Errorf("key.PrivateBytes %+v != privateBytes %+v", key.PrivateBytes, privateBytes)
-	}
-
-	if !bytes.Equal(key.PublicBytes, publicBytes) {
-		t.Errorf("key.PublicBytes %+v != publicBytes %+v", key.PublicBytes, publicBytes)
-	}
-}
+// TODO 测试 loader 的几个 load 方法

@@ -4,72 +4,62 @@
 
 package rsa
 
-import (
-	"io"
-)
-
-// GeneratorOption is a function for setting key generator.
-type GeneratorOption func(generator *KeyGenerator)
-
-// ApplyTo applies generator option to generator.
-func (o GeneratorOption) ApplyTo(generator *KeyGenerator) {
-	o(generator)
+// KeyConfig stores all configurations of key.
+type KeyConfig struct {
+	privateKeyEncoder PrivateKeyEncoder
+	publicKeyEncoder  PublicKeyEncoder
+	privateKeyDecoder PrivateKeyDecoder
+	publicKeyDecoder  PublicKeyDecoder
 }
 
-// WithGeneratePrivateKeyEncoder sets private key encoder to generator.
-func WithGeneratePrivateKeyEncoder(encoder PrivateKeyEncoder) GeneratorOption {
-	return func(generator *KeyGenerator) {
-		generator.privateKeyEncoder = encoder
+// fromKeyOptions returns a key config constructed from key options.
+func fromKeyOptions(opts ...KeyOption) *KeyConfig {
+	cfg := &KeyConfig{
+		privateKeyEncoder: X509.PKCS1PrivateKeyEncoder,
+		publicKeyEncoder:  X509.PKIXPublicKeyEncoder,
+		privateKeyDecoder: X509.PKCS1PrivateKeyDecoder,
+		publicKeyDecoder:  X509.PKIXPublicKeyDecoder,
+	}
+
+	for _, opt := range opts {
+		opt.ApplyTo(cfg)
+	}
+
+	return cfg
+}
+
+// KeyOption is an option for key config.
+type KeyOption func(cfg *KeyConfig)
+
+// ApplyTo applies key option to key config.
+func (ko KeyOption) ApplyTo(opts *KeyConfig) {
+	ko(opts)
+}
+
+// WithPrivateKeyEncoder sets private key encoder to cfg.
+func WithPrivateKeyEncoder(encoder PrivateKeyEncoder) KeyOption {
+	return func(cfg *KeyConfig) {
+		cfg.privateKeyEncoder = encoder
 	}
 }
 
-// WithGeneratePrivateKeyDecoder sets private key decoder to generator.
-func WithGeneratePrivateKeyDecoder(decoder PrivateKeyDecoder) GeneratorOption {
-	return func(generator *KeyGenerator) {
-		generator.privateKeyDecoder = decoder
+// WithPrivateKeyDecoder sets private key decoder to cfg.
+func WithPrivateKeyDecoder(decoder PrivateKeyDecoder) KeyOption {
+	return func(cfg *KeyConfig) {
+		cfg.privateKeyDecoder = decoder
 	}
 }
 
-// WithGeneratePublicKeyEncoder sets public key encoder to generator.
-func WithGeneratePublicKeyEncoder(encoder PublicKeyEncoder) GeneratorOption {
-	return func(generator *KeyGenerator) {
-		generator.publicKeyEncoder = encoder
+// WithPublicKeyEncoder sets public key encoder to cfg.
+func WithPublicKeyEncoder(encoder PublicKeyEncoder) KeyOption {
+	return func(cfg *KeyConfig) {
+		cfg.publicKeyEncoder = encoder
 	}
 }
 
-// LoaderOption is a function for setting key loader.
-type LoaderOption func(loader *KeyLoader)
-
-// ApplyTo applies key option to loader.
-func (o LoaderOption) ApplyTo(loader *KeyLoader) {
-	o(loader)
-}
-
-// WithLoadPrivateKeyDecoder sets private key decoder to loader.
-func WithLoadPrivateKeyDecoder(decoder PrivateKeyDecoder) LoaderOption {
-	return func(loader *KeyLoader) {
-		loader.privateKeyDecoder = decoder
-	}
-}
-
-// WithLoadPublicKeyDecoder sets public key decoder to loader.
-func WithLoadPublicKeyDecoder(decoder PublicKeyDecoder) LoaderOption {
-	return func(loader *KeyLoader) {
-		loader.publicKeyDecoder = decoder
-	}
-}
-
-// Option is a function for setting rsa.
-type Option func(rsa *RSA)
-
-// ApplyTo applies rsa option to rsa.
-func (oo Option) ApplyTo(rsa *RSA) {
-	oo(rsa)
-}
-
-// WithRandom sets random to rsa.
-func WithRandom(random io.Reader) Option {
-	return func(rsa *RSA) {
-		rsa.random = random
+// WithPublicKeyDecoder sets public key decoder to cfg.
+func WithPublicKeyDecoder(decoder PublicKeyDecoder) KeyOption {
+	return func(cfg *KeyConfig) {
+		cfg.publicKeyDecoder = decoder
 	}
 }
