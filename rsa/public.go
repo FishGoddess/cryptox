@@ -10,27 +10,33 @@ import (
 	"github.com/FishGoddess/cryptox"
 )
 
+// PublicKey is the public key of rsa.
 type PublicKey struct {
 	key *rsa.PublicKey
 	bs  cryptox.Bytes
 }
 
+// newPublicKey returns a public key.
 func newPublicKey(key *rsa.PublicKey, bs cryptox.Bytes) PublicKey {
 	return PublicKey{key: key, bs: bs}
 }
 
+// Key returns the key of pk.
 func (pk PublicKey) Key() *rsa.PublicKey {
 	return pk.key
 }
 
-func (pk PublicKey) Encoded() cryptox.Bytes {
+// Bytes returns the bytes of pk.
+func (pk PublicKey) Bytes() cryptox.Bytes {
 	return pk.bs
 }
 
+// EqualsTo returns if pk equals to privateKey.
 func (pk PublicKey) EqualsTo(publicKey PublicKey) bool {
 	return pk.key.Equal(publicKey.key)
 }
 
+// String returns the formatted string of pk.
 func (pk PublicKey) String() string {
 	return pk.bs.String()
 }

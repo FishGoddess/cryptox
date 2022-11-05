@@ -53,7 +53,7 @@ func TestParsePrivateKey(t *testing.T) {
 		t.Error(err)
 	}
 
-	parsedPrivateKey, err := ParsePrivateKey(privateKey.Encoded())
+	parsedPrivateKey, err := ParsePrivateKey(privateKey.Bytes())
 	if err != nil {
 		t.Error(err)
 	}
@@ -75,7 +75,7 @@ func TestParsePublicKey(t *testing.T) {
 		t.Error(err)
 	}
 
-	parsedPublicKey, err := ParsePublicKey(publicKey.Encoded())
+	parsedPublicKey, err := ParsePublicKey(publicKey.Bytes())
 	if err != nil {
 		t.Error(err)
 	}
