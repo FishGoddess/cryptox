@@ -6,6 +6,7 @@ package rsa
 
 import (
 	"bytes"
+	"path/filepath"
 	"testing"
 )
 
@@ -126,5 +127,117 @@ func TestReadPublicKey(t *testing.T) {
 
 	if !readPublicKey.EqualsTo(publicKey) {
 		t.Errorf("readPublicKey %+v != publicKey %+v", readPublicKey, publicKey)
+	}
+}
+
+// go test -v -cover -run=^TestLoadPrivateKey$
+func TestLoadPrivateKey(t *testing.T) {
+	privateKey, err := GeneratePrivateKey(2048)
+	if err != nil {
+		t.Error(err)
+	}
+
+	privateKeyFile := filepath.Join(t.TempDir(), "TestLoadPrivateKey.key")
+
+	_, err = privateKey.Bytes().WriteToFile(privateKeyFile)
+	if err != nil {
+		t.Error(err)
+	}
+
+	loadedPrivateKey, err := LoadPrivateKey(privateKeyFile)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !loadedPrivateKey.EqualsTo(privateKey) {
+		t.Errorf("loadedPrivateKey %+v != privateKey %+v", loadedPrivateKey, privateKey)
+	}
+}
+
+// go test -v -cover -run=^TestLoadPublicKey$
+func TestLoadPublicKey(t *testing.T) {
+	privateKey, err := GeneratePrivateKey(2048)
+	if err != nil {
+		t.Error(err)
+	}
+
+	publicKey, err := GeneratePublicKey(privateKey)
+	if err != nil {
+		t.Error(err)
+	}
+
+	publicKeyFile := filepath.Join(t.TempDir(), "TestLoadPublicKey.pub")
+
+	_, err = publicKey.Bytes().WriteToFile(publicKeyFile)
+	if err != nil {
+		t.Error(err)
+	}
+
+	loadedPublicKey, err := LoadPublicKey(publicKeyFile)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !loadedPublicKey.EqualsTo(publicKey) {
+		t.Errorf("loadedPublicKey %+v != publicKey %+v", loadedPublicKey, publicKey)
+	}
+}
+
+// go test -v -cover -run=^TestMustLoadPrivateKey$
+func TestMustLoadPrivateKey(t *testing.T) {
+	privateKey, err := GeneratePrivateKey(2048)
+	if err != nil {
+		t.Error(err)
+	}
+
+	privateKeyFile := filepath.Join(t.TempDir(), "TestMustLoadPrivateKey.key")
+
+	_, err = privateKey.Bytes().WriteToFile(privateKeyFile)
+	if err != nil {
+		t.Error(err)
+	}
+
+	defer func() {
+		if err := recover(); err != nil {
+			t.Error(err)
+		}
+	}()
+
+	loadedPrivateKey := MustLoadPrivateKey(privateKeyFile)
+
+	if !loadedPrivateKey.EqualsTo(privateKey) {
+		t.Errorf("loadedPrivateKey %+v != privateKey %+v", loadedPrivateKey, privateKey)
+	}
+}
+
+// go test -v -cover -run=^TestMustLoadPublicKey$
+func TestMustLoadPublicKey(t *testing.T) {
+	privateKey, err := GeneratePrivateKey(2048)
+	if err != nil {
+		t.Error(err)
+	}
+
+	publicKey, err := GeneratePublicKey(privateKey)
+	if err != nil {
+		t.Error(err)
+	}
+
+	publicKeyFile := filepath.Join(t.TempDir(), "TestMustLoadPublicKey.pub")
+
+	_, err = publicKey.Bytes().WriteToFile(publicKeyFile)
+	if err != nil {
+		t.Error(err)
+	}
+
+	defer func() {
+		if err := recover(); err != nil {
+			t.Error(err)
+		}
+	}()
+
+	loadedPublicKey := MustLoadPublicKey(publicKeyFile)
+
+	if !loadedPublicKey.EqualsTo(publicKey) {
+		t.Errorf("loadedPublicKey %+v != publicKey %+v", loadedPublicKey, publicKey)
 	}
 }
