@@ -11,14 +11,26 @@ import (
 )
 
 func main() {
-	data := []byte("戴上头箍，爱不了你；不戴头箍，救不了你。")
-	fmt.Printf("Data: %s\n", data)
+	msg := []byte("戴上头箍，爱不了你；不戴头箍，救不了你。")
+	fmt.Printf("Msg: %s\n", msg)
 
-	// Use public key to encrypt data.
+	// Use public key to encrypt msg.
 	publicKey := rsa.MustLoadPublicKey("rsa.pub")
-	_ = publicKey
 
-	// Use private key to decrypt data.
-	privateKey := rsa.MustLoadPrivateKey("rsa.pub")
-	_ = privateKey
+	encrypted, err := publicKey.EncryptPKCS1v15(msg)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("Encrypted: %s\n", encrypted.Base64())
+
+	// Use private key to decrypt msg.
+	privateKey := rsa.MustLoadPrivateKey("rsa.key")
+
+	decrypted, err := privateKey.DecryptPKCS1v15(encrypted)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("Decrypted: %s\n", decrypted)
 }

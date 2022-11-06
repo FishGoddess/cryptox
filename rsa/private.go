@@ -40,3 +40,34 @@ func (pk PrivateKey) EqualsTo(privateKey PrivateKey) bool {
 func (pk PrivateKey) String() string {
 	return pk.keyBytes.String()
 }
+
+func (pk PrivateKey) DecryptPKCS1v15(msg []byte, opts ...Option) (cryptox.Bytes, error) {
+	cfg := fromOptions(opts...)
+	return rsa.DecryptPKCS1v15(cfg.random, pk.key, msg)
+}
+
+func (pk PrivateKey) DecryptPKCS1v15SessionKey(msg []byte, sessionKey []byte, opts ...Option) error {
+	cfg := fromOptions(opts...)
+	return rsa.DecryptPKCS1v15SessionKey(cfg.random, pk.key, msg, sessionKey)
+}
+
+func (pk PrivateKey) DecryptOAEP(msg []byte, label []byte, opts ...Option) (cryptox.Bytes, error) {
+	cfg := fromOptions(opts...)
+	return rsa.DecryptOAEP(cfg.hash, cfg.random, pk.key, msg, label)
+}
+
+func (pk PrivateKey) SignPKCS1v15(hashed []byte, opts ...Option) (cryptox.Bytes, error) {
+	cfg := fromOptions(opts...)
+	return rsa.SignPKCS1v15(cfg.random, pk.key, cfg.cryptoHash, hashed)
+}
+
+func (pk PrivateKey) SignPSS(digest []byte, saltLength int, opts ...Option) (cryptox.Bytes, error) {
+	cfg := fromOptions(opts...)
+
+	pssOpts := &rsa.PSSOptions{
+		Hash:       cfg.cryptoHash,
+		SaltLength: saltLength,
+	}
+
+	return rsa.SignPSS(cfg.random, pk.key, cfg.cryptoHash, digest, pssOpts)
+}

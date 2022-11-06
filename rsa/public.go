@@ -40,3 +40,29 @@ func (pk PublicKey) EqualsTo(publicKey PublicKey) bool {
 func (pk PublicKey) String() string {
 	return pk.keyBytes.String()
 }
+
+func (pk PublicKey) EncryptPKCS1v15(msg []byte, opts ...Option) (cryptox.Bytes, error) {
+	cfg := fromOptions(opts...)
+	return rsa.EncryptPKCS1v15(cfg.random, pk.key, msg)
+}
+
+func (pk PublicKey) EncryptOAEP(msg []byte, label []byte, opts ...Option) (cryptox.Bytes, error) {
+	cfg := fromOptions(opts...)
+	return rsa.EncryptOAEP(cfg.hash, cfg.random, pk.key, msg, label)
+}
+
+func (pk PublicKey) VerifyPKCS1v15(hashed []byte, signature []byte, opts ...Option) error {
+	cfg := fromOptions(opts...)
+	return rsa.VerifyPKCS1v15(pk.key, cfg.cryptoHash, hashed, signature)
+}
+
+func (pk PublicKey) VerifyPSS(digest []byte, signature []byte, saltLength int, opts ...Option) error {
+	cfg := fromOptions(opts...)
+
+	pssOpts := &rsa.PSSOptions{
+		Hash:       cfg.cryptoHash,
+		SaltLength: saltLength,
+	}
+
+	return rsa.VerifyPSS(pk.key, cfg.cryptoHash, digest, signature, pssOpts)
+}

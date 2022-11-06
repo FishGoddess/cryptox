@@ -13,6 +13,12 @@ import (
 	"github.com/FishGoddess/cryptox"
 )
 
+var (
+	// Primes is the prime of rsa key.
+	// See rsa.GenerateMultiPrimeKey.
+	Primes = 2
+)
+
 // GenerateKeys generates a key set of bits.
 func GenerateKeys(bits int, opts ...KeyOption) (PrivateKey, PublicKey, error) {
 	privateKey, err := GeneratePrivateKey(bits, opts...)
@@ -30,7 +36,7 @@ func GenerateKeys(bits int, opts ...KeyOption) (PrivateKey, PublicKey, error) {
 
 // GeneratePrivateKey generates a private key of bits.
 func GeneratePrivateKey(bits int, opts ...KeyOption) (PrivateKey, error) {
-	privateKey, err := rsa.GenerateKey(rand.Reader, bits)
+	privateKey, err := rsa.GenerateMultiPrimeKey(rand.Reader, Primes, bits)
 	if err != nil {
 		return PrivateKey{}, err
 	}
@@ -64,7 +70,7 @@ func ParsePrivateKey(keyBytes cryptox.Bytes, opts ...KeyOption) (PrivateKey, err
 
 	privateKey, err := cfg.privateKeyDecoder.Decode(keyBytes)
 	if err != nil {
-		return PrivateKey{}, nil
+		return PrivateKey{}, err
 	}
 
 	return newPrivateKey(privateKey, keyBytes), nil
@@ -76,7 +82,7 @@ func ParsePublicKey(keyBytes cryptox.Bytes, opts ...KeyOption) (PublicKey, error
 
 	publicKey, err := cfg.publicKeyDecoder.Decode(keyBytes)
 	if err != nil {
-		return PublicKey{}, nil
+		return PublicKey{}, err
 	}
 
 	return newPublicKey(publicKey, keyBytes), nil

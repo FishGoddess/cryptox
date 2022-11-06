@@ -4,6 +4,15 @@
 
 package rsa
 
+import (
+	"crypto"
+	"crypto/rand"
+	"hash"
+	"io"
+
+	"github.com/FishGoddess/cryptox"
+)
+
 // KeyConfig stores all configurations of key.
 type KeyConfig struct {
 	privateKeyEncoder PrivateKeyEncoder
@@ -32,8 +41,8 @@ func fromKeyOptions(opts ...KeyOption) *KeyConfig {
 type KeyOption func(cfg *KeyConfig)
 
 // ApplyTo applies key option to key config.
-func (ko KeyOption) ApplyTo(opts *KeyConfig) {
-	ko(opts)
+func (ko KeyOption) ApplyTo(cfg *KeyConfig) {
+	ko(cfg)
 }
 
 // WithPrivateKeyEncoder sets private key encoder to cfg.
@@ -63,3 +72,35 @@ func WithPublicKeyDecoder(decoder PublicKeyDecoder) KeyOption {
 		cfg.publicKeyDecoder = decoder
 	}
 }
+
+// Config stores all configurations used by encrypting/decrypting/signing/verifying.
+type Config struct {
+	random     io.Reader
+	hash       hash.Hash
+	cryptoHash crypto.Hash
+}
+
+// fromOptions returns a config constructed from options.
+func fromOptions(opts ...Option) *Config {
+	cfg := &Config{
+		random:     rand.Reader,
+		hash:       cryptox.SHA256(),
+		cryptoHash: crypto.SHA256,
+	}
+
+	for _, opt := range opts {
+		opt.ApplyTo(cfg)
+	}
+
+	return cfg
+}
+
+// Option is an option for config.
+type Option func(cfg *Config)
+
+// ApplyTo applies option to config.
+func (o Option) ApplyTo(cfg *Config) {
+	o(cfg)
+}
+
+// TODO Options for config...
