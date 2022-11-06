@@ -12,13 +12,13 @@ import (
 
 // PublicKey is the public key of rsa.
 type PublicKey struct {
-	key *rsa.PublicKey
-	bs  cryptox.Bytes
+	key      *rsa.PublicKey
+	keyBytes cryptox.Bytes
 }
 
 // newPublicKey returns a public key.
-func newPublicKey(key *rsa.PublicKey, bs cryptox.Bytes) PublicKey {
-	return PublicKey{key: key, bs: bs}
+func newPublicKey(key *rsa.PublicKey, keyBytes cryptox.Bytes) PublicKey {
+	return PublicKey{key: key, keyBytes: keyBytes}
 }
 
 // Key returns the key of pk.
@@ -28,7 +28,7 @@ func (pk PublicKey) Key() *rsa.PublicKey {
 
 // Bytes returns the bytes of pk.
 func (pk PublicKey) Bytes() cryptox.Bytes {
-	return pk.bs
+	return pk.keyBytes
 }
 
 // EqualsTo returns if pk equals to privateKey.
@@ -38,5 +38,5 @@ func (pk PublicKey) EqualsTo(publicKey PublicKey) bool {
 
 // String returns the formatted string of pk.
 func (pk PublicKey) String() string {
-	return pk.bs.String()
+	return pk.keyBytes.String()
 }

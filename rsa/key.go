@@ -58,68 +58,68 @@ func GeneratePublicKey(privateKey PrivateKey, opts ...KeyOption) (PublicKey, err
 	return newPublicKey(publicKey, publicKeyBytes), nil
 }
 
-// ParsePrivateKey parses private key from pem.
-func ParsePrivateKey(keyPem cryptox.Bytes, opts ...KeyOption) (PrivateKey, error) {
+// ParsePrivateKey parses private key from pem bytes.
+func ParsePrivateKey(keyBytes cryptox.Bytes, opts ...KeyOption) (PrivateKey, error) {
 	cfg := fromKeyOptions(opts...)
 
-	privateKey, err := cfg.privateKeyDecoder.Decode(keyPem)
+	privateKey, err := cfg.privateKeyDecoder.Decode(keyBytes)
 	if err != nil {
 		return PrivateKey{}, nil
 	}
 
-	return newPrivateKey(privateKey, keyPem), nil
+	return newPrivateKey(privateKey, keyBytes), nil
 }
 
-// ParsePublicKey parses public key from pem.
-func ParsePublicKey(keyPem cryptox.Bytes, opts ...KeyOption) (PublicKey, error) {
+// ParsePublicKey parses public key from pem bytes.
+func ParsePublicKey(keyBytes cryptox.Bytes, opts ...KeyOption) (PublicKey, error) {
 	cfg := fromKeyOptions(opts...)
 
-	publicKey, err := cfg.publicKeyDecoder.Decode(keyPem)
+	publicKey, err := cfg.publicKeyDecoder.Decode(keyBytes)
 	if err != nil {
 		return PublicKey{}, nil
 	}
 
-	return newPublicKey(publicKey, keyPem), nil
+	return newPublicKey(publicKey, keyBytes), nil
 }
 
 // ReadPrivateKey reads private key from a reader.
 func ReadPrivateKey(keyReader io.Reader, opts ...KeyOption) (PrivateKey, error) {
-	keyPem, err := ioutil.ReadAll(keyReader)
+	keyBytes, err := ioutil.ReadAll(keyReader)
 	if err != nil {
 		return PrivateKey{}, err
 	}
 
-	return ParsePrivateKey(keyPem, opts...)
+	return ParsePrivateKey(keyBytes, opts...)
 }
 
 // ReadPublicKey reads public key from a reader.
 func ReadPublicKey(keyReader io.Reader, opts ...KeyOption) (PublicKey, error) {
-	keyPem, err := ioutil.ReadAll(keyReader)
+	keyBytes, err := ioutil.ReadAll(keyReader)
 	if err != nil {
 		return PublicKey{}, err
 	}
 
-	return ParsePublicKey(keyPem, opts...)
+	return ParsePublicKey(keyBytes, opts...)
 }
 
 // LoadPrivateKey loads private key from a file.
 func LoadPrivateKey(keyFile string, opts ...KeyOption) (PrivateKey, error) {
-	keyPem, err := ioutil.ReadFile(keyFile)
+	keyBytes, err := ioutil.ReadFile(keyFile)
 	if err != nil {
 		return PrivateKey{}, err
 	}
 
-	return ParsePrivateKey(keyPem, opts...)
+	return ParsePrivateKey(keyBytes, opts...)
 }
 
 // LoadPublicKey loads public key from a file.
 func LoadPublicKey(keyFile string, opts ...KeyOption) (PublicKey, error) {
-	keyPem, err := ioutil.ReadFile(keyFile)
+	keyBytes, err := ioutil.ReadFile(keyFile)
 	if err != nil {
 		return PublicKey{}, err
 	}
 
-	return ParsePublicKey(keyPem, opts...)
+	return ParsePublicKey(keyBytes, opts...)
 }
 
 // MustLoadPrivateKey loads private key from a file or panic on failed.

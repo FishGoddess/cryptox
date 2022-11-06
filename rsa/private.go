@@ -12,13 +12,13 @@ import (
 
 // PrivateKey is the private key of rsa.
 type PrivateKey struct {
-	key *rsa.PrivateKey
-	bs  cryptox.Bytes
+	key      *rsa.PrivateKey
+	keyBytes cryptox.Bytes
 }
 
 // newPrivateKey returns a private key.
-func newPrivateKey(key *rsa.PrivateKey, bs cryptox.Bytes) PrivateKey {
-	return PrivateKey{key: key, bs: bs}
+func newPrivateKey(key *rsa.PrivateKey, keyBytes cryptox.Bytes) PrivateKey {
+	return PrivateKey{key: key, keyBytes: keyBytes}
 }
 
 // Key returns the key of pk.
@@ -28,7 +28,7 @@ func (pk PrivateKey) Key() *rsa.PrivateKey {
 
 // Bytes returns the bytes of pk.
 func (pk PrivateKey) Bytes() cryptox.Bytes {
-	return pk.bs
+	return pk.keyBytes
 }
 
 // EqualsTo returns if pk equals to privateKey.
@@ -38,5 +38,5 @@ func (pk PrivateKey) EqualsTo(privateKey PrivateKey) bool {
 
 // String returns the formatted string of pk.
 func (pk PrivateKey) String() string {
-	return pk.bs.String()
+	return pk.keyBytes.String()
 }

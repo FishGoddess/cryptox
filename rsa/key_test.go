@@ -5,6 +5,7 @@
 package rsa
 
 import (
+	"bytes"
 	"testing"
 )
 
@@ -85,4 +86,45 @@ func TestParsePublicKey(t *testing.T) {
 	}
 }
 
-// TODO 测试 loader 的几个 load 方法
+// go test -v -cover -run=^TestReadPrivateKey$
+func TestReadPrivateKey(t *testing.T) {
+	privateKey, err := GeneratePrivateKey(2048)
+	if err != nil {
+		t.Error(err)
+	}
+
+	reader := bytes.NewReader(privateKey.Bytes())
+
+	readPrivateKey, err := ReadPrivateKey(reader)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !readPrivateKey.EqualsTo(privateKey) {
+		t.Errorf("readPrivateKey %+v != privateKey %+v", readPrivateKey, privateKey)
+	}
+}
+
+// go test -v -cover -run=^TestReadPublicKey$
+func TestReadPublicKey(t *testing.T) {
+	privateKey, err := GeneratePrivateKey(2048)
+	if err != nil {
+		t.Error(err)
+	}
+
+	publicKey, err := GeneratePublicKey(privateKey)
+	if err != nil {
+		t.Error(err)
+	}
+
+	reader := bytes.NewReader(publicKey.Bytes())
+
+	readPublicKey, err := ReadPublicKey(reader)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !readPublicKey.EqualsTo(publicKey) {
+		t.Errorf("readPublicKey %+v != publicKey %+v", readPublicKey, publicKey)
+	}
+}
