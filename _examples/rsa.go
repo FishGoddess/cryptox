@@ -10,12 +10,17 @@ import (
 	"github.com/FishGoddess/cryptox/rsa"
 )
 
+var (
+	// Use public key to encrypt msg.
+	publicKey = rsa.MustLoadPublicKey("rsa.pub")
+
+	// Use private key to decrypt msg.
+	privateKey = rsa.MustLoadPrivateKey("rsa.key")
+)
+
 func main() {
 	msg := []byte("戴上头箍，爱不了你；不戴头箍，救不了你。")
 	fmt.Printf("Msg: %s\n", msg)
-
-	// Use public key to encrypt msg.
-	publicKey := rsa.MustLoadPublicKey("rsa.pub")
 
 	encrypted, err := publicKey.EncryptPKCS1v15(msg)
 	if err != nil {
@@ -23,9 +28,6 @@ func main() {
 	}
 
 	fmt.Printf("Encrypted: %s\n", encrypted.Base64())
-
-	// Use private key to decrypt msg.
-	privateKey := rsa.MustLoadPrivateKey("rsa.key")
 
 	decrypted, err := privateKey.DecryptPKCS1v15(encrypted)
 	if err != nil {
