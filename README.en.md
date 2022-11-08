@@ -2,7 +2,7 @@
 
 [![Go Doc](_icons/godoc.svg)](https://pkg.go.dev/github.com/FishGoddess/cryptox)
 [![License](_icons/license.svg)](https://opensource.org/licenses/MIT)
-[![License](_icons/coverage.svg)](_icons/coverage.svg)
+[![Coverage](_icons/coverage.svg)](_icons/coverage.svg)
 ![Test](https://github.com/FishGoddess/cryptox/actions/workflows/test.yml/badge.svg)
 
 **Cryptox** is a kit for safety which includes some common encrypted/decrypted algorithms.
