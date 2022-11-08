@@ -103,4 +103,23 @@ func (o Option) ApplyTo(cfg *Config) {
 	o(cfg)
 }
 
-// TODO Options for config...
+// WithRandom sets random to cfg.
+func WithRandom(random io.Reader) Option {
+	return func(cfg *Config) {
+		cfg.random = random
+	}
+}
+
+// WithHash sets hash to cfg.
+func WithHash(hash hash.Hash) Option {
+	return func(cfg *Config) {
+		cfg.hash = hash
+	}
+}
+
+// WithCryptoHash sets crypto hash to cfg.
+func WithCryptoHash(hash crypto.Hash) Option {
+	return func(cfg *Config) {
+		cfg.cryptoHash = hash
+	}
+}

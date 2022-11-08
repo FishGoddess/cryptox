@@ -42,25 +42,25 @@ func (pk PublicKey) String() string {
 }
 
 // EncryptPKCS1v15 encrypts msg with pkcs1 v15.
-func (pk PublicKey) EncryptPKCS1v15(msg []byte, opts ...Option) (cryptox.Bytes, error) {
+func (pk PublicKey) EncryptPKCS1v15(msg cryptox.Bytes, opts ...Option) (cryptox.Bytes, error) {
 	cfg := fromOptions(opts...)
 	return rsa.EncryptPKCS1v15(cfg.random, pk.key, msg)
 }
 
 // EncryptOAEP encrypts msg with oaep.
-func (pk PublicKey) EncryptOAEP(msg []byte, label []byte, opts ...Option) (cryptox.Bytes, error) {
+func (pk PublicKey) EncryptOAEP(msg cryptox.Bytes, label cryptox.Bytes, opts ...Option) (cryptox.Bytes, error) {
 	cfg := fromOptions(opts...)
 	return rsa.EncryptOAEP(cfg.hash, cfg.random, pk.key, msg, label)
 }
 
 // VerifyPKCS1v15 verifies signature with pkcs1 v15.
-func (pk PublicKey) VerifyPKCS1v15(hashed []byte, signature []byte, opts ...Option) error {
+func (pk PublicKey) VerifyPKCS1v15(hashed cryptox.Bytes, signature cryptox.Bytes, opts ...Option) error {
 	cfg := fromOptions(opts...)
 	return rsa.VerifyPKCS1v15(pk.key, cfg.cryptoHash, hashed, signature)
 }
 
 // VerifyPSS verifies signature with pss.
-func (pk PublicKey) VerifyPSS(digest []byte, signature []byte, saltLength int, opts ...Option) error {
+func (pk PublicKey) VerifyPSS(digest cryptox.Bytes, signature cryptox.Bytes, saltLength int, opts ...Option) error {
 	cfg := fromOptions(opts...)
 
 	pssOpts := &rsa.PSSOptions{

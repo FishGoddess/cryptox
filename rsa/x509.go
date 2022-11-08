@@ -16,8 +16,8 @@ import (
 )
 
 const (
-	blockTypePrivate = "RSA Private Key"
-	blockTypePublic  = "RSA Public Key"
+	blockTypePrivate = "PRIVATE KEY"
+	blockTypePublic  = "PUBLIC KEY"
 )
 
 var (

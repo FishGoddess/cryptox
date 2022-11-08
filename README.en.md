@@ -32,6 +32,7 @@ $ go get -u github.com/FishGoddess/cryptox
 * [aes](_examples/aes.go)
 * [hash](_examples/hash.go)
 * [rsa_key](_examples/rsa_key.go)
+* [rsa](_examples/rsa.go)
 
 ### 🚴🏻 Benchmarks
 
@@ -93,6 +94,12 @@ BenchmarkFnv64-12               39065052                29.9 ns/op             8
 BenchmarkFnv64a-12              39740802                29.9 ns/op             8 B/op          1 allocs/op
 BenchmarkFnv128-12              23474830                50.2 ns/op            16 B/op          1 allocs/op
 BenchmarkFnv128a-12             24201123                50.3 ns/op            16 B/op          1 allocs/op
+
+BenchmarkRSAEncryptPKCS1v15-12                     23575             51665 ns/op            5119 B/op         12 allocs/op
+BenchmarkRSAEncryptOAEP-12                         23125             54832 ns/op            5475 B/op         18 allocs/op
+BenchmarkRSADecryptPKCS1v15-12                       806           1388847 ns/op           26180 B/op        102 allocs/op
+BenchmarkRSADecryptPKCS1v15SessionKey-12             856           1367107 ns/op           26179 B/op        102 allocs/op
+BenchmarkRSADecryptOAEP-12                           812           1377677 ns/op           26284 B/op        107 allocs/op
 ```
 
 ### 🎨 Contributing
