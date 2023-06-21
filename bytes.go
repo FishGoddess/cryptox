@@ -1,4 +1,4 @@
-// Copyright 2022 FishGoddess. All rights reserved.
+// Copyright 2023 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -79,24 +79,34 @@ func (bs Bytes) WriteToFile(path string) (n int64, err error) {
 	return bs.WriteTo(file)
 }
 
-// ParseHex uses hex to parse string to Bytes.
-func ParseHex(str string) (Bytes, error) {
-	return hex.DecodeString(str)
+// FromBytes creates a new Bytes from bs.
+func FromBytes(bs []byte) Bytes {
+	return bs
 }
 
-// ParseBase64 uses base64 to parse string to Bytes.
-func ParseBase64(str string) (Bytes, error) {
-	return Base64.DecodeString(str)
+// FromString creates a new Bytes from string.
+func FromString(str string) Bytes {
+	return Bytes(str)
 }
 
-// RandomBytes returns a byte slice filled with random byte.
+// FromHex creates a new Bytes from hex string.
+func FromHex(hexString string) (Bytes, error) {
+	return hex.DecodeString(hexString)
+}
+
+// FromBase64 creates a new Bytes from base64 string.
+func FromBase64(base64String string) (Bytes, error) {
+	return Base64.DecodeString(base64String)
+}
+
+// GenerateBytes generates a byte slice filled with random byte.
 // It usually used to generate an iv and install iv to crypted data.
 // For example, you use this method to generate a byte slice and pass it to encrypter as iv.
 // After encrypting, you append this iv slice encoded to hex or base64 to crypted slice as they are one part.
 // When you need to decrypt data, parse iv from the "crypted" slice including raw-crypted slice and iv slice first.
 // Then you can pass this iv to decrypter and decrypt data as usual.
 // However, you should know that the crypted data of the same plain data will be different every time because of different ivs.
-func RandomBytes(n int) (Bytes, error) {
+func GenerateBytes(n int) (Bytes, error) {
 	bs := make([]byte, n)
 
 	read, err := rand.Read(bs)
@@ -105,7 +115,7 @@ func RandomBytes(n int) (Bytes, error) {
 	}
 
 	if read != n {
-		return nil, fmt.Errorf("cryptox.RandomBytes: read %d != n %d", read, n)
+		return nil, fmt.Errorf("bytes: generate read %d != n %d", read, n)
 	}
 
 	return bs, nil

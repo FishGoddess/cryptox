@@ -1,56 +1,59 @@
-// Copyright 2022 FishGoddess. All rights reserved.
+// Copyright 2023 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
 package hash
 
 import (
-	"crypto/hmac"
+	"crypto/md5"
+	"crypto/sha1"
+	"crypto/sha256"
+	"crypto/sha512"
+	"fmt"
+	stdhash "hash"
 
 	"github.com/FishGoddess/cryptox"
 )
 
-// MD5 hashes data with md5.
-func MD5(data cryptox.Bytes) cryptox.Bytes {
-	bs, _ := cryptox.NewHasher(cryptox.MD5).Hash(data)
-	return bs
+func hash(h stdhash.Hash, bs cryptox.Bytes) (cryptox.Bytes, error) {
+	n, err := h.Write(bs)
+	if err != nil {
+		return nil, err
+	}
+
+	if n != len(bs) {
+		return nil, fmt.Errorf("hash: hashed n %d != len(bs) %d", n, len(bs))
+	}
+
+	return h.Sum(nil), nil
 }
 
-// SHA1 hashes data with sha1.
-func SHA1(data cryptox.Bytes) cryptox.Bytes {
-	bs, _ := cryptox.NewHasher(cryptox.SHA1).Hash(data)
-	return bs
+// MD5 uses md5 to hash bs and returns an error if failed.
+func MD5(bs cryptox.Bytes) (cryptox.Bytes, error) {
+	return hash(md5.New(), bs)
 }
 
-// SHA224 hashes data with sha224.
-func SHA224(data cryptox.Bytes) cryptox.Bytes {
-	bs, _ := cryptox.NewHasher(cryptox.SHA224).Hash(data)
-	return bs
+// SHA1 uses sha1 to hash bs and returns an error if failed.
+func SHA1(bs cryptox.Bytes) (cryptox.Bytes, error) {
+	return hash(sha1.New(), bs)
 }
 
-// SHA256 hashes data with sha256.
-func SHA256(data cryptox.Bytes) cryptox.Bytes {
-	bs, _ := cryptox.NewHasher(cryptox.SHA256).Hash(data)
-	return bs
+// SHA224 uses sha224 to hash bs and returns an error if failed.
+func SHA224(bs cryptox.Bytes) (cryptox.Bytes, error) {
+	return hash(sha256.New224(), bs)
 }
 
-// SHA384 hashes data with sha384.
-func SHA384(data cryptox.Bytes) cryptox.Bytes {
-	bs, _ := cryptox.NewHasher(cryptox.SHA384).Hash(data)
-	return bs
+// SHA256 uses sha256 to hash bs and returns an error if failed.
+func SHA256(bs cryptox.Bytes) (cryptox.Bytes, error) {
+	return hash(sha256.New(), bs)
 }
 
-// SHA512 hashes data with sha512.
-func SHA512(data cryptox.Bytes) cryptox.Bytes {
-	bs, _ := cryptox.NewHasher(cryptox.SHA512).Hash(data)
-	return bs
+// SHA384 uses sha384 to hash bs and returns an error if failed.
+func SHA384(bs cryptox.Bytes) (cryptox.Bytes, error) {
+	return hash(sha512.New384(), bs)
 }
 
-// HMAC hashes data with hash and key.
-func HMAC(hash cryptox.Hash, key cryptox.Bytes, data cryptox.Bytes) cryptox.Bytes {
-	h := hmac.New(hash, key)
-
-	// It should return a nil error forever.
-	h.Write(data)
-	return h.Sum(nil)
+// SHA512 uses sha512 to hash bs and returns an error if failed.
+func SHA512(bs cryptox.Bytes) (cryptox.Bytes, error) {
+	return hash(sha512.New(), bs)
 }

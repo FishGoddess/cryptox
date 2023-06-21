@@ -1,4 +1,4 @@
-// Copyright 2022 FishGoddess. All rights reserved.
+// Copyright 2023 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -7,10 +7,9 @@ package rsa
 import (
 	"crypto"
 	"crypto/rand"
+	"crypto/sha256"
 	"hash"
 	"io"
-
-	"github.com/FishGoddess/cryptox"
 )
 
 // KeyConfig stores all configurations of key.
@@ -84,7 +83,7 @@ type Config struct {
 func fromOptions(opts ...Option) *Config {
 	cfg := &Config{
 		random:     rand.Reader,
-		hash:       cryptox.SHA256(),
+		hash:       sha256.New(),
 		cryptoHash: crypto.SHA256,
 	}
 

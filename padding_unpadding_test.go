@@ -1,10 +1,12 @@
-// Copyright 2022 FishGoddess. All rights reserved.
+// Copyright 2023 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
 package cryptox
 
-import "testing"
+import (
+	"testing"
+)
 
 // go test -v -cover -run=^TestPaddingAndUnPaddingNone$
 func TestPaddingAndUnPaddingNone(t *testing.T) {
@@ -18,20 +20,20 @@ func TestPaddingAndUnPaddingNone(t *testing.T) {
 	}
 
 	for data, expect := range cases {
-		padding := PaddingNone([]byte(data), blockSize)
+		padding := PaddingNone(FromString(data), blockSize)
 		if string(padding) != expect {
-			t.Errorf("data %+v: padding %+v != expect %s", []byte(data), padding, []byte(expect))
+			t.Errorf("data %+v: padding %+v != expect %s", FromString(data), padding, FromString(expect))
 		}
 	}
 
 	for data, expect := range cases {
-		unPadding, err := UnPaddingNone([]byte(expect), blockSize)
+		unPadding, err := UnPaddingNone(FromString(expect), blockSize)
 		if err != nil {
 			t.Error(err)
 		}
 
 		if string(unPadding) != data {
-			t.Errorf("expect %+v: unPadding %+v != data %+v", []byte(expect), unPadding, []byte(data))
+			t.Errorf("expect %+v: unPadding %+v != data %+v", FromString(expect), unPadding, FromString(data))
 		}
 	}
 }
@@ -48,20 +50,20 @@ func TestPaddingAndUnPaddingZero(t *testing.T) {
 	}
 
 	for data, expect := range cases {
-		padding := PaddingZero([]byte(data), blockSize)
+		padding := PaddingZero(FromString(data), blockSize)
 		if string(padding) != expect {
-			t.Errorf("data %+v: padding %+v != expect %s", []byte(data), padding, []byte(expect))
+			t.Errorf("data %+v: padding %+v != expect %s", FromString(data), padding, FromString(expect))
 		}
 	}
 
 	for data, expect := range cases {
-		unPadding, err := UnPaddingZero([]byte(expect), blockSize)
+		unPadding, err := UnPaddingZero(FromString(expect), blockSize)
 		if err != nil {
 			t.Error(err)
 		}
 
 		if string(unPadding) != data {
-			t.Errorf("expect %+v: unPadding %+v != data %+v", []byte(expect), unPadding, []byte(data))
+			t.Errorf("expect %+v: unPadding %+v != data %+v", FromString(expect), unPadding, FromString(data))
 		}
 	}
 }
@@ -78,20 +80,20 @@ func TestPaddingAndUnPaddingPKCS5(t *testing.T) {
 	}
 
 	for data, expect := range cases {
-		padding := PaddingPKCS5([]byte(data), blockSize)
+		padding := PaddingPKCS5(FromString(data), blockSize)
 		if string(padding) != expect {
-			t.Errorf("data %+v: padding %+v != expect %s", []byte(data), padding, []byte(expect))
+			t.Errorf("data %+v: padding %+v != expect %s", FromString(data), padding, FromString(expect))
 		}
 	}
 
 	for data, expect := range cases {
-		unPadding, err := UnPaddingPKCS5([]byte(expect), blockSize)
+		unPadding, err := UnPaddingPKCS5(FromString(expect), blockSize)
 		if err != nil {
 			t.Error(err)
 		}
 
 		if string(unPadding) != data {
-			t.Errorf("expect %+v: unPadding %+v != data %+v", []byte(expect), unPadding, []byte(data))
+			t.Errorf("expect %+v: unPadding %+v != data %+v", FromString(expect), unPadding, FromString(data))
 		}
 	}
 }
@@ -108,20 +110,20 @@ func TestPaddingAndUnPaddingPKCS7(t *testing.T) {
 	}
 
 	for data, expect := range cases {
-		padding := PaddingPKCS7([]byte(data), blockSize)
+		padding := PaddingPKCS7(FromString(data), blockSize)
 		if string(padding) != expect {
-			t.Errorf("data %+v: padding %+v != expect %s", []byte(data), padding, []byte(expect))
+			t.Errorf("data %+v: padding %+v != expect %s", FromString(data), padding, FromString(expect))
 		}
 	}
 
 	for data, expect := range cases {
-		unPadding, err := UnPaddingPKCS7([]byte(expect), blockSize)
+		unPadding, err := UnPaddingPKCS7(FromString(expect), blockSize)
 		if err != nil {
 			t.Error(err)
 		}
 
 		if string(unPadding) != data {
-			t.Errorf("expect %+v: unPadding %+v != data %+v", []byte(expect), unPadding, []byte(data))
+			t.Errorf("expect %+v: unPadding %+v != data %+v", FromString(expect), unPadding, FromString(data))
 		}
 	}
 }

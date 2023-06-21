@@ -1,4 +1,4 @@
-// Copyright 2022 FishGoddess. All rights reserved.
+// Copyright 2023 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -19,7 +19,11 @@ func TestCRC32(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crc, crcNumber := CRC32([]byte(input), TableIEEE)
+		crc, crcNumber, err := CRC32([]byte(input), tableIEEE)
+		if err != nil {
+			t.Error(err)
+		}
+
 		if crc.Hex() != expect {
 			t.Errorf("input %s: crc %s != expect %s", input, crc.Hex(), expect)
 		}
@@ -40,7 +44,11 @@ func TestCRC32IEEE(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crc, crcNumber := CRC32IEEE([]byte(input))
+		crc, crcNumber, err := CRC32IEEE([]byte(input))
+		if err != nil {
+			t.Error(err)
+		}
+
 		if crc.Hex() != expect {
 			t.Errorf("input %s: crc %s != expect %s", input, crc.Hex(), expect)
 		}
@@ -61,7 +69,11 @@ func TestCRC64(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crc, crcNumber := CRC64([]byte(input), TableISO)
+		crc, crcNumber, err := CRC64([]byte(input), tableISO)
+		if err != nil {
+			t.Error(err)
+		}
+
 		if crc.Hex() != expect {
 			t.Errorf("input %s: crc %s != expect %s", input, crc.Hex(), expect)
 		}
@@ -82,7 +94,11 @@ func TestCRC64ISO(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crc, crcNumber := CRC64ISO([]byte(input))
+		crc, crcNumber, err := CRC64ISO([]byte(input))
+		if err != nil {
+			t.Error(err)
+		}
+
 		if crc.Hex() != expect {
 			t.Errorf("input %s: crc %s != expect %s", input, crc.Hex(), expect)
 		}
@@ -103,7 +119,11 @@ func TestCRC64ECMA(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crc, crcNumber := CRC64ECMA([]byte(input))
+		crc, crcNumber, err := CRC64ECMA([]byte(input))
+		if err != nil {
+			t.Error(err)
+		}
+
 		if crc.Hex() != expect {
 			t.Errorf("input %s: crc %s != expect %s", input, crc.Hex(), expect)
 		}

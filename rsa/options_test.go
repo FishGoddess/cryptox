@@ -1,4 +1,4 @@
-// Copyright 2022 FishGoddess. All rights reserved.
+// Copyright 2023 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -7,10 +7,9 @@ package rsa
 import (
 	"crypto"
 	"crypto/rand"
+	"crypto/sha256"
 	"fmt"
 	"testing"
-
-	"github.com/FishGoddess/cryptox"
 )
 
 // go test -v -cover -run=^TestFromKeyOptions$
@@ -132,7 +131,7 @@ func TestWithRandom(t *testing.T) {
 func TestWithHash(t *testing.T) {
 	cfg := &Config{random: nil}
 
-	hash := cryptox.SHA256()
+	hash := sha256.New()
 	opt := WithHash(hash)
 	opt.ApplyTo(cfg)
 

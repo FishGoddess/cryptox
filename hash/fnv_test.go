@@ -1,4 +1,4 @@
-// Copyright 2022 FishGoddess. All rights reserved.
+// Copyright 2023 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -19,7 +19,11 @@ func TestFnv32(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		fnv32, fnv32Number := Fnv32([]byte(input))
+		fnv32, fnv32Number, err := Fnv32([]byte(input))
+		if err != nil {
+			t.Error(err)
+		}
+
 		if fnv32.Hex() != expect {
 			t.Errorf("input %s: fnv32 %s != expect %s", input, fnv32.Hex(), expect)
 		}
@@ -43,7 +47,11 @@ func TestFnv32a(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		fnv32, fnv32Number := Fnv32a([]byte(input))
+		fnv32, fnv32Number, err := Fnv32a([]byte(input))
+		if err != nil {
+			t.Error(err)
+		}
+
 		if fnv32.Hex() != expect {
 			t.Errorf("input %s: fnv32 %s != expect %s", input, fnv32.Hex(), expect)
 		}
@@ -67,7 +75,11 @@ func TestFnv64(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		fnv64, fnv64Number := Fnv64([]byte(input))
+		fnv64, fnv64Number, err := Fnv64([]byte(input))
+		if err != nil {
+			t.Error(err)
+		}
+
 		if fnv64.Hex() != expect {
 			t.Errorf("input %s: fnv64 %s != expect %s", input, fnv64.Hex(), expect)
 		}
@@ -91,7 +103,11 @@ func TestFnv64a(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		fnv64, fnv64Number := Fnv64a([]byte(input))
+		fnv64, fnv64Number, err := Fnv64a([]byte(input))
+		if err != nil {
+			t.Error(err)
+		}
+
 		if fnv64.Hex() != expect {
 			t.Errorf("input %s: fnv64 %s != expect %s", input, fnv64.Hex(), expect)
 		}
@@ -115,7 +131,11 @@ func TestFnv128(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		fnv128 := Fnv128([]byte(input))
+		fnv128, err := Fnv128([]byte(input))
+		if err != nil {
+			t.Error(err)
+		}
+
 		if fnv128.Hex() != expect {
 			t.Errorf("input %s: fnv128 %s != expect %s", input, fnv128.Hex(), expect)
 		}
@@ -139,7 +159,11 @@ func TestFnv128a(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		fnv128 := Fnv128a([]byte(input))
+		fnv128, err := Fnv128a([]byte(input))
+		if err != nil {
+			t.Error(err)
+		}
+
 		if fnv128.Hex() != expect {
 			t.Errorf("input %s: fnv128 %s != expect %s", input, fnv128.Hex(), expect)
 		}

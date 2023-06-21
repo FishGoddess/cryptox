@@ -1,4 +1,4 @@
-// Copyright 2022 FishGoddess. All rights reserved.
+// Copyright 2023 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -12,9 +12,9 @@ import (
 )
 
 var (
-	aesBenchKey   = []byte("12345678876543211234567887654321")
-	aesBenchIV    = []byte("8765432112345678")
-	aesBenchPlain = make([]byte, 128)
+	aesBenchKey      = cryptox.FromString("12345678876543211234567887654321")
+	aesBenchIV       = cryptox.FromString("8765432112345678")
+	aesBenchPlain, _ = cryptox.GenerateBytes(128)
 )
 
 // go test -v -bench=^BenchmarkAESEncryptWithECB$ -benchtime=1s aes_test.go
@@ -22,8 +22,9 @@ func BenchmarkAESEncryptWithECB(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
+	aesObj := aes.New(aesBenchKey)
 	for i := 0; i < b.N; i++ {
-		_, err := aes.ECBEncrypter(aesBenchKey, cryptox.PaddingPKCS7).Encrypt(aesBenchPlain)
+		_, err := aesObj.EncryptECB(cryptox.PaddingPKCS7, aesBenchPlain)
 		if err != nil {
 			b.Error(err)
 		}
@@ -35,8 +36,9 @@ func BenchmarkAESEncryptWithCBC(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
+	aesObj := aes.New(aesBenchKey)
 	for i := 0; i < b.N; i++ {
-		_, err := aes.CBCEncrypter(aesBenchKey, aesBenchIV, cryptox.PaddingPKCS7).Encrypt(aesBenchPlain)
+		_, err := aesObj.EncryptCBC(cryptox.PaddingPKCS7, aesBenchIV, aesBenchPlain)
 		if err != nil {
 			b.Error(err)
 		}
@@ -48,8 +50,9 @@ func BenchmarkAESEncryptWithCFB(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
+	aesObj := aes.New(aesBenchKey)
 	for i := 0; i < b.N; i++ {
-		_, err := aes.CFBEncrypter(aesBenchKey, aesBenchIV, cryptox.PaddingNone).Encrypt(aesBenchPlain)
+		_, err := aesObj.EncryptCFB(cryptox.PaddingNone, aesBenchIV, aesBenchPlain)
 		if err != nil {
 			b.Error(err)
 		}
@@ -61,6 +64,7 @@ func BenchmarkAESEncryptWithOFB(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
+	aesObj := aes.New(aesBenchKey)
 	for i := 0; i < b.N; i++ {
 		_, err := aes.OFBEncrypter(aesBenchKey, aesBenchIV, cryptox.PaddingNone).Encrypt(aesBenchPlain)
 		if err != nil {
@@ -74,6 +78,7 @@ func BenchmarkAESEncryptWithCTR(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
+	aesObj := aes.New(aesBenchKey)
 	for i := 0; i < b.N; i++ {
 		_, err := aes.CTREncrypter(aesBenchKey, aesBenchIV, cryptox.PaddingNone).Encrypt(aesBenchPlain)
 		if err != nil {
@@ -92,6 +97,7 @@ func BenchmarkAESDecryptWithECB(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
+	aesObj := aes.New(aesBenchKey)
 	for i := 0; i < b.N; i++ {
 		_, err := aes.ECBDecrypter(aesBenchKey, cryptox.UnPaddingPKCS7).Decrypt(benchCrypted)
 		if err != nil {
@@ -110,6 +116,7 @@ func BenchmarkAESDecryptWithCBC(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
+	aesObj := aes.New(aesBenchKey)
 	for i := 0; i < b.N; i++ {
 		_, err := aes.CBCDecrypter(aesBenchKey, aesBenchIV, cryptox.UnPaddingPKCS7).Decrypt(benchCrypted)
 		if err != nil {
@@ -128,6 +135,7 @@ func BenchmarkAESDecryptWithCFB(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
+	aesObj := aes.New(aesBenchKey)
 	for i := 0; i < b.N; i++ {
 		_, err := aes.CFBDecrypter(aesBenchKey, aesBenchIV, cryptox.UnPaddingNone).Decrypt(benchCrypted)
 		if err != nil {
@@ -146,6 +154,7 @@ func BenchmarkAESDecryptWithOFB(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
+	aesObj := aes.New(aesBenchKey)
 	for i := 0; i < b.N; i++ {
 		_, err := aes.OFBDecrypter(aesBenchKey, aesBenchIV, cryptox.UnPaddingNone).Decrypt(benchCrypted)
 		if err != nil {
@@ -164,6 +173,7 @@ func BenchmarkAESDecryptWithCTR(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
+	aesObj := aes.New(aesBenchKey)
 	for i := 0; i < b.N; i++ {
 		_, err := aes.CTRDecrypter(aesBenchKey, aesBenchIV, cryptox.UnPaddingNone).Decrypt(benchCrypted)
 		if err != nil {

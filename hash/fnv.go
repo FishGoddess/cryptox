@@ -1,4 +1,4 @@
-// Copyright 2022 FishGoddess. All rights reserved.
+// Copyright 2023 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -10,50 +10,62 @@ import (
 	"github.com/FishGoddess/cryptox"
 )
 
-// Fnv32 uses fnv-1/32bit to hash data.
-func Fnv32(data cryptox.Bytes) (cryptox.Bytes, uint32) {
+// Fnv32 uses fnv-1/32bit to hash bs.
+func Fnv32(bs cryptox.Bytes) (cryptox.Bytes, uint32, error) {
 	hash32 := fnv.New32()
-	hash32.Write(data)
+	if _, err := hash32.Write(bs); err != nil {
+		return nil, 0, err
+	}
 
-	return hash32.Sum(nil), hash32.Sum32()
+	return hash32.Sum(nil), hash32.Sum32(), nil
 }
 
-// Fnv32a uses fnv-1a/32bit to hash data.
-func Fnv32a(data cryptox.Bytes) (cryptox.Bytes, uint32) {
+// Fnv32a uses fnv-1a/32bit to hash bs.
+func Fnv32a(bs cryptox.Bytes) (cryptox.Bytes, uint32, error) {
 	hash32 := fnv.New32a()
-	hash32.Write(data)
+	if _, err := hash32.Write(bs); err != nil {
+		return nil, 0, err
+	}
 
-	return hash32.Sum(nil), hash32.Sum32()
+	return hash32.Sum(nil), hash32.Sum32(), nil
 }
 
-// Fnv64 uses fnv-1/64bit to hash data.
-func Fnv64(data cryptox.Bytes) (cryptox.Bytes, uint64) {
+// Fnv64 uses fnv-1/64bit to hash bs.
+func Fnv64(bs cryptox.Bytes) (cryptox.Bytes, uint64, error) {
 	hash64 := fnv.New64()
-	hash64.Write(data)
+	if _, err := hash64.Write(bs); err != nil {
+		return nil, 0, err
+	}
 
-	return hash64.Sum(nil), hash64.Sum64()
+	return hash64.Sum(nil), hash64.Sum64(), nil
 }
 
-// Fnv64a uses fnv-1a/64bit to hash data.
-func Fnv64a(data cryptox.Bytes) (cryptox.Bytes, uint64) {
+// Fnv64a uses fnv-1a/64bit to hash bs.
+func Fnv64a(bs cryptox.Bytes) (cryptox.Bytes, uint64, error) {
 	hash64 := fnv.New64a()
-	hash64.Write(data)
+	if _, err := hash64.Write(bs); err != nil {
+		return nil, 0, err
+	}
 
-	return hash64.Sum(nil), hash64.Sum64()
+	return hash64.Sum(nil), hash64.Sum64(), nil
 }
 
-// Fnv128 uses fnv-1/128bit to hash data.
-func Fnv128(data cryptox.Bytes) cryptox.Bytes {
-	hash64 := fnv.New128()
-	hash64.Write(data)
+// Fnv128 uses fnv-1/128bit to hash bs.
+func Fnv128(bs cryptox.Bytes) (cryptox.Bytes, error) {
+	hash128 := fnv.New128()
+	if _, err := hash128.Write(bs); err != nil {
+		return nil, err
+	}
 
-	return hash64.Sum(nil)
+	return hash128.Sum(nil), nil
 }
 
-// Fnv128a uses fnv-1a/128bit to hash data.
-func Fnv128a(data cryptox.Bytes) cryptox.Bytes {
-	hash64 := fnv.New128a()
-	hash64.Write(data)
+// Fnv128a uses fnv-1a/128bit to hash bs.
+func Fnv128a(bs cryptox.Bytes) (cryptox.Bytes, error) {
+	hash128 := fnv.New128a()
+	if _, err := hash128.Write(bs); err != nil {
+		return nil, err
+	}
 
-	return hash64.Sum(nil)
+	return hash128.Sum(nil), nil
 }

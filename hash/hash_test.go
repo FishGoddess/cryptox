@@ -1,10 +1,14 @@
-// Copyright 2022 FishGoddess. All rights reserved.
+// Copyright 2023 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
 package hash
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/FishGoddess/cryptox"
+)
 
 // go test -v -cover -run=^TestMD5$
 func TestMD5(t *testing.T) {
@@ -15,7 +19,10 @@ func TestMD5(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		sum := MD5([]byte(input))
+		sum, err := MD5(cryptox.FromString(input))
+		if err != nil {
+			t.Error(err)
+		}
 
 		if sum.Hex() != expect {
 			t.Errorf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
@@ -32,7 +39,10 @@ func TestSHA1(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		sum := SHA1([]byte(input))
+		sum, err := SHA1(cryptox.FromString(input))
+		if err != nil {
+			t.Error(err)
+		}
 
 		if sum.Hex() != expect {
 			t.Errorf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
@@ -49,7 +59,10 @@ func TestSHA224(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		sum := SHA224([]byte(input))
+		sum, err := SHA224(cryptox.FromString(input))
+		if err != nil {
+			t.Error(err)
+		}
 
 		if sum.Hex() != expect {
 			t.Errorf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
@@ -66,7 +79,10 @@ func TestSHA256(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		sum := SHA256([]byte(input))
+		sum, err := SHA256(cryptox.FromString(input))
+		if err != nil {
+			t.Error(err)
+		}
 
 		if sum.Hex() != expect {
 			t.Errorf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
@@ -83,7 +99,10 @@ func TestSHA384(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		sum := SHA384([]byte(input))
+		sum, err := SHA384(cryptox.FromString(input))
+		if err != nil {
+			t.Error(err)
+		}
 
 		if sum.Hex() != expect {
 			t.Errorf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
@@ -100,7 +119,10 @@ func TestSHA512(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		sum := SHA512([]byte(input))
+		sum, err := SHA512(cryptox.FromString(input))
+		if err != nil {
+			t.Error(err)
+		}
 
 		if sum.Hex() != expect {
 			t.Errorf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)

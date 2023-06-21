@@ -1,4 +1,4 @@
-// Copyright 2022 FishGoddess. All rights reserved.
+// Copyright 2023 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -92,8 +92,44 @@ func TestBytesWriteToFile(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestParseHex$
-func TestParseHex(t *testing.T) {
+// go test -v -cover -run=^TestFromBytes$
+func TestFromBytes(t *testing.T) {
+	cases := map[string]string{
+		"":      "",
+		"123":   "123",
+		"你好，世界": "你好，世界",
+	}
+
+	for encoded, expect := range cases {
+		plain := FromBytes([]byte(encoded))
+		plainStr := string(plain)
+
+		if plainStr != expect {
+			t.Errorf("encoded %s: plainStr %s != expect %s", encoded, plainStr, expect)
+		}
+	}
+}
+
+// go test -v -cover -run=^TestFromString$
+func TestFromString(t *testing.T) {
+	cases := map[string]string{
+		"":      "",
+		"123":   "123",
+		"你好，世界": "你好，世界",
+	}
+
+	for encoded, expect := range cases {
+		plain := FromString(encoded)
+		plainStr := string(plain)
+
+		if plainStr != expect {
+			t.Errorf("encoded %s: plainStr %s != expect %s", encoded, plainStr, expect)
+		}
+	}
+}
+
+// go test -v -cover -run=^TestFromHex$
+func TestFromHex(t *testing.T) {
 	cases := map[string]string{
 		"":                               "",
 		"313233":                         "123",
@@ -101,7 +137,7 @@ func TestParseHex(t *testing.T) {
 	}
 
 	for encoded, expect := range cases {
-		plain, err := ParseHex(encoded)
+		plain, err := FromHex(encoded)
 		if err != nil {
 			t.Error(err)
 		}
@@ -113,8 +149,8 @@ func TestParseHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestParseBase64$
-func TestParseBase64(t *testing.T) {
+// go test -v -cover -run=^TestFromBase64$
+func TestFromBase64(t *testing.T) {
 	cases := map[string]string{
 		"":                     "",
 		"MTIz":                 "123",
@@ -122,7 +158,7 @@ func TestParseBase64(t *testing.T) {
 	}
 
 	for encoded, expect := range cases {
-		plain, err := ParseBase64(encoded)
+		plain, err := FromBase64(encoded)
 		if err != nil {
 			t.Error(err)
 		}
@@ -134,12 +170,12 @@ func TestParseBase64(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestRandomBytes$
-func TestRandomBytes(t *testing.T) {
+// go test -v -cover -run=^TestGenerateBytes$
+func TestGenerateBytes(t *testing.T) {
 	for i := 0; i < 16; i++ {
 		n := i
 
-		bs, err := RandomBytes(n)
+		bs, err := GenerateBytes(n)
 		if err != nil {
 			t.Error(err)
 		}
@@ -148,6 +184,6 @@ func TestRandomBytes(t *testing.T) {
 			t.Errorf("len(bs) %d != n %d", len(bs), n)
 		}
 
-		t.Log(bs)
+		t.Log(bs.Hex(), bs.Base64())
 	}
 }

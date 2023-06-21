@@ -1,57 +1,28 @@
-// Copyright 2022 FishGoddess. All rights reserved.
+// Copyright 2023 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
 package aes
 
-import "github.com/FishGoddess/cryptox"
+import (
+	"crypto/aes"
+	"crypto/cipher"
 
-// ECBEncrypter returns a cryptox.Encrypter using ecb mode.
-func ECBEncrypter(key []byte, padding cryptox.Padding) cryptox.Encrypter {
-	return cryptox.NewEncrypter(cryptox.AES, key, cryptox.EncryptECB, nil, padding)
+	"github.com/FishGoddess/cryptox"
+)
+
+// AES packs some function of aes.
+type AES struct {
+	block cipher.Block
+	err   error
 }
 
-// ECBDecrypter returns a cryptox.Decrypter using ecb mode.
-func ECBDecrypter(key []byte, unPadding cryptox.UnPadding) cryptox.Decrypter {
-	return cryptox.NewDecrypter(cryptox.AES, key, cryptox.DecryptECB, nil, unPadding)
-}
+// New creates a new AES with key.
+func New(key cryptox.Bytes) AES {
+	block, err := aes.NewCipher(key)
 
-// CBCEncrypter returns a cryptox.Encrypter using cbc mode.
-func CBCEncrypter(key []byte, iv []byte, padding cryptox.Padding) cryptox.Encrypter {
-	return cryptox.NewEncrypter(cryptox.AES, key, cryptox.EncryptCBC, iv, padding)
-}
-
-// CBCDecrypter returns a cryptox.Decrypter using cbc mode.
-func CBCDecrypter(key []byte, iv []byte, unPadding cryptox.UnPadding) cryptox.Decrypter {
-	return cryptox.NewDecrypter(cryptox.AES, key, cryptox.DecryptCBC, iv, unPadding)
-}
-
-// CFBEncrypter returns a cryptox.Encrypter using cfb mode.
-func CFBEncrypter(key []byte, iv []byte, padding cryptox.Padding) cryptox.Encrypter {
-	return cryptox.NewEncrypter(cryptox.AES, key, cryptox.EncryptCFB, iv, padding)
-}
-
-// CFBDecrypter returns a cryptox.Decrypter using cfb mode.
-func CFBDecrypter(key []byte, iv []byte, unPadding cryptox.UnPadding) cryptox.Decrypter {
-	return cryptox.NewDecrypter(cryptox.AES, key, cryptox.DecryptCFB, iv, unPadding)
-}
-
-// OFBEncrypter returns a cryptox.Encrypter using ofb mode.
-func OFBEncrypter(key []byte, iv []byte, padding cryptox.Padding) cryptox.Encrypter {
-	return cryptox.NewEncrypter(cryptox.AES, key, cryptox.EncryptOFB, iv, padding)
-}
-
-// OFBDecrypter returns a cryptox.Decrypter using ofb mode.
-func OFBDecrypter(key []byte, iv []byte, unPadding cryptox.UnPadding) cryptox.Decrypter {
-	return cryptox.NewDecrypter(cryptox.AES, key, cryptox.DecryptOFB, iv, unPadding)
-}
-
-// CTREncrypter returns a cryptox.Encrypter using ctr mode.
-func CTREncrypter(key []byte, iv []byte, padding cryptox.Padding) cryptox.Encrypter {
-	return cryptox.NewEncrypter(cryptox.AES, key, cryptox.EncryptCTR, iv, padding)
-}
-
-// CTRDecrypter returns a cryptox.Decrypter using ctr mode.
-func CTRDecrypter(key []byte, iv []byte, unPadding cryptox.UnPadding) cryptox.Decrypter {
-	return cryptox.NewDecrypter(cryptox.AES, key, cryptox.DecryptCTR, iv, unPadding)
+	return AES{
+		block: block,
+		err:   err,
+	}
 }
