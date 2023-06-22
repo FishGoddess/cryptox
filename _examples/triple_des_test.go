@@ -17,74 +17,81 @@ var (
 	tripleDesBenchPlain = make([]byte, 128)
 )
 
-// go test -v -bench=^BenchmarkTripleDESEncryptWithECB$ -benchtime=1s triple_des_test.go
-func BenchmarkTripleDESEncryptWithECB(b *testing.B) {
+// go test -v -bench=^BenchmarkTripleDESEncryptECB$ -benchtime=1s triple_des_test.go
+func BenchmarkTripleDESEncryptECB(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
+	desObj := des.NewTriple(tripleDesBenchKey)
 	for i := 0; i < b.N; i++ {
-		_, err := des.TripleECBEncrypter(tripleDesBenchKey, cryptox.PaddingPKCS7).Encrypt(tripleDesBenchPlain)
+		_, err := desObj.EncryptECB(cryptox.PaddingPKCS7, tripleDesBenchPlain)
 		if err != nil {
 			b.Error(err)
 		}
 	}
 }
 
-// go test -v -bench=^BenchmarkTripleDESEncryptWithCBC$ -benchtime=1s triple_des_test.go
-func BenchmarkTripleDESEncryptWithCBC(b *testing.B) {
+// go test -v -bench=^BenchmarkTripleDESEncryptCBC$ -benchtime=1s triple_des_test.go
+func BenchmarkTripleDESEncryptCBC(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
+	desObj := des.NewTriple(tripleDesBenchKey)
 	for i := 0; i < b.N; i++ {
-		_, err := des.TripleCBCEncrypter(tripleDesBenchKey, tripleDesBenchIV, cryptox.PaddingPKCS7).Encrypt(tripleDesBenchPlain)
+		_, err := desObj.EncryptCBC(cryptox.PaddingPKCS7, tripleDesBenchIV, tripleDesBenchPlain)
 		if err != nil {
 			b.Error(err)
 		}
 	}
 }
 
-// go test -v -bench=^BenchmarkTripleDESEncryptWithCFB$ -benchtime=1s triple_des_test.go
-func BenchmarkTripleDESEncryptWithCFB(b *testing.B) {
+// go test -v -bench=^BenchmarkTripleDESEncryptCFB$ -benchtime=1s triple_des_test.go
+func BenchmarkTripleDESEncryptCFB(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
+	desObj := des.NewTriple(tripleDesBenchKey)
 	for i := 0; i < b.N; i++ {
-		_, err := des.TripleCFBEncrypter(tripleDesBenchKey, tripleDesBenchIV, cryptox.PaddingNone).Encrypt(tripleDesBenchPlain)
+		_, err := desObj.EncryptCFB(cryptox.PaddingNone, tripleDesBenchIV, tripleDesBenchPlain)
 		if err != nil {
 			b.Error(err)
 		}
 	}
 }
 
-// go test -v -bench=^BenchmarkTripleDESEncryptWithOFB$ -benchtime=1s triple_des_test.go
-func BenchmarkTripleDESEncryptWithOFB(b *testing.B) {
+// go test -v -bench=^BenchmarkTripleDESEncryptOFB$ -benchtime=1s triple_des_test.go
+func BenchmarkTripleDESEncryptOFB(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
+	desObj := des.NewTriple(tripleDesBenchKey)
 	for i := 0; i < b.N; i++ {
-		_, err := des.TripleOFBEncrypter(tripleDesBenchKey, tripleDesBenchIV, cryptox.PaddingNone).Encrypt(tripleDesBenchPlain)
+		_, err := desObj.EncryptOFB(cryptox.PaddingNone, tripleDesBenchIV, tripleDesBenchPlain)
 		if err != nil {
 			b.Error(err)
 		}
 	}
 }
 
-// go test -v -bench=^BenchmarkTripleDESEncryptWithCTR$ -benchtime=1s triple_des_test.go
-func BenchmarkTripleDESEncryptWithCTR(b *testing.B) {
+// go test -v -bench=^BenchmarkTripleDESEncryptCTR$ -benchtime=1s triple_des_test.go
+func BenchmarkTripleDESEncryptCTR(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
+	desObj := des.NewTriple(tripleDesBenchKey)
 	for i := 0; i < b.N; i++ {
-		_, err := des.TripleCTREncrypter(tripleDesBenchKey, tripleDesBenchIV, cryptox.PaddingNone).Encrypt(tripleDesBenchPlain)
+		_, err := desObj.EncryptCTR(cryptox.PaddingNone, tripleDesBenchIV, tripleDesBenchPlain)
 		if err != nil {
 			b.Error(err)
 		}
 	}
 }
 
-// go test -v -bench=^BenchmarkTripleDESDecryptWithECB$ -benchtime=1s triple_des_test.go
-func BenchmarkTripleDESDecryptWithECB(b *testing.B) {
-	benchCrypted, err := des.TripleECBEncrypter(tripleDesBenchKey, cryptox.PaddingPKCS7).Encrypt(tripleDesBenchPlain)
+// go test -v -bench=^BenchmarkTripleDESDecryptECB$ -benchtime=1s triple_des_test.go
+func BenchmarkTripleDESDecryptECB(b *testing.B) {
+	desObj := des.NewTriple(tripleDesBenchKey)
+
+	benchCrypted, err := desObj.EncryptECB(cryptox.PaddingPKCS7, tripleDesBenchPlain)
 	if err != nil {
 		b.Error(err)
 	}
@@ -93,16 +100,18 @@ func BenchmarkTripleDESDecryptWithECB(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := des.TripleECBDecrypter(tripleDesBenchKey, cryptox.UnPaddingPKCS7).Decrypt(benchCrypted)
+		_, err := desObj.DecryptECB(cryptox.UnPaddingPKCS7, benchCrypted)
 		if err != nil {
 			b.Error(err)
 		}
 	}
 }
 
-// go test -v -bench=^BenchmarkTripleDESDecryptWithCBC$ -benchtime=1s triple_des_test.go
-func BenchmarkTripleDESDecryptWithCBC(b *testing.B) {
-	benchCrypted, err := des.TripleCBCEncrypter(tripleDesBenchKey, tripleDesBenchIV, cryptox.PaddingPKCS7).Encrypt(tripleDesBenchPlain)
+// go test -v -bench=^BenchmarkTripleDESDecryptCBC$ -benchtime=1s triple_des_test.go
+func BenchmarkTripleDESDecryptCBC(b *testing.B) {
+	desObj := des.NewTriple(tripleDesBenchKey)
+
+	benchCrypted, err := desObj.EncryptCBC(cryptox.PaddingPKCS7, tripleDesBenchIV, tripleDesBenchPlain)
 	if err != nil {
 		b.Error(err)
 	}
@@ -111,16 +120,18 @@ func BenchmarkTripleDESDecryptWithCBC(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := des.TripleCBCDecrypter(tripleDesBenchKey, tripleDesBenchIV, cryptox.UnPaddingPKCS7).Decrypt(benchCrypted)
+		_, err := desObj.DecryptCBC(cryptox.UnPaddingPKCS7, tripleDesBenchIV, benchCrypted)
 		if err != nil {
 			b.Error(err)
 		}
 	}
 }
 
-// go test -v -bench=^BenchmarkTripleDESDecryptWithCFB$ -benchtime=1s triple_des_test.go
-func BenchmarkTripleDESDecryptWithCFB(b *testing.B) {
-	benchCrypted, err := des.TripleCFBEncrypter(tripleDesBenchKey, tripleDesBenchIV, cryptox.PaddingNone).Encrypt(tripleDesBenchPlain)
+// go test -v -bench=^BenchmarkTripleDESDecryptCFB$ -benchtime=1s triple_des_test.go
+func BenchmarkTripleDESDecryptCFB(b *testing.B) {
+	desObj := des.NewTriple(tripleDesBenchKey)
+
+	benchCrypted, err := desObj.EncryptCFB(cryptox.PaddingNone, tripleDesBenchIV, tripleDesBenchPlain)
 	if err != nil {
 		b.Error(err)
 	}
@@ -129,16 +140,18 @@ func BenchmarkTripleDESDecryptWithCFB(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := des.TripleCFBDecrypter(tripleDesBenchKey, tripleDesBenchIV, cryptox.UnPaddingNone).Decrypt(benchCrypted)
+		_, err := desObj.DecryptCFB(cryptox.UnPaddingNone, tripleDesBenchIV, benchCrypted)
 		if err != nil {
 			b.Error(err)
 		}
 	}
 }
 
-// go test -v -bench=^BenchmarkTripleDESDecryptWithOFB$ -benchtime=1s triple_des_test.go
-func BenchmarkTripleDESDecryptWithOFB(b *testing.B) {
-	benchCrypted, err := des.TripleOFBEncrypter(tripleDesBenchKey, tripleDesBenchIV, cryptox.PaddingNone).Encrypt(tripleDesBenchPlain)
+// go test -v -bench=^BenchmarkTripleDESDecryptOFB$ -benchtime=1s triple_des_test.go
+func BenchmarkTripleDESDecryptOFB(b *testing.B) {
+	desObj := des.NewTriple(tripleDesBenchKey)
+
+	benchCrypted, err := desObj.EncryptOFB(cryptox.PaddingNone, tripleDesBenchIV, tripleDesBenchPlain)
 	if err != nil {
 		b.Error(err)
 	}
@@ -147,16 +160,18 @@ func BenchmarkTripleDESDecryptWithOFB(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := des.TripleOFBDecrypter(tripleDesBenchKey, tripleDesBenchIV, cryptox.UnPaddingNone).Decrypt(benchCrypted)
+		_, err := desObj.DecryptOFB(cryptox.UnPaddingNone, tripleDesBenchIV, benchCrypted)
 		if err != nil {
 			b.Error(err)
 		}
 	}
 }
 
-// go test -v -bench=^BenchmarkTripleDESDecryptWithCTR$ -benchtime=1s triple_des_test.go
-func BenchmarkTripleDESDecryptWithCTR(b *testing.B) {
-	benchCrypted, err := des.TripleCTREncrypter(tripleDesBenchKey, tripleDesBenchIV, cryptox.PaddingNone).Encrypt(tripleDesBenchPlain)
+// go test -v -bench=^BenchmarkTripleDESDecryptCTR$ -benchtime=1s triple_des_test.go
+func BenchmarkTripleDESDecryptCTR(b *testing.B) {
+	desObj := des.NewTriple(tripleDesBenchKey)
+
+	benchCrypted, err := desObj.EncryptCTR(cryptox.PaddingNone, tripleDesBenchIV, tripleDesBenchPlain)
 	if err != nil {
 		b.Error(err)
 	}
@@ -165,7 +180,7 @@ func BenchmarkTripleDESDecryptWithCTR(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := des.TripleCTRDecrypter(tripleDesBenchKey, tripleDesBenchIV, cryptox.UnPaddingNone).Decrypt(benchCrypted)
+		_, err := desObj.DecryptCTR(cryptox.UnPaddingNone, tripleDesBenchIV, benchCrypted)
 		if err != nil {
 			b.Error(err)
 		}
