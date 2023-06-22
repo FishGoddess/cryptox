@@ -14,7 +14,7 @@ import (
 func main() {
 	// As you know, key is necessary in 3des.
 	// However, not all modes need iv, such as ecb.
-	key := cryptox.FromString("12345678")
+	key := cryptox.FromString("123456788765432112345678")
 	iv := cryptox.FromString("87654321")
 
 	plain := cryptox.FromString("你好，世界")
