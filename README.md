@@ -37,7 +37,7 @@ $ go get -u github.com/FishGoddess/cryptox
 ### 🚴🏻 性能测试
 
 ```shell
-$ go test -v -bench=. -benchtime=1s _examples/*_test.go
+$ make bench
 ```
 
 _注：数据为 128 字节，ecb/cbc 为 pkcs7 填充，cfb/ofb/ctr 为不填充。_

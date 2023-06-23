@@ -37,7 +37,7 @@ $ go get -u github.com/FishGoddess/cryptox
 ### 🚴🏻 Benchmarks
 
 ```shell
-$ go test -v -bench=. -benchtime=1s _examples/*_test.go
+$ make bench
 ```
 
 _Note: Data size is 128 bytes, ecb/cbc uses pkcs7 padding, cfb/ofb/ctr is no padding._
