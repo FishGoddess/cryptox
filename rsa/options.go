@@ -21,7 +21,7 @@ type KeyConfig struct {
 }
 
 // fromKeyOptions returns a key config constructed from key options.
-func fromKeyOptions(opts ...KeyOption) *KeyConfig {
+func fromKeyOptions(opts []KeyOption) *KeyConfig {
 	cfg := &KeyConfig{
 		privateKeyEncoder: X509.PKCS1PrivateKeyEncoder,
 		privateKeyDecoder: X509.PKCS1PrivateKeyDecoder,
@@ -80,7 +80,7 @@ type Config struct {
 }
 
 // fromOptions returns a config constructed from options.
-func fromOptions(opts ...Option) *Config {
+func fromOptions(opts []Option) *Config {
 	cfg := &Config{
 		random:     rand.Reader,
 		hash:       sha256.New(),

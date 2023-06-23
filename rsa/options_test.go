@@ -21,7 +21,7 @@ func TestFromKeyOptions(t *testing.T) {
 		WithPublicKeyDecoder(X509.PKCS1PublicKeyDecoder),
 	}
 
-	cfg := fromKeyOptions(opts...)
+	cfg := fromKeyOptions(opts)
 
 	encoderPointer := fmt.Sprintf("%p", cfg.privateKeyEncoder)
 	expectPointer := fmt.Sprintf("%p", X509.PKCS8PrivateKeyEncoder)

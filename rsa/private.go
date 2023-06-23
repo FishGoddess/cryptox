@@ -43,31 +43,31 @@ func (pk PrivateKey) String() string {
 
 // DecryptPKCS1v15 decrypts msg with pkcs1 v15.
 func (pk PrivateKey) DecryptPKCS1v15(msg cryptox.Bytes, opts ...Option) (cryptox.Bytes, error) {
-	cfg := fromOptions(opts...)
+	cfg := fromOptions(opts)
 	return rsa.DecryptPKCS1v15(cfg.random, pk.key, msg)
 }
 
 // DecryptPKCS1v15SessionKey decrypts msg using a session key with pkcs1 v15.
 func (pk PrivateKey) DecryptPKCS1v15SessionKey(msg cryptox.Bytes, sessionKey cryptox.Bytes, opts ...Option) error {
-	cfg := fromOptions(opts...)
+	cfg := fromOptions(opts)
 	return rsa.DecryptPKCS1v15SessionKey(cfg.random, pk.key, msg, sessionKey)
 }
 
 // DecryptOAEP decrypts msg with oaep.
 func (pk PrivateKey) DecryptOAEP(msg cryptox.Bytes, label cryptox.Bytes, opts ...Option) (cryptox.Bytes, error) {
-	cfg := fromOptions(opts...)
+	cfg := fromOptions(opts)
 	return rsa.DecryptOAEP(cfg.hash, cfg.random, pk.key, msg, label)
 }
 
 // SignPKCS1v15 signs hashed data with pkcs1 v15.
 func (pk PrivateKey) SignPKCS1v15(hashed cryptox.Bytes, opts ...Option) (cryptox.Bytes, error) {
-	cfg := fromOptions(opts...)
+	cfg := fromOptions(opts)
 	return rsa.SignPKCS1v15(cfg.random, pk.key, cfg.cryptoHash, hashed)
 }
 
 // SignPSS signs digest data with pss.
 func (pk PrivateKey) SignPSS(digest cryptox.Bytes, saltLength int, opts ...Option) (cryptox.Bytes, error) {
-	cfg := fromOptions(opts...)
+	cfg := fromOptions(opts)
 
 	pssOpts := &rsa.PSSOptions{
 		Hash:       cfg.cryptoHash,

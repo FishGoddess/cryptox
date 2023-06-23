@@ -36,12 +36,12 @@ func GenerateKeys(bits int, opts ...KeyOption) (PrivateKey, PublicKey, error) {
 
 // GeneratePrivateKey generates a private key of bits.
 func GeneratePrivateKey(bits int, opts ...KeyOption) (PrivateKey, error) {
+	cfg := fromKeyOptions(opts)
+
 	privateKey, err := rsa.GenerateMultiPrimeKey(rand.Reader, Primes, bits)
 	if err != nil {
 		return PrivateKey{}, err
 	}
-
-	cfg := fromKeyOptions(opts...)
 
 	privateKeyBytes, err := cfg.privateKeyEncoder.Encode(privateKey)
 	if err != nil {
@@ -53,8 +53,8 @@ func GeneratePrivateKey(bits int, opts ...KeyOption) (PrivateKey, error) {
 
 // GeneratePublicKey generates a public key from private key.
 func GeneratePublicKey(privateKey PrivateKey, opts ...KeyOption) (PublicKey, error) {
+	cfg := fromKeyOptions(opts)
 	publicKey := &(privateKey.Key().PublicKey)
-	cfg := fromKeyOptions(opts...)
 
 	publicKeyBytes, err := cfg.publicKeyEncoder.Encode(publicKey)
 	if err != nil {
@@ -66,7 +66,7 @@ func GeneratePublicKey(privateKey PrivateKey, opts ...KeyOption) (PublicKey, err
 
 // ParsePrivateKey parses private key from pem bytes.
 func ParsePrivateKey(keyBytes cryptox.Bytes, opts ...KeyOption) (PrivateKey, error) {
-	cfg := fromKeyOptions(opts...)
+	cfg := fromKeyOptions(opts)
 
 	privateKey, err := cfg.privateKeyDecoder.Decode(keyBytes)
 	if err != nil {
@@ -78,7 +78,7 @@ func ParsePrivateKey(keyBytes cryptox.Bytes, opts ...KeyOption) (PrivateKey, err
 
 // ParsePublicKey parses public key from pem bytes.
 func ParsePublicKey(keyBytes cryptox.Bytes, opts ...KeyOption) (PublicKey, error) {
-	cfg := fromKeyOptions(opts...)
+	cfg := fromKeyOptions(opts)
 
 	publicKey, err := cfg.publicKeyDecoder.Decode(keyBytes)
 	if err != nil {
