@@ -86,18 +86,18 @@ BenchmarkTripleDESDecryptCFB-12    	  301969	      3958 ns/op	     224 B/op	    
 BenchmarkTripleDESDecryptOFB-12    	   79599	     15109 ns/op	     728 B/op	       4 allocs/op
 BenchmarkTripleDESDecryptCTR-12    	   75466	     15411 ns/op	     728 B/op	       4 allocs/op
 
-BenchmarkAESEncryptECB-12    	 4770836	       246.0 ns/op	     528 B/op	       3 allocs/op
-BenchmarkAESEncryptCBC-12    	 2797909	       433.1 ns/op	     640 B/op	       6 allocs/op
-BenchmarkAESEncryptCFB-12    	 3189496	       393.5 ns/op	     368 B/op	       5 allocs/op
-BenchmarkAESEncryptOFB-12    	 1582888	       756.9 ns/op	     864 B/op	       5 allocs/op
-BenchmarkAESEncryptCTR-12    	 1348118	       894.1 ns/op	     864 B/op	       5 allocs/op
-BenchmarkAESEncryptGCM-12        3743560           317.9 ns/op       592 B/op          3 allocs/op
-BenchmarkAESDecryptECB-12    	 8621173	       140.4 ns/op	     144 B/op	       1 allocs/op
-BenchmarkAESDecryptCBC-12    	 3975070	       305.9 ns/op	     256 B/op	       4 allocs/op
-BenchmarkAESDecryptCFB-12    	 3739603	       324.2 ns/op	     240 B/op	       4 allocs/op
-BenchmarkAESDecryptOFB-12    	 1646392	       722.1 ns/op	     736 B/op	       4 allocs/op
-BenchmarkAESDecryptCTR-12    	 1393838	       877.0 ns/op	     736 B/op	       4 allocs/op
-BenchmarkAESDecryptGCM-12        4248702           277.7 ns/op       464 B/op          2 allocs/op
+BenchmarkAESEncryptECB-12        4806080               266.4 ns/op           528 B/op          3 allocs/op
+BenchmarkAESEncryptCBC-12        2538808               471.7 ns/op           640 B/op          6 allocs/op
+BenchmarkAESEncryptCFB-12        2787636               400.0 ns/op           368 B/op          5 allocs/op
+BenchmarkAESEncryptOFB-12        1536372               790.4 ns/op           864 B/op          5 allocs/op
+BenchmarkAESEncryptCTR-12        1303022               924.3 ns/op           864 B/op          5 allocs/op
+BenchmarkAESEncryptGCM-12        3683218               330.1 ns/op           592 B/op          3 allocs/op
+BenchmarkAESDecryptECB-12        8220330               143.1 ns/op           144 B/op          1 allocs/op
+BenchmarkAESDecryptCBC-12        3690129               312.8 ns/op           256 B/op          4 allocs/op
+BenchmarkAESDecryptCFB-12        3557036               329.2 ns/op           240 B/op          4 allocs/op
+BenchmarkAESDecryptOFB-12        1649554               736.8 ns/op           736 B/op          4 allocs/op
+BenchmarkAESDecryptCTR-12        1369501               869.6 ns/op           736 B/op          4 allocs/op
+BenchmarkAESDecryptGCM-12        4053975               287.9 ns/op           464 B/op          2 allocs/op
 
 BenchmarkRSAGenerateKey1024PKCS1PKIX-12     	      66	  16759624 ns/op	 1026852 B/op	    4042 allocs/op
 BenchmarkRSAGenerateKey2048PKCS1PKIX-12     	      13	 113534778 ns/op	 2129219 B/op	    5761 allocs/op
