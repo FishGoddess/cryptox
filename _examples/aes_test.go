@@ -14,6 +14,7 @@ import (
 var (
 	aesBenchKey      = cryptox.FromString("12345678876543211234567887654321")
 	aesBenchIV       = cryptox.FromString("8765432112345678")
+	aesBenchNonce    = cryptox.FromString("123456abcdef")
 	aesBenchPlain, _ = cryptox.GenerateBytes(128)
 )
 
@@ -81,6 +82,20 @@ func BenchmarkAESEncryptCTR(b *testing.B) {
 	aesObj := aes.New(aesBenchKey)
 	for i := 0; i < b.N; i++ {
 		_, err := aesObj.EncryptCTR(cryptox.PaddingNone, aesBenchIV, aesBenchPlain)
+		if err != nil {
+			b.Error(err)
+		}
+	}
+}
+
+// go test -v -bench=^BenchmarkAESEncryptGCM$ -benchtime=1s aes_test.go
+func BenchmarkAESEncryptGCM(b *testing.B) {
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	aesObj := aes.New(aesBenchKey)
+	for i := 0; i < b.N; i++ {
+		_, err := aesObj.EncryptGCM(aesBenchNonce, aesBenchPlain, nil)
 		if err != nil {
 			b.Error(err)
 		}
@@ -181,6 +196,26 @@ func BenchmarkAESDecryptCTR(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		_, err := aesObj.DecryptCTR(cryptox.UnPaddingNone, aesBenchIV, benchCrypted)
+		if err != nil {
+			b.Error(err)
+		}
+	}
+}
+
+// go test -v -bench=^BenchmarkAESDecryptGCM$ -benchtime=1s aes_test.go
+func BenchmarkAESDecryptGCM(b *testing.B) {
+	aesObj := aes.New(aesBenchKey)
+
+	benchCrypted, err := aesObj.EncryptGCM(aesBenchNonce, aesBenchPlain, nil)
+	if err != nil {
+		b.Error(err)
+	}
+
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		_, err := aesObj.DecryptGCM(aesBenchNonce, benchCrypted, nil)
 		if err != nil {
 			b.Error(err)
 		}
