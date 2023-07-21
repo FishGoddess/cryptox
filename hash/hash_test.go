@@ -19,11 +19,7 @@ func TestMD5(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		sum, err := MD5(cryptox.FromString(input))
-		if err != nil {
-			t.Error(err)
-		}
-
+		sum := MD5(cryptox.FromString(input))
 		if sum.Hex() != expect {
 			t.Errorf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
 		}
@@ -39,11 +35,7 @@ func TestSHA1(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		sum, err := SHA1(cryptox.FromString(input))
-		if err != nil {
-			t.Error(err)
-		}
-
+		sum := SHA1(cryptox.FromString(input))
 		if sum.Hex() != expect {
 			t.Errorf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
 		}
@@ -59,11 +51,7 @@ func TestSHA224(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		sum, err := SHA224(cryptox.FromString(input))
-		if err != nil {
-			t.Error(err)
-		}
-
+		sum := SHA224(cryptox.FromString(input))
 		if sum.Hex() != expect {
 			t.Errorf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
 		}
@@ -79,11 +67,7 @@ func TestSHA256(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		sum, err := SHA256(cryptox.FromString(input))
-		if err != nil {
-			t.Error(err)
-		}
-
+		sum := SHA256(cryptox.FromString(input))
 		if sum.Hex() != expect {
 			t.Errorf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
 		}
@@ -99,11 +83,7 @@ func TestSHA384(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		sum, err := SHA384(cryptox.FromString(input))
-		if err != nil {
-			t.Error(err)
-		}
-
+		sum := SHA384(cryptox.FromString(input))
 		if sum.Hex() != expect {
 			t.Errorf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
 		}
@@ -119,11 +99,7 @@ func TestSHA512(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		sum, err := SHA512(cryptox.FromString(input))
-		if err != nil {
-			t.Error(err)
-		}
-
+		sum := SHA512(cryptox.FromString(input))
 		if sum.Hex() != expect {
 			t.Errorf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
 		}

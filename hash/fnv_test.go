@@ -8,116 +8,102 @@ import (
 	"bytes"
 	"hash/fnv"
 	"testing"
+
+	"github.com/FishGoddess/cryptox"
 )
 
 // go test -v -cover -run=^TestFnv32$
 func TestFnv32(t *testing.T) {
-	cases := map[string]string{
-		"":      "811c9dc5",
-		"123":   "72d607bb",
-		"你好，世界": "f0de4cd0",
+	cases := map[string]uint32{
+		"":      2166136261,
+		"123":   1926629307,
+		"你好，世界": 4041100496,
 	}
 
 	for input, expect := range cases {
-		fnv32, fnv32Number, err := Fnv32([]byte(input))
-		if err != nil {
-			t.Error(err)
-		}
-
-		if fnv32.Hex() != expect {
-			t.Errorf("input %s: fnv32 %s != expect %s", input, fnv32.Hex(), expect)
+		fnv32 := Fnv32(cryptox.FromString(input))
+		if fnv32 != expect {
+			t.Errorf("input %s: fnv32 %d != expect %d", input, fnv32, expect)
 		}
 
 		hash32 := fnv.New32()
 		hash32.Write([]byte(input))
 
 		expectNumber := hash32.Sum32()
-		if fnv32Number != expectNumber {
-			t.Errorf("input %s: fnv32Number %d != expectNumber %d", input, fnv32Number, expectNumber)
+		if fnv32 != expectNumber {
+			t.Errorf("input %s: fnv32 %d != expectNumber %d", input, fnv32, expectNumber)
 		}
 	}
 }
 
 // go test -v -cover -run=^TestFnv32a$
 func TestFnv32a(t *testing.T) {
-	cases := map[string]string{
-		"":      "811c9dc5",
-		"123":   "7238631b",
-		"你好，世界": "e57e15b6",
+	cases := map[string]uint32{
+		"":      2166136261,
+		"123":   1916298011,
+		"你好，世界": 3850245558,
 	}
 
 	for input, expect := range cases {
-		fnv32, fnv32Number, err := Fnv32a([]byte(input))
-		if err != nil {
-			t.Error(err)
-		}
-
-		if fnv32.Hex() != expect {
-			t.Errorf("input %s: fnv32 %s != expect %s", input, fnv32.Hex(), expect)
+		fnv32a := Fnv32a(cryptox.FromString(input))
+		if fnv32a != expect {
+			t.Errorf("input %s: fnv32a %d != expect %d", input, fnv32a, expect)
 		}
 
 		hash32 := fnv.New32a()
 		hash32.Write([]byte(input))
 
 		expectNumber := hash32.Sum32()
-		if fnv32Number != expectNumber {
-			t.Errorf("input %s: fnv32Number %d != expectNumber %d", input, fnv32Number, expectNumber)
+		if fnv32a != expectNumber {
+			t.Errorf("input %s: fnv32a %d != expectNumber %d", input, fnv32a, expectNumber)
 		}
 	}
 }
 
 // go test -v -cover -run=^TestFnv64$
 func TestFnv64(t *testing.T) {
-	cases := map[string]string{
-		"":      "cbf29ce484222325",
-		"123":   "d97ffa186c3a60bb",
-		"你好，世界": "3118c9955d46a2d0",
+	cases := map[string]uint64{
+		"":      14695981039346656037,
+		"123":   15672520211074539707,
+		"你好，世界": 3537799150651744976,
 	}
 
 	for input, expect := range cases {
-		fnv64, fnv64Number, err := Fnv64([]byte(input))
-		if err != nil {
-			t.Error(err)
-		}
-
-		if fnv64.Hex() != expect {
-			t.Errorf("input %s: fnv64 %s != expect %s", input, fnv64.Hex(), expect)
+		fnv64 := Fnv64(cryptox.FromString(input))
+		if fnv64 != expect {
+			t.Errorf("input %s: fnv64 %d != expect %d", input, fnv64, expect)
 		}
 
 		hash64 := fnv.New64()
 		hash64.Write([]byte(input))
 
 		expectNumber := hash64.Sum64()
-		if fnv64Number != expectNumber {
-			t.Errorf("input %s: fnv64Number %d != expectNumber %d", input, fnv64Number, expectNumber)
+		if fnv64 != expectNumber {
+			t.Errorf("input %s: fnv64 %d != expectNumber %d", input, fnv64, expectNumber)
 		}
 	}
 }
 
 // go test -v -cover -run=^TestFnv64a$
 func TestFnv64a(t *testing.T) {
-	cases := map[string]string{
-		"":      "cbf29ce484222325",
-		"123":   "456fc2181822c4db",
-		"你好，世界": "fe310926beabb516",
+	cases := map[string]uint64{
+		"":      14695981039346656037,
+		"123":   5003431119771845851,
+		"你好，世界": 18316431221504849174,
 	}
 
 	for input, expect := range cases {
-		fnv64, fnv64Number, err := Fnv64a([]byte(input))
-		if err != nil {
-			t.Error(err)
-		}
-
-		if fnv64.Hex() != expect {
-			t.Errorf("input %s: fnv64 %s != expect %s", input, fnv64.Hex(), expect)
+		fnv64a := Fnv64a(cryptox.FromString(input))
+		if fnv64a != expect {
+			t.Errorf("input %s: fnv64a %d != expect %d", input, fnv64a, expect)
 		}
 
 		hash64 := fnv.New64a()
 		hash64.Write([]byte(input))
 
 		expectNumber := hash64.Sum64()
-		if fnv64Number != expectNumber {
-			t.Errorf("input %s: fnv64Number %d != expectNumber %d", input, fnv64Number, expectNumber)
+		if fnv64a != expectNumber {
+			t.Errorf("input %s: fnv64a %d != expectNumber %d", input, fnv64a, expectNumber)
 		}
 	}
 }
@@ -131,11 +117,7 @@ func TestFnv128(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		fnv128, err := Fnv128([]byte(input))
-		if err != nil {
-			t.Error(err)
-		}
-
+		fnv128 := Fnv128([]byte(input))
 		if fnv128.Hex() != expect {
 			t.Errorf("input %s: fnv128 %s != expect %s", input, fnv128.Hex(), expect)
 		}
@@ -159,11 +141,7 @@ func TestFnv128a(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		fnv128, err := Fnv128a([]byte(input))
-		if err != nil {
-			t.Error(err)
-		}
-
+		fnv128 := Fnv128a([]byte(input))
 		if fnv128.Hex() != expect {
 			t.Errorf("input %s: fnv128 %s != expect %s", input, fnv128.Hex(), expect)
 		}

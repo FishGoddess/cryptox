@@ -11,61 +11,49 @@ import (
 )
 
 // Fnv32 uses fnv-1/32bit to hash bs.
-func Fnv32(bs cryptox.Bytes) (cryptox.Bytes, uint32, error) {
+func Fnv32(bs cryptox.Bytes) uint32 {
 	hash32 := fnv.New32()
-	if _, err := hash32.Write(bs); err != nil {
-		return nil, 0, err
-	}
+	hash32.Write(bs)
 
-	return hash32.Sum(nil), hash32.Sum32(), nil
+	return hash32.Sum32()
 }
 
 // Fnv32a uses fnv-1a/32bit to hash bs.
-func Fnv32a(bs cryptox.Bytes) (cryptox.Bytes, uint32, error) {
+func Fnv32a(bs cryptox.Bytes) uint32 {
 	hash32 := fnv.New32a()
-	if _, err := hash32.Write(bs); err != nil {
-		return nil, 0, err
-	}
+	hash32.Write(bs)
 
-	return hash32.Sum(nil), hash32.Sum32(), nil
+	return hash32.Sum32()
 }
 
 // Fnv64 uses fnv-1/64bit to hash bs.
-func Fnv64(bs cryptox.Bytes) (cryptox.Bytes, uint64, error) {
+func Fnv64(bs cryptox.Bytes) uint64 {
 	hash64 := fnv.New64()
-	if _, err := hash64.Write(bs); err != nil {
-		return nil, 0, err
-	}
+	hash64.Write(bs)
 
-	return hash64.Sum(nil), hash64.Sum64(), nil
+	return hash64.Sum64()
 }
 
 // Fnv64a uses fnv-1a/64bit to hash bs.
-func Fnv64a(bs cryptox.Bytes) (cryptox.Bytes, uint64, error) {
+func Fnv64a(bs cryptox.Bytes) uint64 {
 	hash64 := fnv.New64a()
-	if _, err := hash64.Write(bs); err != nil {
-		return nil, 0, err
-	}
+	hash64.Write(bs)
 
-	return hash64.Sum(nil), hash64.Sum64(), nil
+	return hash64.Sum64()
 }
 
 // Fnv128 uses fnv-1/128bit to hash bs.
-func Fnv128(bs cryptox.Bytes) (cryptox.Bytes, error) {
+func Fnv128(bs cryptox.Bytes) cryptox.Bytes {
 	hash128 := fnv.New128()
-	if _, err := hash128.Write(bs); err != nil {
-		return nil, err
-	}
+	hash128.Write(bs)
 
-	return hash128.Sum(nil), nil
+	return hash128.Sum(nil)
 }
 
 // Fnv128a uses fnv-1a/128bit to hash bs.
-func Fnv128a(bs cryptox.Bytes) (cryptox.Bytes, error) {
+func Fnv128a(bs cryptox.Bytes) cryptox.Bytes {
 	hash128 := fnv.New128a()
-	if _, err := hash128.Write(bs); err != nil {
-		return nil, err
-	}
+	hash128.Write(bs)
 
-	return hash128.Sum(nil), nil
+	return hash128.Sum(nil)
 }
