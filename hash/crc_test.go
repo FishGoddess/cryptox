@@ -8,129 +8,111 @@ import (
 	"hash/crc32"
 	"hash/crc64"
 	"testing"
+
+	"github.com/FishGoddess/cryptox"
 )
 
 // go test -v -cover -run=^TestCRC32$
 func TestCRC32(t *testing.T) {
-	cases := map[string]string{
-		"":      "00000000",
-		"123":   "884863d2",
-		"你好，世界": "acf5da54",
+	cases := map[string]uint32{
+		"":      0,
+		"123":   2286445522,
+		"你好，世界": 2901793364,
 	}
 
 	for input, expect := range cases {
-		crc, crcNumber, err := CRC32([]byte(input), tableIEEE)
-		if err != nil {
-			t.Error(err)
-		}
-
-		if crc.Hex() != expect {
-			t.Errorf("input %s: crc %s != expect %s", input, crc.Hex(), expect)
+		crc := CRC32(cryptox.FromString(input), tableIEEE)
+		if crc != expect {
+			t.Errorf("input %s: crc %d != expect %d", input, crc, expect)
 		}
 
 		expectNumber := crc32.ChecksumIEEE([]byte(input))
-		if crcNumber != expectNumber {
-			t.Errorf("input %s: crcNumber %d != expectNumber %d", input, crcNumber, expectNumber)
+		if crc != expectNumber {
+			t.Errorf("input %s: crc %d != expectNumber %d", input, crc, expectNumber)
 		}
 	}
 }
 
 // go test -v -cover -run=^TestCRC32IEEE$
 func TestCRC32IEEE(t *testing.T) {
-	cases := map[string]string{
-		"":      "00000000",
-		"123":   "884863d2",
-		"你好，世界": "acf5da54",
+	cases := map[string]uint32{
+		"":      0,
+		"123":   2286445522,
+		"你好，世界": 2901793364,
 	}
 
 	for input, expect := range cases {
-		crc, crcNumber, err := CRC32IEEE([]byte(input))
-		if err != nil {
-			t.Error(err)
-		}
-
-		if crc.Hex() != expect {
-			t.Errorf("input %s: crc %s != expect %s", input, crc.Hex(), expect)
+		crc := CRC32IEEE(cryptox.FromString(input))
+		if crc != expect {
+			t.Errorf("input %s: crc %d != expect %d", input, crc, expect)
 		}
 
 		expectNumber := crc32.ChecksumIEEE([]byte(input))
-		if crcNumber != expectNumber {
-			t.Errorf("input %s: crcNumber %d != expectNumber %d", input, crcNumber, expectNumber)
+		if crc != expectNumber {
+			t.Errorf("input %s: crc %d != expectNumber %d", input, crc, expectNumber)
 		}
 	}
 }
 
 // go test -v -cover -run=^TestCRC64$
 func TestCRC64(t *testing.T) {
-	cases := map[string]string{
-		"":      "0000000000000000",
-		"123":   "4001b32000000000",
-		"你好，世界": "97788e871c4b3b66",
+	cases := map[string]uint64{
+		"":      0,
+		"123":   4612164443424423936,
+		"你好，世界": 10914630407878818662,
 	}
 
 	for input, expect := range cases {
-		crc, crcNumber, err := CRC64([]byte(input), tableISO)
-		if err != nil {
-			t.Error(err)
-		}
-
-		if crc.Hex() != expect {
-			t.Errorf("input %s: crc %s != expect %s", input, crc.Hex(), expect)
+		crc := CRC64(cryptox.FromString(input), tableISO)
+		if crc != expect {
+			t.Errorf("input %s: crc %d != expect %d", input, crc, expect)
 		}
 
 		expectNumber := crc64.Checksum([]byte(input), crc64.MakeTable(crc64.ISO))
-		if crcNumber != expectNumber {
-			t.Errorf("input %s: crcNumber %d != expectNumber %d", input, crcNumber, expectNumber)
+		if crc != expectNumber {
+			t.Errorf("input %s: crc %d != expectNumber %d", input, crc, expectNumber)
 		}
 	}
 }
 
 // go test -v -cover -run=^TestCRC64ISO$
 func TestCRC64ISO(t *testing.T) {
-	cases := map[string]string{
-		"":      "0000000000000000",
-		"123":   "4001b32000000000",
-		"你好，世界": "97788e871c4b3b66",
+	cases := map[string]uint64{
+		"":      0,
+		"123":   4612164443424423936,
+		"你好，世界": 10914630407878818662,
 	}
 
 	for input, expect := range cases {
-		crc, crcNumber, err := CRC64ISO([]byte(input))
-		if err != nil {
-			t.Error(err)
-		}
-
-		if crc.Hex() != expect {
-			t.Errorf("input %s: crc %s != expect %s", input, crc.Hex(), expect)
+		crc := CRC64ISO(cryptox.FromString(input))
+		if crc != expect {
+			t.Errorf("input %s: crc %d != expect %d", input, crc, expect)
 		}
 
 		expectNumber := crc64.Checksum([]byte(input), crc64.MakeTable(crc64.ISO))
-		if crcNumber != expectNumber {
-			t.Errorf("input %s: crcNumber %d != expectNumber %d", input, crcNumber, expectNumber)
+		if crc != expectNumber {
+			t.Errorf("input %s: crc %d != expectNumber %d", input, crc, expectNumber)
 		}
 	}
 }
 
 // go test -v -cover -run=^TestCRC64ECMA$
 func TestCRC64ECMA(t *testing.T) {
-	cases := map[string]string{
-		"":      "0000000000000000",
-		"123":   "30232844071cc561",
-		"你好，世界": "3eba78bfcc65bffb",
+	cases := map[string]uint64{
+		"":      0,
+		"123":   3468660410647627105,
+		"你好，世界": 4520057941183021051,
 	}
 
 	for input, expect := range cases {
-		crc, crcNumber, err := CRC64ECMA([]byte(input))
-		if err != nil {
-			t.Error(err)
-		}
-
-		if crc.Hex() != expect {
-			t.Errorf("input %s: crc %s != expect %s", input, crc.Hex(), expect)
+		crc := CRC64ECMA(cryptox.FromString(input))
+		if crc != expect {
+			t.Errorf("input %s: crc %d != expect %d", input, crc, expect)
 		}
 
 		expectNumber := crc64.Checksum([]byte(input), crc64.MakeTable(crc64.ECMA))
-		if crcNumber != expectNumber {
-			t.Errorf("input %s: crcNumber %d != expectNumber %d", input, crcNumber, expectNumber)
+		if crc != expectNumber {
+			t.Errorf("input %s: crc %d != expectNumber %d", input, crc, expectNumber)
 		}
 	}
 }
