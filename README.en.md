@@ -47,22 +47,22 @@ goos: darwin
 goarch: amd64
 cpu: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz
 
-BenchmarkMD5-12          	 6937862	       166.6 ns/op	     112 B/op	       2 allocs/op
-BenchmarkSHA1-12         	 6311574	       187.3 ns/op	     136 B/op	       2 allocs/op
-BenchmarkSHA224-12       	 4770352	       251.5 ns/op	     160 B/op	       2 allocs/op
-BenchmarkSHA256-12       	 4743789	       251.3 ns/op	     160 B/op	       2 allocs/op
-BenchmarkSHA384-12       	 3708129	       334.7 ns/op	     272 B/op	       2 allocs/op
-BenchmarkSHA512-12       	 3557325	       335.9 ns/op	     288 B/op	       2 allocs/op
-BenchmarkHMAC-12         	 1000000	      1030 ns/op	     512 B/op	       6 allocs/op
-BenchmarkCRC32IEEE-12    	16118478	        71.73 ns/op	      24 B/op	       2 allocs/op
-BenchmarkCRC64ISO-12     	25652527	        45.25 ns/op	       8 B/op	       1 allocs/op
-BenchmarkCRC64ECMA-12    	26552835	        44.71 ns/op	       8 B/op	       1 allocs/op
-BenchmarkFnv32-12        	40867548	        28.54 ns/op	       8 B/op	       1 allocs/op
-BenchmarkFnv32a-12       	41241873	        28.21 ns/op	       8 B/op	       1 allocs/op
-BenchmarkFnv64-12        	34188957	        30.16 ns/op	       8 B/op	       1 allocs/op
-BenchmarkFnv64a-12       	38607868	        30.02 ns/op	       8 B/op	       1 allocs/op
-BenchmarkFnv128-12       	23522612	        50.60 ns/op	      16 B/op	       1 allocs/op
-BenchmarkFnv128a-12      	23278514	        51.00 ns/op	      16 B/op	       1 allocs/op
+BenchmarkMD5-12                 11118327                111.2 ns/op             0 B/op          0 allocs/op
+BenchmarkSHA1-12                 9216342                129.3 ns/op             0 B/op          0 allocs/op
+BenchmarkSHA224-12               6227264                219.6 ns/op             0 B/op          0 allocs/op
+BenchmarkSHA256-12               5364110                203.8 ns/op             0 B/op          0 allocs/op
+BenchmarkSHA384-12               4600442                254.7 ns/op             0 B/op          0 allocs/op
+BenchmarkSHA512-12               4683705                266.1 ns/op             0 B/op          0 allocs/op
+BenchmarkHMAC-12                  929726                 1156 ns/op           512 B/op          6 allocs/op
+BenchmarkCRC32IEEE-12           53518428                25.81 ns/op             0 B/op          0 allocs/op
+BenchmarkCRC64ISO-12            47010480                23.54 ns/op             0 B/op          0 allocs/op
+BenchmarkCRC64ECMA-12           51956055                23.19 ns/op             0 B/op          0 allocs/op
+BenchmarkFnv32-12              104025846                12.84 ns/op             0 B/op          0 allocs/op
+BenchmarkFnv32a-12              89485070                12.40 ns/op             0 B/op          0 allocs/op
+BenchmarkFnv64-12               68797173                15.69 ns/op             0 B/op          0 allocs/op
+BenchmarkFnv64a-12              78190952                16.05 ns/op             0 B/op          0 allocs/op
+BenchmarkFnv128-12              17743756                63.86 ns/op            16 B/op          1 allocs/op
+BenchmarkFnv128a-12             19056975                64.67 ns/op            16 B/op          1 allocs/op
 
 BenchmarkDESEncryptECB-12    	  704928	      1724 ns/op	     528 B/op	       3 allocs/op
 BenchmarkDESEncryptCBC-12    	  615673	      1906 ns/op	     624 B/op	       6 allocs/op
