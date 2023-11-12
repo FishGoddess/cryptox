@@ -127,14 +127,3 @@ BenchmarkRSAVerifyPKCS1v15-12                      27355             46102 ns/op
 ### 🎨 贡献者
 
 如果您觉得 cryptox 缺少您需要的功能，请不要犹豫，马上参与进来，发起一个 _**issue**_。
-
-### 💪 使用 cryptox 的项目
-
-| 项目     | 作者         | 描述               | 链接                                                                                         |
-|--------|------------|------------------|--------------------------------------------------------------------------------------------|
-| Postar | avino-plan | 一个简单易用且低耦合的邮件服务。 | [Github](https://github.com/avino-plan/postar) / [码云](https://gitee.com/avino-plan/postar) |
-
-最后，我想感谢 JetBrains 公司的 **free JetBrains Open Source license(s)**，因为 cryptox 是用该计划下的 Idea / GoLand
-完成开发的。
-
-<a href="https://www.jetbrains.com/?from=cryptox" target="_blank"><img src="./_icons/jetbrains.png" width="250"/></a>
