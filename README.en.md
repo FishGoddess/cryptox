@@ -127,14 +127,3 @@ BenchmarkRSAVerifyPKCS1v15-12                      27355             46102 ns/op
 ### 🎨 Contributing
 
 If you find that something is not working as expected please open an _**issue**_.
-
-### 💪 Projects using cryptox
-
-| Project | Author     | Description                                    | link                                                                                          |
-|---------|------------|------------------------------------------------|-----------------------------------------------------------------------------------------------|
-| Postar  | avino-plan | An easy-to-use and low-coupling email service. | [Github](https://github.com/avino-plan/postar) / [Gitee](https://gitee.com/avino-plan/postar) |
-
-At last, I want to thank JetBrains for **free JetBrains Open Source license(s)**, because cryptox is developed with Idea
-/ GoLand under it.
-
-<a href="https://www.jetbrains.com/?from=cryptox" target="_blank"><img src="./_icons/jetbrains.png" width="250"/></a>
