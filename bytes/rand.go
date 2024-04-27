@@ -14,8 +14,8 @@ const words = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 var source = rand.NewSource(time.Now().UnixNano())
 
-// GenerateToBytes generates n bytes in random and appends them to bs.
-func GenerateToBytes(bs []byte, n int) []byte {
+// AppendRandomBytes appends n random bytes to bs.
+func AppendRandomBytes(bs []byte, n int) []byte {
 	length := int64(len(words))
 
 	for i := 0; i < n; i++ {
@@ -26,15 +26,15 @@ func GenerateToBytes(bs []byte, n int) []byte {
 	return bs
 }
 
-// GenerateBytes generates n bytes in random and returns them.
+// GenerateBytes generates n random bytes and returns them.
 func GenerateBytes(n int) []byte {
 	bs := make([]byte, 0, n)
-	bs = GenerateToBytes(bs, n)
+	bs = AppendRandomBytes(bs, n)
 
 	return bs
 }
 
-// GenerateString generates a string in random and returns it.
+// GenerateString generates a random string and returns it.
 func GenerateString(n int) string {
 	bs := GenerateBytes(n)
 

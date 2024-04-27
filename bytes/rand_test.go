@@ -8,13 +8,13 @@ import (
 	"testing"
 )
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestGenerateToBytes$
-func TestGenerateToBytes(t *testing.T) {
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestAppendRandomBytes$
+func TestAppendRandomBytes(t *testing.T) {
 	n := 32
 
 	for i := 0; i < 10; i++ {
 		bs := make([]byte, 0, n)
-		bs = GenerateToBytes(bs, n)
+		bs = AppendRandomBytes(bs, n)
 
 		if len(bs) != n {
 			t.Fatalf(" len(bs) %d != n %d", len(bs), n)
