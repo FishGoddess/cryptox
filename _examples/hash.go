@@ -1,4 +1,4 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -7,12 +7,11 @@ package main
 import (
 	"fmt"
 
-	"github.com/FishGoddess/cryptox"
 	"github.com/FishGoddess/cryptox/hash"
 )
 
 func main() {
-	data := cryptox.FromString("你好，世界")
+	data := []byte("你好，世界")
 	fmt.Println("data:", data)
 
 	// All hashing functions will return a cryptox.Bytes type which can be encoded to hex and base64.
@@ -40,12 +39,6 @@ func main() {
 	sha512 := hash.SHA512(data)
 	fmt.Println("sha512 hex:", sha512.Hex())
 	fmt.Println("sha512 base64:", sha512.Base64())
-
-	// HMAC uses a hash and key to work, and we choose sha256 here.
-	key := cryptox.FromString("12345678")
-	hmac, _ := hash.HMAC(key).SHA256(data)
-	fmt.Printf("hmac with key %s hex: %s\n", key, hmac.Hex())
-	fmt.Printf("hmac with key %s base64: %s\n", key, hmac.Base64())
 
 	crc32 := hash.CRC32IEEE(data)
 	fmt.Printf("crc32 with ieee: %d\n", crc32)

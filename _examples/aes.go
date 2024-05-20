@@ -1,4 +1,4 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -14,10 +14,10 @@ import (
 func main() {
 	// As you know, key is necessary in aes.
 	// However, not all modes need iv, such as ecb.
-	key := cryptox.FromString("12345678876543211234567887654321")
-	iv := cryptox.FromString("8765432112345678")
+	key := []byte("12345678876543211234567887654321")
+	iv := []byte("8765432112345678")
 
-	plain := cryptox.FromString("你好，世界")
+	plain := []byte("你好，世界")
 	fmt.Println("plain:", plain)
 
 	// We use ctr mode and no padding to encrypt data.

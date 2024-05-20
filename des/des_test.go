@@ -1,4 +1,4 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -12,9 +12,9 @@ import (
 )
 
 var (
-	testKey       = cryptox.FromString("12345678")
-	testKeyTriple = cryptox.FromString("123456788765432112345678")
-	testIV        = cryptox.FromString("87654321")
+	testKey       = []byte("12345678")
+	testKeyTriple = []byte("123456788765432112345678")
+	testIV        = []byte("87654321")
 )
 
 type testResult struct {
@@ -39,16 +39,16 @@ func (tr *testResult) compareTo(bs cryptox.Bytes) error {
 	return nil
 }
 
-// go test -v -cover -run=^TestDES$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestDES$
 func TestDES(t *testing.T) {
 	if des := New(testKey); des.err != nil {
-		t.Error(des.err)
+		t.Fatal(des.err)
 	}
 }
 
-// go test -v -cover -run=^TestTripleDES$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestTripleDES$
 func TestTripleDES(t *testing.T) {
 	if des := NewTriple(testKeyTriple); des.err != nil {
-		t.Error(des.err)
+		t.Fatal(des.err)
 	}
 }

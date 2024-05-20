@@ -1,4 +1,4 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -26,7 +26,7 @@ func BenchmarkDESEncryptECB(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := desObj.EncryptECB(cryptox.PaddingPKCS7, desBenchPlain)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -40,7 +40,7 @@ func BenchmarkDESEncryptCBC(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := desObj.EncryptCBC(cryptox.PaddingPKCS7, desBenchIV, desBenchPlain)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -54,7 +54,7 @@ func BenchmarkDESEncryptCFB(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := desObj.EncryptCFB(cryptox.PaddingPKCS7, desBenchIV, desBenchPlain)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -68,7 +68,7 @@ func BenchmarkDESEncryptOFB(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := desObj.EncryptOFB(cryptox.PaddingPKCS7, desBenchIV, desBenchPlain)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -82,7 +82,7 @@ func BenchmarkDESEncryptCTR(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := desObj.EncryptCTR(cryptox.PaddingPKCS7, desBenchIV, desBenchPlain)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -93,7 +93,7 @@ func BenchmarkDESDecryptECB(b *testing.B) {
 
 	benchCrypted, err := desObj.EncryptECB(cryptox.PaddingPKCS7, desBenchPlain)
 	if err != nil {
-		b.Error(err)
+		b.Fatal(err)
 	}
 
 	b.ReportAllocs()
@@ -102,7 +102,7 @@ func BenchmarkDESDecryptECB(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := desObj.DecryptECB(cryptox.UnPaddingPKCS7, benchCrypted)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -113,7 +113,7 @@ func BenchmarkDESDecryptCBC(b *testing.B) {
 
 	benchCrypted, err := desObj.EncryptCBC(cryptox.PaddingPKCS7, desBenchIV, desBenchPlain)
 	if err != nil {
-		b.Error(err)
+		b.Fatal(err)
 	}
 
 	b.ReportAllocs()
@@ -122,7 +122,7 @@ func BenchmarkDESDecryptCBC(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := desObj.DecryptCBC(cryptox.UnPaddingPKCS7, desBenchIV, benchCrypted)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -133,7 +133,7 @@ func BenchmarkDESDecryptCFB(b *testing.B) {
 
 	benchCrypted, err := desObj.EncryptCFB(cryptox.PaddingNone, desBenchIV, desBenchPlain)
 	if err != nil {
-		b.Error(err)
+		b.Fatal(err)
 	}
 
 	b.ReportAllocs()
@@ -142,7 +142,7 @@ func BenchmarkDESDecryptCFB(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := desObj.DecryptCFB(cryptox.UnPaddingNone, desBenchIV, benchCrypted)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -153,7 +153,7 @@ func BenchmarkDESDecryptOFB(b *testing.B) {
 
 	benchCrypted, err := desObj.EncryptOFB(cryptox.PaddingNone, desBenchIV, desBenchPlain)
 	if err != nil {
-		b.Error(err)
+		b.Fatal(err)
 	}
 
 	b.ReportAllocs()
@@ -162,7 +162,7 @@ func BenchmarkDESDecryptOFB(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := desObj.DecryptOFB(cryptox.UnPaddingNone, desBenchIV, benchCrypted)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -173,7 +173,7 @@ func BenchmarkDESDecryptCTR(b *testing.B) {
 
 	benchCrypted, err := desObj.EncryptCTR(cryptox.PaddingNone, desBenchIV, desBenchPlain)
 	if err != nil {
-		b.Error(err)
+		b.Fatal(err)
 	}
 
 	b.ReportAllocs()
@@ -182,7 +182,7 @@ func BenchmarkDESDecryptCTR(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := desObj.DecryptCTR(cryptox.UnPaddingNone, desBenchIV, benchCrypted)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }

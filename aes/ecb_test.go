@@ -1,4 +1,4 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -10,7 +10,7 @@ import (
 	"github.com/FishGoddess/cryptox"
 )
 
-// go test -v -cover -run=^TestAESECB$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestAESECB$
 func TestAESECB(t *testing.T) {
 	aes := New(testKey)
 
@@ -33,22 +33,22 @@ func TestAESECB(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crypted, err := aes.EncryptECB(cryptox.PaddingPKCS7, cryptox.FromString(input))
+		crypted, err := aes.EncryptECB(cryptox.PaddingPKCS7, []byte(input))
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 
 		if err = expect.compareTo(crypted); err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 
 		plain, err := aes.DecryptECB(cryptox.UnPaddingPKCS7, crypted)
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 
 		if string(plain) != input {
-			t.Errorf("input %s: plain %+v != input %+v", input, plain, []byte(input))
+			t.Fatalf("input %s: plain %+v != input %+v", input, plain, []byte(input))
 		}
 	}
 }

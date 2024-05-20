@@ -1,4 +1,4 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -10,7 +10,7 @@ import (
 	"github.com/FishGoddess/cryptox"
 )
 
-// go test -v -cover -run=^TestDESECB$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestDESECB$
 func TestDESECB(t *testing.T) {
 	des := New(testKey)
 
@@ -33,27 +33,27 @@ func TestDESECB(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crypted, err := des.EncryptECB(cryptox.PaddingPKCS7, cryptox.FromString(input))
+		crypted, err := des.EncryptECB(cryptox.PaddingPKCS7, []byte(input))
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 
 		if err = expect.compareTo(crypted); err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 
 		plain, err := des.DecryptECB(cryptox.UnPaddingPKCS7, crypted)
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 
 		if string(plain) != input {
-			t.Errorf("input %s: plain %+v != input %+v", input, plain, []byte(input))
+			t.Fatalf("input %s: plain %+v != input %+v", input, plain, []byte(input))
 		}
 	}
 }
 
-// go test -v -cover -run=^TestTripleDESECB$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestTripleDESECB$
 func TestTripleDESECB(t *testing.T) {
 	des := NewTriple(testKeyTriple)
 
@@ -76,22 +76,22 @@ func TestTripleDESECB(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crypted, err := des.EncryptECB(cryptox.PaddingPKCS7, cryptox.FromString(input))
+		crypted, err := des.EncryptECB(cryptox.PaddingPKCS7, []byte(input))
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 
 		if err = expect.compareTo(crypted); err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 
 		plain, err := des.DecryptECB(cryptox.UnPaddingPKCS7, crypted)
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 
 		if string(plain) != input {
-			t.Errorf("input %s: plain %+v != input %+v", input, plain, []byte(input))
+			t.Fatalf("input %s: plain %+v != input %+v", input, plain, []byte(input))
 		}
 	}
 }

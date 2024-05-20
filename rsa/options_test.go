@@ -1,4 +1,4 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -12,7 +12,7 @@ import (
 	"testing"
 )
 
-// go test -v -cover -run=^TestFromKeyOptions$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestFromKeyOptions$
 func TestFromKeyOptions(t *testing.T) {
 	opts := []KeyOption{
 		WithPrivateKeyEncoder(X509.PKCS8PrivateKeyEncoder),
@@ -27,32 +27,32 @@ func TestFromKeyOptions(t *testing.T) {
 	expectPointer := fmt.Sprintf("%p", X509.PKCS8PrivateKeyEncoder)
 
 	if encoderPointer != expectPointer {
-		t.Errorf("encoderPointer %s != expectPointer %s", encoderPointer, expectPointer)
+		t.Fatalf("encoderPointer %s != expectPointer %s", encoderPointer, expectPointer)
 	}
 
 	decoderPointer := fmt.Sprintf("%p", cfg.privateKeyDecoder)
 	expectPointer = fmt.Sprintf("%p", X509.PKCS8PrivateKeyDecoder)
 
 	if decoderPointer != expectPointer {
-		t.Errorf("decoderPointer %s != expectPointer %s", decoderPointer, expectPointer)
+		t.Fatalf("decoderPointer %s != expectPointer %s", decoderPointer, expectPointer)
 	}
 
 	encoderPointer = fmt.Sprintf("%p", cfg.publicKeyEncoder)
 	expectPointer = fmt.Sprintf("%p", X509.PKCS1PublicKeyEncoder)
 
 	if encoderPointer != expectPointer {
-		t.Errorf("encoderPointer %s != expectPointer %s", encoderPointer, expectPointer)
+		t.Fatalf("encoderPointer %s != expectPointer %s", encoderPointer, expectPointer)
 	}
 
 	decoderPointer = fmt.Sprintf("%p", cfg.publicKeyDecoder)
 	expectPointer = fmt.Sprintf("%p", X509.PKCS1PublicKeyDecoder)
 
 	if decoderPointer != expectPointer {
-		t.Errorf("decoderPointer %s != expectPointer %s", decoderPointer, expectPointer)
+		t.Fatalf("decoderPointer %s != expectPointer %s", decoderPointer, expectPointer)
 	}
 }
 
-// go test -v -cover -run=^TestWithPrivateKeyEncoder$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestWithPrivateKeyEncoder$
 func TestWithPrivateKeyEncoder(t *testing.T) {
 	cfg := &KeyConfig{privateKeyEncoder: nil}
 
@@ -63,11 +63,11 @@ func TestWithPrivateKeyEncoder(t *testing.T) {
 	expectPointer := fmt.Sprintf("%p", X509.PKCS1PrivateKeyEncoder)
 
 	if encoderPointer != expectPointer {
-		t.Errorf("encoderPointer %s != expectPointer %s", encoderPointer, expectPointer)
+		t.Fatalf("encoderPointer %s != expectPointer %s", encoderPointer, expectPointer)
 	}
 }
 
-// go test -v -cover -run=^TestWithPrivateKeyDecoder$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestWithPrivateKeyDecoder$
 func TestWithPrivateKeyDecoder(t *testing.T) {
 	cfg := &KeyConfig{privateKeyDecoder: nil}
 
@@ -78,11 +78,11 @@ func TestWithPrivateKeyDecoder(t *testing.T) {
 	expectPointer := fmt.Sprintf("%p", X509.PKCS1PrivateKeyDecoder)
 
 	if decoderPointer != expectPointer {
-		t.Errorf("decoderPointer %s != expectPointer %s", decoderPointer, expectPointer)
+		t.Fatalf("decoderPointer %s != expectPointer %s", decoderPointer, expectPointer)
 	}
 }
 
-// go test -v -cover -run=^TestWithPublicKeyEncoder$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestWithPublicKeyEncoder$
 func TestWithPublicKeyEncoder(t *testing.T) {
 	cfg := &KeyConfig{publicKeyEncoder: nil}
 
@@ -93,11 +93,11 @@ func TestWithPublicKeyEncoder(t *testing.T) {
 	expectPointer := fmt.Sprintf("%p", X509.PKIXPublicKeyEncoder)
 
 	if encoderPointer != expectPointer {
-		t.Errorf("encoderPointer %s != expectPointer %s", encoderPointer, expectPointer)
+		t.Fatalf("encoderPointer %s != expectPointer %s", encoderPointer, expectPointer)
 	}
 }
 
-// go test -v -cover -run=^TestWithPublicKeyDecoder$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestWithPublicKeyDecoder$
 func TestWithPublicKeyDecoder(t *testing.T) {
 	cfg := &KeyConfig{publicKeyDecoder: nil}
 
@@ -108,11 +108,11 @@ func TestWithPublicKeyDecoder(t *testing.T) {
 	expectPointer := fmt.Sprintf("%p", X509.PKIXPublicKeyDecoder)
 
 	if decoderPointer != expectPointer {
-		t.Errorf("decoderPointer %s != expectPointer %s", decoderPointer, expectPointer)
+		t.Fatalf("decoderPointer %s != expectPointer %s", decoderPointer, expectPointer)
 	}
 }
 
-// go test -v -cover -run=^TestWithRandom$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestWithRandom$
 func TestWithRandom(t *testing.T) {
 	cfg := &Config{random: nil}
 
@@ -123,11 +123,11 @@ func TestWithRandom(t *testing.T) {
 	expectPointer := fmt.Sprintf("%p", rand.Reader)
 
 	if randomPointer != expectPointer {
-		t.Errorf("randomPointer %s != expectPointer %s", randomPointer, expectPointer)
+		t.Fatalf("randomPointer %s != expectPointer %s", randomPointer, expectPointer)
 	}
 }
 
-// go test -v -cover -run=^TestWithHash$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestWithHash$
 func TestWithHash(t *testing.T) {
 	cfg := &Config{random: nil}
 
@@ -139,11 +139,11 @@ func TestWithHash(t *testing.T) {
 	expectPointer := fmt.Sprintf("%p", hash)
 
 	if hashPointer != expectPointer {
-		t.Errorf("hashPointer %s != expectPointer %s", hashPointer, expectPointer)
+		t.Fatalf("hashPointer %s != expectPointer %s", hashPointer, expectPointer)
 	}
 }
 
-// go test -v -cover -run=^TestWithCryptoHash$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestWithCryptoHash$
 func TestWithCryptoHash(t *testing.T) {
 	cfg := &Config{cryptoHash: 0}
 
@@ -152,6 +152,6 @@ func TestWithCryptoHash(t *testing.T) {
 	opt.ApplyTo(cfg)
 
 	if cfg.cryptoHash != hash {
-		t.Errorf("cfg.cryptoHash %d != hash %d", cfg.cryptoHash, hash)
+		t.Fatalf("cfg.cryptoHash %d != hash %d", cfg.cryptoHash, hash)
 	}
 }

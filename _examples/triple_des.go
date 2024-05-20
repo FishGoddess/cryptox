@@ -1,4 +1,4 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -14,10 +14,10 @@ import (
 func main() {
 	// As you know, key is necessary in 3des.
 	// However, not all modes need iv, such as ecb.
-	key := cryptox.FromString("123456788765432112345678")
-	iv := cryptox.FromString("87654321")
+	key := []byte("123456788765432112345678")
+	iv := []byte("87654321")
 
-	plain := cryptox.FromString("你好，世界")
+	plain := []byte("你好，世界")
 	fmt.Println("plain:", plain)
 
 	// We use cbc mode and pkcs7 padding to encrypt data.

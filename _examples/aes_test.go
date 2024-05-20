@@ -1,4 +1,4 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -12,9 +12,9 @@ import (
 )
 
 var (
-	aesBenchKey      = cryptox.FromString("12345678876543211234567887654321")
-	aesBenchIV       = cryptox.FromString("8765432112345678")
-	aesBenchNonce    = cryptox.FromString("123456abcdef")
+	aesBenchKey      = []byte("12345678876543211234567887654321")
+	aesBenchIV       = []byte("8765432112345678")
+	aesBenchNonce    = []byte("123456abcdef")
 	aesBenchPlain, _ = cryptox.GenerateBytes(128)
 )
 
@@ -27,7 +27,7 @@ func BenchmarkAESEncryptECB(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := aesObj.EncryptECB(cryptox.PaddingPKCS7, aesBenchPlain)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -41,7 +41,7 @@ func BenchmarkAESEncryptCBC(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := aesObj.EncryptCBC(cryptox.PaddingPKCS7, aesBenchIV, aesBenchPlain)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -55,7 +55,7 @@ func BenchmarkAESEncryptCFB(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := aesObj.EncryptCFB(cryptox.PaddingNone, aesBenchIV, aesBenchPlain)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -69,7 +69,7 @@ func BenchmarkAESEncryptOFB(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := aesObj.EncryptOFB(cryptox.PaddingNone, aesBenchIV, aesBenchPlain)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -83,7 +83,7 @@ func BenchmarkAESEncryptCTR(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := aesObj.EncryptCTR(cryptox.PaddingNone, aesBenchIV, aesBenchPlain)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -97,7 +97,7 @@ func BenchmarkAESEncryptGCM(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := aesObj.EncryptGCM(aesBenchNonce, aesBenchPlain, nil)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -108,7 +108,7 @@ func BenchmarkAESDecryptECB(b *testing.B) {
 
 	benchCrypted, err := aesObj.EncryptECB(cryptox.PaddingPKCS7, aesBenchPlain)
 	if err != nil {
-		b.Error(err)
+		b.Fatal(err)
 	}
 
 	b.ReportAllocs()
@@ -117,7 +117,7 @@ func BenchmarkAESDecryptECB(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := aesObj.DecryptECB(cryptox.UnPaddingPKCS7, benchCrypted)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -128,7 +128,7 @@ func BenchmarkAESDecryptCBC(b *testing.B) {
 
 	benchCrypted, err := aesObj.EncryptCBC(cryptox.PaddingPKCS7, aesBenchIV, aesBenchPlain)
 	if err != nil {
-		b.Error(err)
+		b.Fatal(err)
 	}
 
 	b.ReportAllocs()
@@ -137,7 +137,7 @@ func BenchmarkAESDecryptCBC(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := aesObj.DecryptCBC(cryptox.UnPaddingPKCS7, aesBenchIV, benchCrypted)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -148,7 +148,7 @@ func BenchmarkAESDecryptCFB(b *testing.B) {
 
 	benchCrypted, err := aesObj.EncryptCFB(cryptox.PaddingNone, aesBenchIV, aesBenchPlain)
 	if err != nil {
-		b.Error(err)
+		b.Fatal(err)
 	}
 
 	b.ReportAllocs()
@@ -157,7 +157,7 @@ func BenchmarkAESDecryptCFB(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := aesObj.DecryptCFB(cryptox.UnPaddingNone, aesBenchIV, benchCrypted)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -168,7 +168,7 @@ func BenchmarkAESDecryptOFB(b *testing.B) {
 
 	benchCrypted, err := aesObj.EncryptOFB(cryptox.PaddingNone, aesBenchIV, aesBenchPlain)
 	if err != nil {
-		b.Error(err)
+		b.Fatal(err)
 	}
 
 	b.ReportAllocs()
@@ -177,7 +177,7 @@ func BenchmarkAESDecryptOFB(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := aesObj.DecryptOFB(cryptox.UnPaddingNone, aesBenchIV, benchCrypted)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -188,7 +188,7 @@ func BenchmarkAESDecryptCTR(b *testing.B) {
 
 	benchCrypted, err := aesObj.EncryptCTR(cryptox.PaddingNone, aesBenchIV, aesBenchPlain)
 	if err != nil {
-		b.Error(err)
+		b.Fatal(err)
 	}
 
 	b.ReportAllocs()
@@ -197,7 +197,7 @@ func BenchmarkAESDecryptCTR(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := aesObj.DecryptCTR(cryptox.UnPaddingNone, aesBenchIV, benchCrypted)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -208,7 +208,7 @@ func BenchmarkAESDecryptGCM(b *testing.B) {
 
 	benchCrypted, err := aesObj.EncryptGCM(aesBenchNonce, aesBenchPlain, nil)
 	if err != nil {
-		b.Error(err)
+		b.Fatal(err)
 	}
 
 	b.ReportAllocs()
@@ -217,7 +217,7 @@ func BenchmarkAESDecryptGCM(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := aesObj.DecryptGCM(aesBenchNonce, benchCrypted, nil)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }

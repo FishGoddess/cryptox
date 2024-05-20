@@ -1,4 +1,4 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -17,10 +17,8 @@ var (
 	tableECMA = crc64.MakeTable(crc64.ECMA)
 )
 
-// Table32 is an alias of crc32.Table.
 type Table32 = crc32.Table
 
-// Table64 is an alias of crc64.Table.
 type Table64 = crc64.Table
 
 // CRC32 uses given table to checksum bs.

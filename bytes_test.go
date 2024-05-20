@@ -1,4 +1,4 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -8,65 +8,66 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/hex"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"testing"
 )
 
-// go test -v -cover -run=^TestBytes$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestBytes$
 func TestBytes(t *testing.T) {
 	str := "Hello World"
 
 	bs := Bytes(str)
-	if !bytes.Equal(bs.Bytes(), bs) {
-		t.Errorf("bs.Bytes() %+v != []byte(str) %+v", bs.Bytes(), []byte(str))
-	}
-
-	if bs.String() != str {
-		t.Errorf("bs.String() %s != str %s", bs.String(), str)
+	if !bytes.Equal(bs, []byte(str)) {
+		t.Fatalf("bs %+v != []byte(str) %+v", bs, []byte(str))
 	}
 
 	expect := hex.EncodeToString(bs)
 	if bs.Hex() != expect {
-		t.Errorf("bs.String() %s != expect %s", bs.String(), expect)
+		t.Fatalf("bs.Hex() %s != expect %s", bs.Hex(), expect)
 	}
 
 	expect = base64.StdEncoding.EncodeToString(bs)
-	if bs.Base64() != base64.StdEncoding.EncodeToString(bs) {
-		t.Errorf("bs.String() %s != expect %s", bs.String(), expect)
+	if bs.Base64() != expect {
+		t.Fatalf("bs.Base64() %s != expect %s", bs.Base64(), expect)
 	}
 }
 
-// go test -v -cover -run=^TestBytesClone$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestBytesClone$
 func TestBytesClone(t *testing.T) {
 	bs := Bytes("Hello World")
 	newSlice := bs.Clone()
 
-	if string(newSlice) != string(bs) {
-		t.Errorf("newSlice %s != bs %s", string(newSlice), string(bs))
+	if !bytes.Equal(newSlice, bs) {
+		t.Fatalf("newSlice %+v != bs %+v", newSlice, bs)
+	}
+
+	bs[0] = '\n'
+	if bytes.Equal(newSlice, bs) {
+		t.Fatalf("newSlice %+v == bs %+v", newSlice, bs)
 	}
 }
 
-// go test -v -cover -run=^TestBytesWriteTo$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestBytesWriteTo$
 func TestBytesWriteTo(t *testing.T) {
 	bs := Bytes("你好，世界")
 
 	var buff bytes.Buffer
 	n, err := bs.WriteTo(&buff)
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	if n != int64(len(bs)) {
-		t.Errorf("n %d != int64(len(bs)) %d", n, int64(len(bs)))
+		t.Fatalf("n %d != int64(len(bs)) %d", n, int64(len(bs)))
 	}
 
 	if !bytes.Equal(bs, buff.Bytes()) {
-		t.Errorf("bs %+v != buff.Bytes() %+v", bs, buff.Bytes())
+		t.Fatalf("bs %+v != buff.Bytes() %+v", bs, buff.Bytes())
 	}
 }
 
-// go test -v -cover -run=^TestBytesWriteToFile$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestBytesWriteToFile$
 func TestBytesWriteToFile(t *testing.T) {
 	bs := Bytes("你好，世界")
 
@@ -75,61 +76,25 @@ func TestBytesWriteToFile(t *testing.T) {
 
 	n, err := bs.WriteToFile(path)
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	if n != int64(len(bs)) {
-		t.Errorf("n %d != int64(len(bs)) %d", n, int64(len(bs)))
+		t.Fatalf("n %d != int64(len(bs)) %d", n, int64(len(bs)))
 	}
 
-	readBytes, err := ioutil.ReadFile(path)
+	readBytes, err := os.ReadFile(path)
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	if !bytes.Equal(bs, readBytes) {
-		t.Errorf("bs %+v != readBytes %+v", bs, readBytes)
+		t.Fatalf("bs %+v != readBytes %+v", bs, readBytes)
 	}
 }
 
-// go test -v -cover -run=^TestFromBytes$
-func TestFromBytes(t *testing.T) {
-	cases := map[string]string{
-		"":      "",
-		"123":   "123",
-		"你好，世界": "你好，世界",
-	}
-
-	for encoded, expect := range cases {
-		plain := FromBytes([]byte(encoded))
-		plainStr := string(plain)
-
-		if plainStr != expect {
-			t.Errorf("encoded %s: plainStr %s != expect %s", encoded, plainStr, expect)
-		}
-	}
-}
-
-// go test -v -cover -run=^TestFromString$
-func TestFromString(t *testing.T) {
-	cases := map[string]string{
-		"":      "",
-		"123":   "123",
-		"你好，世界": "你好，世界",
-	}
-
-	for encoded, expect := range cases {
-		plain := FromString(encoded)
-		plainStr := string(plain)
-
-		if plainStr != expect {
-			t.Errorf("encoded %s: plainStr %s != expect %s", encoded, plainStr, expect)
-		}
-	}
-}
-
-// go test -v -cover -run=^TestFromHex$
-func TestFromHex(t *testing.T) {
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestParseHex$
+func TestParseHex(t *testing.T) {
 	cases := map[string]string{
 		"":                               "",
 		"313233":                         "123",
@@ -137,19 +102,18 @@ func TestFromHex(t *testing.T) {
 	}
 
 	for encoded, expect := range cases {
-		plain, err := FromHex(encoded)
+		decoded, err := ParseHex(encoded)
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 
-		plainStr := string(plain)
-		if plainStr != expect {
-			t.Errorf("encoded %s: plainStr %s != expect %s", encoded, plainStr, expect)
+		if !bytes.Equal(decoded, []byte(expect)) {
+			t.Fatalf("encoded %s: decoded %+v != expect %+v", encoded, decoded, []byte(expect))
 		}
 	}
 }
 
-// go test -v -cover -run=^TestFromBase64$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestFromBase64$
 func TestFromBase64(t *testing.T) {
 	cases := map[string]string{
 		"":                     "",
@@ -158,32 +122,13 @@ func TestFromBase64(t *testing.T) {
 	}
 
 	for encoded, expect := range cases {
-		plain, err := FromBase64(encoded)
+		decoded, err := ParseBase64(encoded)
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 
-		plainStr := string(plain)
-		if plainStr != expect {
-			t.Errorf("encoded %s: plainStr %s != expect %s", encoded, plainStr, expect)
+		if !bytes.Equal(decoded, []byte(expect)) {
+			t.Fatalf("encoded %s: decoded %+v != expect %+v", encoded, decoded, []byte(expect))
 		}
-	}
-}
-
-// go test -v -cover -run=^TestGenerateBytes$
-func TestGenerateBytes(t *testing.T) {
-	for i := 0; i < 16; i++ {
-		n := i
-
-		bs, err := GenerateBytes(n)
-		if err != nil {
-			t.Error(err)
-		}
-
-		if len(bs) != n {
-			t.Errorf("len(bs) %d != n %d", len(bs), n)
-		}
-
-		t.Log(bs.Hex(), bs.Base64())
 	}
 }

@@ -1,4 +1,4 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -24,7 +24,7 @@ func BenchmarkRSAGenerateKey1024PKCS1PKIX(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _, err := rsa.GenerateKeys(1024, opts...)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -43,7 +43,7 @@ func BenchmarkRSAGenerateKey2048PKCS1PKIX(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _, err := rsa.GenerateKeys(2048, opts...)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -62,7 +62,7 @@ func BenchmarkRSAGenerateKey4096PKCS1PKIX(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _, err := rsa.GenerateKeys(4096, opts...)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -81,7 +81,7 @@ func BenchmarkRSAGenerateKey1024PKCS8PKIX(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _, err := rsa.GenerateKeys(1024, opts...)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -100,7 +100,7 @@ func BenchmarkRSAGenerateKey2048PKCS8PKIX(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _, err := rsa.GenerateKeys(2048, opts...)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -119,7 +119,7 @@ func BenchmarkRSAGenerateKey4096PKCS8PKIX(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _, err := rsa.GenerateKeys(4096, opts...)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -138,7 +138,7 @@ func BenchmarkRSAGenerateKey1024PKCS1PKCS1(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _, err := rsa.GenerateKeys(1024, opts...)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -157,7 +157,7 @@ func BenchmarkRSAGenerateKey2048PKCS1PKCS1(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _, err := rsa.GenerateKeys(2048, opts...)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -176,7 +176,7 @@ func BenchmarkRSAGenerateKey4096PKCS1PKCS1(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _, err := rsa.GenerateKeys(4096, opts...)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -195,7 +195,7 @@ func BenchmarkRSAGenerateKey1024PKCS8PKCS1(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _, err := rsa.GenerateKeys(1024, opts...)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -214,7 +214,7 @@ func BenchmarkRSAGenerateKey2048PKCS8PKCS1(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _, err := rsa.GenerateKeys(2048, opts...)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -233,7 +233,7 @@ func BenchmarkRSAGenerateKey4096PKCS8PKCS1(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _, err := rsa.GenerateKeys(4096, opts...)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }

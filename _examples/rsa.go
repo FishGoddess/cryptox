@@ -1,4 +1,4 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -7,7 +7,6 @@ package main
 import (
 	"fmt"
 
-	"github.com/FishGoddess/cryptox"
 	"github.com/FishGoddess/cryptox/hash"
 	"github.com/FishGoddess/cryptox/rsa"
 )
@@ -21,7 +20,7 @@ var (
 )
 
 func main() {
-	msg := cryptox.FromString("戴上头箍，爱不了你；不戴头箍，救不了你。")
+	msg := []byte("戴上头箍，爱不了你；不戴头箍，救不了你。")
 	fmt.Printf("Msg: %s\n", msg)
 
 	// Use public key to encrypt msg.

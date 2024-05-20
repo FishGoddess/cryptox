@@ -1,4 +1,4 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -38,9 +38,9 @@ func (tr *testResult) compareTo(bs cryptox.Bytes) error {
 	return nil
 }
 
-// go test -v -cover -run=^TestAES$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestAES$
 func TestAES(t *testing.T) {
 	if aes := New(testKey); aes.err != nil {
-		t.Error(aes.err)
+		t.Fatal(aes.err)
 	}
 }

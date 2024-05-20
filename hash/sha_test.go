@@ -1,4 +1,4 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -6,27 +6,9 @@ package hash
 
 import (
 	"testing"
-
-	"github.com/FishGoddess/cryptox"
 )
 
-// go test -v -cover -run=^TestMD5$
-func TestMD5(t *testing.T) {
-	cases := map[string]string{
-		"":      "d41d8cd98f00b204e9800998ecf8427e",
-		"123":   "202cb962ac59075b964b07152d234b70",
-		"你好，世界": "dbefd3ada018615b35588a01e216ae6e",
-	}
-
-	for input, expect := range cases {
-		sum := MD5(cryptox.FromString(input))
-		if sum.Hex() != expect {
-			t.Errorf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
-		}
-	}
-}
-
-// go test -v -cover -run=^TestSHA1$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestSHA1$
 func TestSHA1(t *testing.T) {
 	cases := map[string]string{
 		"":      "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -35,14 +17,14 @@ func TestSHA1(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		sum := SHA1(cryptox.FromString(input))
+		sum := SHA1([]byte(input))
 		if sum.Hex() != expect {
-			t.Errorf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
+			t.Fatalf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
 		}
 	}
 }
 
-// go test -v -cover -run=^TestSHA224$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestSHA224$
 func TestSHA224(t *testing.T) {
 	cases := map[string]string{
 		"":      "d14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f",
@@ -51,14 +33,14 @@ func TestSHA224(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		sum := SHA224(cryptox.FromString(input))
+		sum := SHA224([]byte(input))
 		if sum.Hex() != expect {
-			t.Errorf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
+			t.Fatalf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
 		}
 	}
 }
 
-// go test -v -cover -run=^TestSHA256$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestSHA256$
 func TestSHA256(t *testing.T) {
 	cases := map[string]string{
 		"":      "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -67,14 +49,14 @@ func TestSHA256(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		sum := SHA256(cryptox.FromString(input))
+		sum := SHA256([]byte(input))
 		if sum.Hex() != expect {
-			t.Errorf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
+			t.Fatalf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
 		}
 	}
 }
 
-// go test -v -cover -run=^TestSHA384$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestSHA384$
 func TestSHA384(t *testing.T) {
 	cases := map[string]string{
 		"":      "38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b",
@@ -83,14 +65,14 @@ func TestSHA384(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		sum := SHA384(cryptox.FromString(input))
+		sum := SHA384([]byte(input))
 		if sum.Hex() != expect {
-			t.Errorf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
+			t.Fatalf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
 		}
 	}
 }
 
-// go test -v -cover -run=^TestSHA512$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestSHA512$
 func TestSHA512(t *testing.T) {
 	cases := map[string]string{
 		"":      "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e",
@@ -99,9 +81,9 @@ func TestSHA512(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		sum := SHA512(cryptox.FromString(input))
+		sum := SHA512([]byte(input))
 		if sum.Hex() != expect {
-			t.Errorf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
+			t.Fatalf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
 		}
 	}
 }

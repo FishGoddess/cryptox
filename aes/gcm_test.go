@@ -1,4 +1,4 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -6,25 +6,23 @@ package aes
 
 import (
 	"testing"
-
-	"github.com/FishGoddess/cryptox"
 )
 
-// go test -v -cover -run=^TestGenerateGCMNonce$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestGenerateGCMNonce$
 func TestGenerateGCMNonce(t *testing.T) {
 	nonce, err := GenerateGCMNonce()
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	if len(nonce) != gcmStandardNonceSize {
-		t.Errorf("len(nonce) %d is wrong", len(nonce))
+		t.Fatalf("len(nonce) %d is wrong", len(nonce))
 	}
 
 	t.Log(nonce)
 }
 
-// go test -v -cover -run=^TestAESGCM$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestAESGCM$
 func TestAESGCM(t *testing.T) {
 	aes := New(testKey)
 
@@ -37,24 +35,24 @@ func TestAESGCM(t *testing.T) {
 		},
 	}
 
-	nonce := cryptox.FromString("123456abcdef")
+	nonce := []byte("123456abcdef")
 	for input, expect := range cases {
-		crypted, err := aes.EncryptGCM(nonce, cryptox.FromString(input), nil)
+		crypted, err := aes.EncryptGCM(nonce, []byte(input), nil)
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 
 		if crypted.Base64() != expect.base64String {
-			t.Errorf("crypted %s is wrong", crypted.Base64())
+			t.Fatalf("crypted %s is wrong", crypted.Base64())
 		}
 
 		plain, err := aes.DecryptGCM(nonce, crypted, nil)
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 
 		if string(plain) != input {
-			t.Errorf("input %s: plain %+v != input %+v", input, plain, []byte(input))
+			t.Fatalf("input %s: plain %+v != input %+v", input, plain, []byte(input))
 		}
 	}
 }

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
-package bytes
+package cryptox
 
 import "fmt"
 
@@ -22,6 +22,7 @@ func PaddingZero() Padding {
 }
 
 // PaddingPKCS5 paddings bs using pkcs5.
+// Actually we found pkcs5 equals to pkcs7.
 func PaddingPKCS5() Padding {
 	return paddingPKCS7{}
 }
