@@ -23,7 +23,7 @@ func GenerateGCMNonce() (cryptox.Bytes, error) {
 	}
 
 	if len(nonce) != gcmStandardNonceSize {
-		return nil, fmt.Errorf("aes: len(nonce) %d is wrong", len(nonce))
+		return nil, fmt.Errorf("cryptox/aes: len(nonce) %d is wrong", len(nonce))
 	}
 
 	return nonce, nil

@@ -5,6 +5,7 @@
 package rsa
 
 import (
+	"bytes"
 	"crypto/rand"
 	"crypto/rsa"
 	"testing"
@@ -50,7 +51,7 @@ func TestPublicKey(t *testing.T) {
 		t.Fatalf("key.key %+v != publicKey %+v", key.key, publicKey)
 	}
 
-	if key.keyBytes.String() != publicKeyBytes.String() {
+	if !bytes.Equal(key.keyBytes, publicKeyBytes) {
 		t.Fatalf("key.keyBytes %+v != publicKeyBytes %+v", key.keyBytes, publicKeyBytes)
 	}
 
@@ -58,7 +59,7 @@ func TestPublicKey(t *testing.T) {
 		t.Fatalf("key.Key() %+v != publicKey %+v", key.Key(), publicKey)
 	}
 
-	if key.Bytes().String() != publicKeyBytes.String() {
+	if !bytes.Equal(key.Bytes(), publicKeyBytes) {
 		t.Fatalf("key.Bytes() %+v != publicKeyBytes %+v", key.Bytes(), publicKeyBytes)
 	}
 
@@ -71,8 +72,8 @@ func TestPublicKey(t *testing.T) {
 		t.Fatalf("key %+v != expectPublicKey %+v", key, expectPublicKey)
 	}
 
-	if key.String() != publicKeyBytes.String() {
-		t.Fatalf("key.String() %+v != publicKeyBytes %+v", key.String(), publicKeyBytes)
+	if key.String() != string(publicKeyBytes) {
+		t.Fatalf("key.String() %s != publicKeyBytes %s", key.String(), publicKeyBytes)
 	}
 }
 
@@ -96,7 +97,7 @@ func TestPublicKeyEncryptPKCS1v15(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if decrypted.String() != msg {
+		if string(decrypted) != msg {
 			t.Fatalf("decrypted %s != msg %s", decrypted, msg)
 		}
 	}
@@ -122,7 +123,7 @@ func TestPublicKeyEncryptOAEP(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if decrypted.String() != msg {
+		if string(decrypted) != msg {
 			t.Fatalf("decrypted %s != msg %s", decrypted, msg)
 		}
 	}

@@ -25,7 +25,7 @@ func hash(hashFunc func() stdhash.Hash, key cryptox.Bytes, bs cryptox.Bytes) (cr
 	}
 
 	if n != len(bs) {
-		return nil, fmt.Errorf("cryptox: hashed n %d != len(bs) %d", n, len(bs))
+		return nil, fmt.Errorf("cryptox/hmac: hashed n %d != len(bs) %d", n, len(bs))
 	}
 
 	return h.Sum(nil), nil

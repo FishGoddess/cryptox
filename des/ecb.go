@@ -18,7 +18,7 @@ func encryptECB(block cipher.Block, padding cryptox.Padding, bs cryptox.Bytes) (
 	dst := src.Clone()
 
 	if len(src)%blockSize != 0 {
-		return nil, fmt.Errorf("des: encrypt ecb len(src) %d %% blockSize %d != 0", len(src), blockSize)
+		return nil, fmt.Errorf("cryptox/des: encrypt ecb len(src) %d %% blockSize %d != 0", len(src), blockSize)
 	}
 
 	start := 0
@@ -41,7 +41,7 @@ func decryptECB(block cipher.Block, unpadding cryptox.UnPadding, bs cryptox.Byte
 	dst := bs.Clone()
 
 	if len(src)%blockSize != 0 {
-		return nil, fmt.Errorf("des: decrypt ecb len(src) %d %% blockSize %d != 0", len(src), blockSize)
+		return nil, fmt.Errorf("cryptox/des: decrypt ecb len(src) %d %% blockSize %d != 0", len(src), blockSize)
 	}
 
 	start := 0

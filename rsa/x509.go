@@ -91,7 +91,7 @@ func (xp x509Pem) encode(blockType string, blockBytes cryptox.Bytes) (cryptox.By
 func (xp x509Pem) decode(blockType string, keyPem cryptox.Bytes) (*pem.Block, error) {
 	block, _ := pem.Decode(keyPem)
 	if block == nil {
-		return nil, fmt.Errorf("cryptox.rsa: decode %s from pem failed", strings.ToLower(blockType))
+		return nil, fmt.Errorf("cryptox/rsa: decode %s from pem failed", strings.ToLower(blockType))
 	}
 
 	return block, nil
@@ -137,7 +137,7 @@ func (xp x509Pem) PKCS8PrivateKeyDecoder(privateKeyPem cryptox.Bytes) (*rsa.Priv
 
 	privateKey, ok := key.(*rsa.PrivateKey)
 	if !ok {
-		return nil, fmt.Errorf("cryptox.rsa: parsed key %T isn't a *rsa.PrivateKey", key)
+		return nil, fmt.Errorf("cryptox/rsa: parsed key %T isn't a *rsa.PrivateKey", key)
 	}
 
 	return privateKey, nil
@@ -167,7 +167,7 @@ func (xp x509Pem) PKIXPublicKeyDecoder(publicKeyPem cryptox.Bytes) (*rsa.PublicK
 
 	publicKey, ok := key.(*rsa.PublicKey)
 	if !ok {
-		return nil, fmt.Errorf("cryptox.rsa: parsed key %T isn't a *rsa.PublicKey", key)
+		return nil, fmt.Errorf("cryptox/rsa: parsed key %T isn't a *rsa.PublicKey", key)
 	}
 
 	return publicKey, nil

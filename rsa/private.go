@@ -10,13 +10,11 @@ import (
 	"github.com/FishGoddess/cryptox"
 )
 
-// PrivateKey is the private key of rsa.
 type PrivateKey struct {
 	key      *rsa.PrivateKey
 	keyBytes cryptox.Bytes
 }
 
-// newPrivateKey returns a private key.
 func newPrivateKey(key *rsa.PrivateKey, keyBytes cryptox.Bytes) PrivateKey {
 	return PrivateKey{key: key, keyBytes: keyBytes}
 }
@@ -31,48 +29,48 @@ func (pk PrivateKey) Bytes() cryptox.Bytes {
 	return pk.keyBytes
 }
 
+// String returns the string of pk.
+func (pk PrivateKey) String() string {
+	return string(pk.keyBytes)
+}
+
 // EqualsTo returns if pk equals to privateKey.
 func (pk PrivateKey) EqualsTo(privateKey PrivateKey) bool {
 	return pk.key.Equal(privateKey.key)
 }
 
-// String returns the formatted string of pk.
-func (pk PrivateKey) String() string {
-	return pk.keyBytes.String()
-}
-
 // DecryptPKCS1v15 decrypts msg with pkcs1 v15.
 func (pk PrivateKey) DecryptPKCS1v15(msg cryptox.Bytes, opts ...Option) (cryptox.Bytes, error) {
-	cfg := fromOptions(opts)
-	return rsa.DecryptPKCS1v15(cfg.random, pk.key, msg)
+	conf := newConfig(opts)
+	return rsa.DecryptPKCS1v15(conf.random, pk.key, msg)
 }
 
 // DecryptPKCS1v15SessionKey decrypts msg using a session key with pkcs1 v15.
 func (pk PrivateKey) DecryptPKCS1v15SessionKey(msg cryptox.Bytes, sessionKey cryptox.Bytes, opts ...Option) error {
-	cfg := fromOptions(opts)
-	return rsa.DecryptPKCS1v15SessionKey(cfg.random, pk.key, msg, sessionKey)
+	conf := newConfig(opts)
+	return rsa.DecryptPKCS1v15SessionKey(conf.random, pk.key, msg, sessionKey)
 }
 
 // DecryptOAEP decrypts msg with oaep.
 func (pk PrivateKey) DecryptOAEP(msg cryptox.Bytes, label cryptox.Bytes, opts ...Option) (cryptox.Bytes, error) {
-	cfg := fromOptions(opts)
-	return rsa.DecryptOAEP(cfg.hash, cfg.random, pk.key, msg, label)
+	conf := newConfig(opts)
+	return rsa.DecryptOAEP(conf.hash, conf.random, pk.key, msg, label)
 }
 
 // SignPKCS1v15 signs hashed data with pkcs1 v15.
 func (pk PrivateKey) SignPKCS1v15(hashed cryptox.Bytes, opts ...Option) (cryptox.Bytes, error) {
-	cfg := fromOptions(opts)
-	return rsa.SignPKCS1v15(cfg.random, pk.key, cfg.cryptoHash, hashed)
+	conf := newConfig(opts)
+	return rsa.SignPKCS1v15(conf.random, pk.key, conf.cryptoHash, hashed)
 }
 
 // SignPSS signs digest data with pss.
 func (pk PrivateKey) SignPSS(digest cryptox.Bytes, saltLength int, opts ...Option) (cryptox.Bytes, error) {
-	cfg := fromOptions(opts)
+	conf := newConfig(opts)
 
 	pssOpts := &rsa.PSSOptions{
-		Hash:       cfg.cryptoHash,
+		Hash:       conf.cryptoHash,
 		SaltLength: saltLength,
 	}
 
-	return rsa.SignPSS(cfg.random, pk.key, cfg.cryptoHash, digest, pssOpts)
+	return rsa.SignPSS(conf.random, pk.key, conf.cryptoHash, digest, pssOpts)
 }

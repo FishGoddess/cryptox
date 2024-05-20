@@ -5,6 +5,7 @@
 package rsa
 
 import (
+	"bytes"
 	"crypto/rand"
 	"crypto/rsa"
 	"testing"
@@ -66,7 +67,7 @@ func TestPrivateKey(t *testing.T) {
 		t.Fatalf("key.key %+v != privateKey %+v", key.key, privateKey)
 	}
 
-	if key.keyBytes.String() != privateKeyBytes.String() {
+	if !bytes.Equal(key.keyBytes, privateKeyBytes) {
 		t.Fatalf("key.keyBytes %+v != privateKeyBytes %+v", key.keyBytes, privateKeyBytes)
 	}
 
@@ -74,7 +75,7 @@ func TestPrivateKey(t *testing.T) {
 		t.Fatalf("key.Key() %+v != privateKey %+v", key.Key(), privateKey)
 	}
 
-	if key.Bytes().String() != privateKeyBytes.String() {
+	if !bytes.Equal(key.Bytes(), privateKeyBytes) {
 		t.Fatalf("key.Bytes() %+v != privateKeyBytes %+v", key.Bytes(), privateKeyBytes)
 	}
 
@@ -87,8 +88,8 @@ func TestPrivateKey(t *testing.T) {
 		t.Fatalf("key %+v != expectPrivateKey %+v", key, expectPrivateKey)
 	}
 
-	if key.String() != privateKeyBytes.String() {
-		t.Fatalf("key.String() %+v != privateKeyBytes %+v", key.String(), privateKeyBytes)
+	if key.String() != string(privateKeyBytes) {
+		t.Fatalf("key.String() %s != privateKeyBytes %s", key.String(), privateKeyBytes)
 	}
 }
 
