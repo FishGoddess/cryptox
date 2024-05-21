@@ -10,8 +10,8 @@ import (
 )
 
 type paddingTestCase struct {
-	Data []byte
-	Want []byte
+	Data Bytes
+	Want Bytes
 }
 
 func testPadding(t *testing.T, padding Padding, testCases []paddingTestCase) {
@@ -23,13 +23,13 @@ func testPadding(t *testing.T, padding Padding, testCases []paddingTestCase) {
 			t.Fatalf("got %+v != want %+v", got, testCase.Want)
 		}
 
-		got, err := padding.UndoPadding(got, blockSize)
+		gotUndo, err := padding.UndoPadding(got, blockSize)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		if !bytes.Equal(got, testCase.Data) {
-			t.Fatalf("got %+v != data %+v", got, testCase.Data)
+		if !bytes.Equal(gotUndo, testCase.Data) {
+			t.Fatalf("gotUndo %+v != data %+v", gotUndo, testCase.Data)
 		}
 	}
 }
@@ -37,51 +37,47 @@ func testPadding(t *testing.T, padding Padding, testCases []paddingTestCase) {
 // go test -v -cover -count=1 -test.cpu=1 -run=^TestPaddingNone$
 func TestPaddingNone(t *testing.T) {
 	testCases := []paddingTestCase{
-		{Data: []byte{}, Want: []byte{}},
-		{Data: []byte{1, 2, 3, 4, 5}, Want: []byte{1, 2, 3, 4, 5}},
-		{Data: []byte{1, 2, 3, 4, 5, 6, 7, 8}, Want: []byte{1, 2, 3, 4, 5, 6, 7, 8}},
-		{Data: []byte{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0}, Want: []byte{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0}},
+		{Data: Bytes{}, Want: Bytes{}},
+		{Data: Bytes{1, 2, 3, 4, 5}, Want: Bytes{1, 2, 3, 4, 5}},
+		{Data: Bytes{1, 2, 3, 4, 5, 6, 7, 8}, Want: Bytes{1, 2, 3, 4, 5, 6, 7, 8}},
+		{Data: Bytes{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0}, Want: Bytes{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0}},
 	}
 
-	padding := PaddingNone()
-	testPadding(t, padding, testCases)
+	testPadding(t, PaddingNone, testCases)
 }
 
 // go test -v -cover -count=1 -test.cpu=1 -run=^TestPaddingZero$
 func TestPaddingZero(t *testing.T) {
 	testCases := []paddingTestCase{
-		{Data: []byte{}, Want: []byte{0, 0, 0, 0, 0, 0, 0, 0}},
-		{Data: []byte{1, 2, 3, 4, 5}, Want: []byte{1, 2, 3, 4, 5, 0, 0, 0}},
-		{Data: []byte{1, 2, 3, 4, 5, 6, 7, 8}, Want: []byte{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0}},
-		{Data: []byte{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0}, Want: []byte{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
+		{Data: Bytes{}, Want: Bytes{0, 0, 0, 0, 0, 0, 0, 0}},
+		{Data: Bytes{1, 2, 3, 4, 5}, Want: Bytes{1, 2, 3, 4, 5, 0, 0, 0}},
+		{Data: Bytes{1, 2, 3, 4, 5, 6, 7, 8}, Want: Bytes{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0}},
+		{Data: Bytes{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0}, Want: Bytes{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
 	}
 
-	padding := PaddingZero()
-	testPadding(t, padding, testCases)
+	testPadding(t, PaddingZero, testCases)
 }
 
 // go test -v -cover -count=1 -test.cpu=1 -run=^TestPaddingPKCS5$
 func TestPaddingPKCS5(t *testing.T) {
 	testCases := []paddingTestCase{
-		{Data: []byte{}, Want: []byte{8, 8, 8, 8, 8, 8, 8, 8}},
-		{Data: []byte{1, 2, 3, 4, 5}, Want: []byte{1, 2, 3, 4, 5, 3, 3, 3}},
-		{Data: []byte{1, 2, 3, 4, 5, 6, 7, 8}, Want: []byte{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8}},
-		{Data: []byte{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8}, Want: []byte{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8}},
+		{Data: Bytes{}, Want: Bytes{8, 8, 8, 8, 8, 8, 8, 8}},
+		{Data: Bytes{1, 2, 3, 4, 5}, Want: Bytes{1, 2, 3, 4, 5, 3, 3, 3}},
+		{Data: Bytes{1, 2, 3, 4, 5, 6, 7, 8}, Want: Bytes{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8}},
+		{Data: Bytes{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8}, Want: Bytes{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8}},
 	}
 
-	padding := PaddingPKCS5()
-	testPadding(t, padding, testCases)
+	testPadding(t, PaddingPKCS5, testCases)
 }
 
 // go test -v -cover -count=1 -test.cpu=1 -run=^TestPaddingPKCS7$
 func TestPaddingPKCS7(t *testing.T) {
 	testCases := []paddingTestCase{
-		{Data: []byte{}, Want: []byte{8, 8, 8, 8, 8, 8, 8, 8}},
-		{Data: []byte{1, 2, 3, 4, 5}, Want: []byte{1, 2, 3, 4, 5, 3, 3, 3}},
-		{Data: []byte{1, 2, 3, 4, 5, 6, 7, 8}, Want: []byte{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8}},
-		{Data: []byte{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8}, Want: []byte{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8}},
+		{Data: Bytes{}, Want: Bytes{8, 8, 8, 8, 8, 8, 8, 8}},
+		{Data: Bytes{1, 2, 3, 4, 5}, Want: Bytes{1, 2, 3, 4, 5, 3, 3, 3}},
+		{Data: Bytes{1, 2, 3, 4, 5, 6, 7, 8}, Want: Bytes{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8}},
+		{Data: Bytes{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8}, Want: Bytes{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8}},
 	}
 
-	padding := PaddingPKCS7()
-	testPadding(t, padding, testCases)
+	testPadding(t, PaddingPKCS7, testCases)
 }

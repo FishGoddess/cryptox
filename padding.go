@@ -6,45 +6,35 @@ package cryptox
 
 import "fmt"
 
+var (
+	PaddingNone  Padding = paddingNone{}
+	PaddingZero  Padding = paddingZero{}
+	PaddingPKCS5 Padding = paddingPKCS7{} // PKCS5 is actually the same as pkcs7.
+	PaddingPKCS7 Padding = paddingPKCS7{}
+)
+
+// Padding paddings and undo paddings to a byte slice.
+// You should know the returned bytes is always cloned from the passed bytes,
+// so they are two different byte slices.
 type Padding interface {
-	Padding(bs []byte, blockSize int) []byte
-	UndoPadding(bs []byte, blockSize int) ([]byte, error)
-}
-
-// PaddingNone won't padding anything to bs.
-func PaddingNone() Padding {
-	return paddingNone{}
-}
-
-// PaddingZero paddings zero to bs.
-func PaddingZero() Padding {
-	return paddingZero{}
-}
-
-// PaddingPKCS5 paddings bs using pkcs5.
-// Actually we found pkcs5 equals to pkcs7.
-func PaddingPKCS5() Padding {
-	return paddingPKCS7{}
-}
-
-// PaddingPKCS7 paddings bs using pkcs7.
-func PaddingPKCS7() Padding {
-	return paddingPKCS7{}
+	Padding(bs Bytes, blockSize int) Bytes
+	UndoPadding(bs Bytes, blockSize int) (Bytes, error)
 }
 
 type paddingNone struct{}
 
-func (paddingNone) Padding(bs []byte, blockSize int) []byte {
-	return bs
+func (paddingNone) Padding(bs Bytes, blockSize int) Bytes {
+	return bs.Clone()
 }
 
-func (paddingNone) UndoPadding(bs []byte, blockSize int) ([]byte, error) {
-	return bs, nil
+func (paddingNone) UndoPadding(bs Bytes, blockSize int) (Bytes, error) {
+	return bs.Clone(), nil
 }
 
 type paddingZero struct{}
 
-func (paddingZero) Padding(bs []byte, blockSize int) []byte {
+func (paddingZero) Padding(bs Bytes, blockSize int) Bytes {
+	bs = bs.Clone()
 	padding := blockSize - (len(bs) % blockSize)
 
 	for i := 0; i < padding; i++ {
@@ -54,7 +44,8 @@ func (paddingZero) Padding(bs []byte, blockSize int) []byte {
 	return bs
 }
 
-func (paddingZero) UndoPadding(bs []byte, blockSize int) ([]byte, error) {
+func (paddingZero) UndoPadding(bs Bytes, blockSize int) (Bytes, error) {
+	bs = bs.Clone()
 	length := len(bs)
 
 	var i int
@@ -74,7 +65,8 @@ func (paddingZero) UndoPadding(bs []byte, blockSize int) ([]byte, error) {
 
 type paddingPKCS7 struct{}
 
-func (paddingPKCS7) Padding(bs []byte, blockSize int) []byte {
+func (paddingPKCS7) Padding(bs Bytes, blockSize int) Bytes {
+	bs = bs.Clone()
 	padding := blockSize - (len(bs) % blockSize)
 
 	for i := 0; i < padding; i++ {
@@ -84,7 +76,8 @@ func (paddingPKCS7) Padding(bs []byte, blockSize int) []byte {
 	return bs
 }
 
-func (paddingPKCS7) UndoPadding(bs []byte, blockSize int) ([]byte, error) {
+func (paddingPKCS7) UndoPadding(bs Bytes, blockSize int) (Bytes, error) {
+	bs = bs.Clone()
 	length := len(bs)
 	number := int(bs[length-1])
 
