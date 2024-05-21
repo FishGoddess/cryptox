@@ -12,10 +12,10 @@ import (
 )
 
 var (
-	aesBenchKey      = []byte("12345678876543211234567887654321")
-	aesBenchIV       = []byte("8765432112345678")
-	aesBenchNonce    = []byte("123456abcdef")
-	aesBenchPlain, _ = cryptox.GenerateBytes(128)
+	aesBenchKey   = []byte("12345678876543211234567887654321")
+	aesBenchIV    = []byte("8765432112345678")
+	aesBenchNonce = []byte("123456abcdef")
+	aesBenchMsg   = cryptox.GenerateBytes(128)
 )
 
 // go test -v -bench=^BenchmarkAESEncryptECB$ -benchtime=1s aes_test.go
@@ -23,9 +23,8 @@ func BenchmarkAESEncryptECB(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	aesObj := aes.New(aesBenchKey)
 	for i := 0; i < b.N; i++ {
-		_, err := aesObj.EncryptECB(cryptox.PaddingPKCS7, aesBenchPlain)
+		_, err := aes.EncryptECB(aesBenchKey, cryptox.PaddingPKCS7, aesBenchMsg)
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -37,9 +36,8 @@ func BenchmarkAESEncryptCBC(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	aesObj := aes.New(aesBenchKey)
 	for i := 0; i < b.N; i++ {
-		_, err := aesObj.EncryptCBC(cryptox.PaddingPKCS7, aesBenchIV, aesBenchPlain)
+		_, err := aes.EncryptCBC(aesBenchKey, aesBenchIV, cryptox.PaddingPKCS7, aesBenchMsg)
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -51,9 +49,8 @@ func BenchmarkAESEncryptCFB(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	aesObj := aes.New(aesBenchKey)
 	for i := 0; i < b.N; i++ {
-		_, err := aesObj.EncryptCFB(cryptox.PaddingNone, aesBenchIV, aesBenchPlain)
+		_, err := aes.EncryptCFB(aesBenchKey, aesBenchIV, cryptox.PaddingNone, aesBenchMsg)
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -65,9 +62,8 @@ func BenchmarkAESEncryptOFB(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	aesObj := aes.New(aesBenchKey)
 	for i := 0; i < b.N; i++ {
-		_, err := aesObj.EncryptOFB(cryptox.PaddingNone, aesBenchIV, aesBenchPlain)
+		_, err := aes.EncryptOFB(aesBenchKey, aesBenchIV, cryptox.PaddingNone, aesBenchMsg)
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -79,9 +75,8 @@ func BenchmarkAESEncryptCTR(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	aesObj := aes.New(aesBenchKey)
 	for i := 0; i < b.N; i++ {
-		_, err := aesObj.EncryptCTR(cryptox.PaddingNone, aesBenchIV, aesBenchPlain)
+		_, err := aes.EncryptCTR(aesBenchKey, aesBenchIV, cryptox.PaddingNone, aesBenchMsg)
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -93,9 +88,8 @@ func BenchmarkAESEncryptGCM(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	aesObj := aes.New(aesBenchKey)
 	for i := 0; i < b.N; i++ {
-		_, err := aesObj.EncryptGCM(aesBenchNonce, aesBenchPlain, nil)
+		_, err := aes.EncryptGCM(aesBenchKey, aesBenchNonce, nil, aesBenchMsg)
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -104,9 +98,7 @@ func BenchmarkAESEncryptGCM(b *testing.B) {
 
 // go test -v -bench=^BenchmarkAESDecryptECB$ -benchtime=1s aes_test.go
 func BenchmarkAESDecryptECB(b *testing.B) {
-	aesObj := aes.New(aesBenchKey)
-
-	benchCrypted, err := aesObj.EncryptECB(cryptox.PaddingPKCS7, aesBenchPlain)
+	encrypted, err := aes.EncryptECB(aesBenchKey, cryptox.PaddingPKCS7, aesBenchMsg)
 	if err != nil {
 		b.Fatal(err)
 	}
@@ -115,7 +107,7 @@ func BenchmarkAESDecryptECB(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := aesObj.DecryptECB(cryptox.UnPaddingPKCS7, benchCrypted)
+		_, err := aes.DecryptECB(aesBenchKey, cryptox.PaddingPKCS7, encrypted)
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -124,9 +116,7 @@ func BenchmarkAESDecryptECB(b *testing.B) {
 
 // go test -v -bench=^BenchmarkAESDecryptCBC$ -benchtime=1s aes_test.go
 func BenchmarkAESDecryptCBC(b *testing.B) {
-	aesObj := aes.New(aesBenchKey)
-
-	benchCrypted, err := aesObj.EncryptCBC(cryptox.PaddingPKCS7, aesBenchIV, aesBenchPlain)
+	encrypted, err := aes.EncryptCBC(aesBenchKey, aesBenchIV, cryptox.PaddingPKCS7, aesBenchMsg)
 	if err != nil {
 		b.Fatal(err)
 	}
@@ -135,7 +125,7 @@ func BenchmarkAESDecryptCBC(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := aesObj.DecryptCBC(cryptox.UnPaddingPKCS7, aesBenchIV, benchCrypted)
+		_, err := aes.DecryptCBC(aesBenchKey, aesBenchIV, cryptox.PaddingPKCS7, encrypted)
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -144,9 +134,7 @@ func BenchmarkAESDecryptCBC(b *testing.B) {
 
 // go test -v -bench=^BenchmarkAESDecryptCFB$ -benchtime=1s aes_test.go
 func BenchmarkAESDecryptCFB(b *testing.B) {
-	aesObj := aes.New(aesBenchKey)
-
-	benchCrypted, err := aesObj.EncryptCFB(cryptox.PaddingNone, aesBenchIV, aesBenchPlain)
+	encrypted, err := aes.EncryptCFB(aesBenchKey, aesBenchIV, cryptox.PaddingNone, aesBenchMsg)
 	if err != nil {
 		b.Fatal(err)
 	}
@@ -155,7 +143,7 @@ func BenchmarkAESDecryptCFB(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := aesObj.DecryptCFB(cryptox.UnPaddingNone, aesBenchIV, benchCrypted)
+		_, err := aes.DecryptCFB(aesBenchKey, aesBenchIV, cryptox.PaddingNone, encrypted)
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -164,9 +152,7 @@ func BenchmarkAESDecryptCFB(b *testing.B) {
 
 // go test -v -bench=^BenchmarkAESDecryptOFB$ -benchtime=1s aes_test.go
 func BenchmarkAESDecryptOFB(b *testing.B) {
-	aesObj := aes.New(aesBenchKey)
-
-	benchCrypted, err := aesObj.EncryptOFB(cryptox.PaddingNone, aesBenchIV, aesBenchPlain)
+	encrypted, err := aes.EncryptOFB(aesBenchKey, aesBenchIV, cryptox.PaddingNone, aesBenchMsg)
 	if err != nil {
 		b.Fatal(err)
 	}
@@ -175,7 +161,7 @@ func BenchmarkAESDecryptOFB(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := aesObj.DecryptOFB(cryptox.UnPaddingNone, aesBenchIV, benchCrypted)
+		_, err := aes.DecryptOFB(aesBenchKey, aesBenchIV, cryptox.PaddingNone, encrypted)
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -184,9 +170,7 @@ func BenchmarkAESDecryptOFB(b *testing.B) {
 
 // go test -v -bench=^BenchmarkAESDecryptCTR$ -benchtime=1s aes_test.go
 func BenchmarkAESDecryptCTR(b *testing.B) {
-	aesObj := aes.New(aesBenchKey)
-
-	benchCrypted, err := aesObj.EncryptCTR(cryptox.PaddingNone, aesBenchIV, aesBenchPlain)
+	encrypted, err := aes.EncryptCTR(aesBenchKey, aesBenchIV, cryptox.PaddingNone, aesBenchMsg)
 	if err != nil {
 		b.Fatal(err)
 	}
@@ -195,7 +179,7 @@ func BenchmarkAESDecryptCTR(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := aesObj.DecryptCTR(cryptox.UnPaddingNone, aesBenchIV, benchCrypted)
+		_, err := aes.DecryptCTR(aesBenchKey, aesBenchIV, cryptox.PaddingNone, encrypted)
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -204,9 +188,7 @@ func BenchmarkAESDecryptCTR(b *testing.B) {
 
 // go test -v -bench=^BenchmarkAESDecryptGCM$ -benchtime=1s aes_test.go
 func BenchmarkAESDecryptGCM(b *testing.B) {
-	aesObj := aes.New(aesBenchKey)
-
-	benchCrypted, err := aesObj.EncryptGCM(aesBenchNonce, aesBenchPlain, nil)
+	encrypted, err := aes.EncryptGCM(aesBenchKey, aesBenchNonce, nil, aesBenchMsg)
 	if err != nil {
 		b.Fatal(err)
 	}
@@ -215,7 +197,7 @@ func BenchmarkAESDecryptGCM(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := aesObj.DecryptGCM(aesBenchNonce, benchCrypted, nil)
+		_, err := aes.DecryptGCM(aesBenchKey, aesBenchNonce, nil, encrypted)
 		if err != nil {
 			b.Fatal(err)
 		}

@@ -126,32 +126,6 @@ func DecryptCFB(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs
 	return padding.UndoPadding(dst, blockSize)
 }
 
-func EncryptCTR(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	block, blockSize, err := newBlock(key)
-	if err != nil {
-		return nil, err
-	}
-
-	src := padding.Padding(bs, blockSize)
-	dst := src.Clone()
-
-	cipher.NewCTR(block, iv).XORKeyStream(dst, src)
-	return dst, nil
-}
-
-func DecryptCTR(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	block, blockSize, err := newBlock(key)
-	if err != nil {
-		return nil, err
-	}
-
-	src := bs
-	dst := bs.Clone()
-
-	cipher.NewCTR(block, iv).XORKeyStream(dst, src)
-	return padding.UndoPadding(dst, blockSize)
-}
-
 func EncryptOFB(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
 	block, blockSize, err := newBlock(key)
 	if err != nil {
@@ -175,6 +149,32 @@ func DecryptOFB(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs
 	dst := bs.Clone()
 
 	cipher.NewOFB(block, iv).XORKeyStream(dst, src)
+	return padding.UndoPadding(dst, blockSize)
+}
+
+func EncryptCTR(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+	block, blockSize, err := newBlock(key)
+	if err != nil {
+		return nil, err
+	}
+
+	src := padding.Padding(bs, blockSize)
+	dst := src.Clone()
+
+	cipher.NewCTR(block, iv).XORKeyStream(dst, src)
+	return dst, nil
+}
+
+func DecryptCTR(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+	block, blockSize, err := newBlock(key)
+	if err != nil {
+		return nil, err
+	}
+
+	src := bs
+	dst := bs.Clone()
+
+	cipher.NewCTR(block, iv).XORKeyStream(dst, src)
 	return padding.UndoPadding(dst, blockSize)
 }
 
