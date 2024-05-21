@@ -39,12 +39,8 @@ func main() {
 
 	fmt.Printf("Decrypted: %s\n", decrypted)
 
-	msg = hash.SHA256(msg)
-	if err != nil {
-		panic(err)
-	}
-
 	// Use private key to sign msg.
+	msg = hash.SHA256(msg)
 	signed, err := privateKey.SignPKCS1v15(msg)
 	if err != nil {
 		panic(err)
