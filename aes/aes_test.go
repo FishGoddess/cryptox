@@ -64,7 +64,7 @@ func TestNewBlock(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestAESECB$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestECB$
 func TestECB(t *testing.T) {
 	cases := map[string]*testResult{
 		"": {

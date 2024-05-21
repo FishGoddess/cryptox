@@ -12,8 +12,8 @@ import (
 	"github.com/FishGoddess/cryptox"
 )
 
-func newBlock(key cryptox.Bytes) (cipher.Block, int, error) {
-	block, err := des.NewCipher(key)
+func newTripleBlock(key cryptox.Bytes) (cipher.Block, int, error) {
+	block, err := des.NewTripleDESCipher(key)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -22,8 +22,8 @@ func newBlock(key cryptox.Bytes) (cipher.Block, int, error) {
 	return block, blockSize, nil
 }
 
-func EncryptECB(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	block, blockSize, err := newBlock(key)
+func EncryptECBTriple(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +32,7 @@ func EncryptECB(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (c
 	dst := src.Clone()
 
 	if len(src)%blockSize != 0 {
-		return nil, fmt.Errorf("cryptox/des: encrypt ecb len(src) %d %% blockSize %d != 0", len(src), blockSize)
+		return nil, fmt.Errorf("cryptox/des: encrypt ecb triple len(src) %d %% blockSize %d != 0", len(src), blockSize)
 	}
 
 	start := 0
@@ -48,8 +48,8 @@ func EncryptECB(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (c
 	return dst, nil
 }
 
-func DecryptECB(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	block, blockSize, err := newBlock(key)
+func DecryptECBTriple(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +58,7 @@ func DecryptECB(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (c
 	dst := bs.Clone()
 
 	if len(src)%blockSize != 0 {
-		return nil, fmt.Errorf("cryptox/des: decrypt ecb len(src) %d %% blockSize %d != 0", len(src), blockSize)
+		return nil, fmt.Errorf("cryptox/des: decrypt ecb triple len(src) %d %% blockSize %d != 0", len(src), blockSize)
 	}
 
 	start := 0
@@ -74,8 +74,8 @@ func DecryptECB(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (c
 	return padding.UndoPadding(dst, blockSize)
 }
 
-func EncryptCBC(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	block, blockSize, err := newBlock(key)
+func EncryptCBCTriple(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
@@ -87,8 +87,8 @@ func EncryptCBC(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs
 	return dst, nil
 }
 
-func DecryptCBC(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	block, blockSize, err := newBlock(key)
+func DecryptCBCTriple(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
@@ -100,8 +100,8 @@ func DecryptCBC(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs
 	return padding.UndoPadding(dst, blockSize)
 }
 
-func EncryptCFB(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	block, blockSize, err := newBlock(key)
+func EncryptCFBTriple(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
@@ -113,8 +113,8 @@ func EncryptCFB(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs
 	return dst, nil
 }
 
-func DecryptCFB(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	block, blockSize, err := newBlock(key)
+func DecryptCFBTriple(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
@@ -126,8 +126,8 @@ func DecryptCFB(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs
 	return padding.UndoPadding(dst, blockSize)
 }
 
-func EncryptOFB(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	block, blockSize, err := newBlock(key)
+func EncryptOFBTriple(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
@@ -139,8 +139,8 @@ func EncryptOFB(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs
 	return dst, nil
 }
 
-func DecryptOFB(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	block, blockSize, err := newBlock(key)
+func DecryptOFBTriple(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
@@ -152,8 +152,8 @@ func DecryptOFB(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs
 	return padding.UndoPadding(dst, blockSize)
 }
 
-func EncryptCTR(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	block, blockSize, err := newBlock(key)
+func EncryptCTRTriple(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
@@ -165,8 +165,8 @@ func EncryptCTR(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs
 	return dst, nil
 }
 
-func DecryptCTR(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	block, blockSize, err := newBlock(key)
+func DecryptCTRTriple(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
