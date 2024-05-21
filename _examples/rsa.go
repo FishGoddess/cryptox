@@ -39,7 +39,7 @@ func main() {
 
 	fmt.Printf("Decrypted: %s\n", decrypted)
 
-	msg, err = hash.SHA256(msg)
+	msg = hash.SHA256(msg)
 	if err != nil {
 		panic(err)
 	}

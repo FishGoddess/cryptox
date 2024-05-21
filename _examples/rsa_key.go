@@ -11,9 +11,9 @@ import (
 )
 
 func main() {
-	// Generate a 2048 bits key.
-	// More encoder/decoder information in rsa.KeyOption.
-	privateKey, publicKey, err := rsa.GenerateKeys(2048)
+	// Generate a 4096 bits key.
+	// Check rsa.KeyOption for more information of encoder and decoder.
+	privateKey, publicKey, err := rsa.GenerateKeys(4096)
 	if err != nil {
 		panic(err)
 	}
@@ -52,13 +52,13 @@ func main() {
 	fmt.Println(loadedPrivateKey)
 	fmt.Println(loadedPublicKey)
 
-	// Already have a private key in bytes?
+	// Want to load keys from file and panic if failed?
+	// Try these:
+	loadedPrivateKey = rsa.MustLoadPrivateKey("rsa.key")
+	loadedPublicKey = rsa.MustLoadPublicKey("rsa.pub")
+
+	// Already have a private or public key in bytes?
 	// Try these:
 	_, _ = rsa.ParsePrivateKey(privateKey.Bytes())
 	_, _ = rsa.ParsePublicKey(publicKey.Bytes())
-
-	// Want to load keys from file and panic if failed?
-	// Try these:
-	_ = rsa.MustLoadPrivateKey("rsa.key")
-	_ = rsa.MustLoadPublicKey("rsa.pub")
 }
