@@ -26,26 +26,26 @@ func TestAppendBytes(t *testing.T) {
 
 // go test -v -cover -count=1 -test.cpu=1 -run=^TestGenerateBytes$
 func TestGenerateBytes(t *testing.T) {
-	n := 32
+	for i := 1; i <= 64; i++ {
+		bs := GenerateBytes(i)
 
-	for i := 0; i < 10; i++ {
-		bs := GenerateBytes(n)
-
-		if len(bs) != n {
-			t.Fatalf(" len(bs) %d != n %d", len(bs), n)
+		if len(bs) != i {
+			t.Fatalf(" len(bs) %d != %d", len(bs), i)
 		}
 
 		t.Logf("%s\n", bs)
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^$ -bench=^BenchmarkGenerateBytes$
-// BenchmarkGenerateBytes-2       11110136               106.2 ns/op            16 B/op          1 allocs/op
-func BenchmarkGenerateBytes(b *testing.B) {
-	b.ReportAllocs()
-	b.ResetTimer()
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestGenerateString$
+func TestGenerateString(t *testing.T) {
+	for i := 1; i <= 64; i++ {
+		str := GenerateString(i)
 
-	for i := 0; i < b.N; i++ {
-		GenerateBytes(16)
+		if len(str) != i {
+			t.Fatalf(" len(str) %d != %d", len(str), i)
+		}
+
+		t.Logf("%s\n", str)
 	}
 }

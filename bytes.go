@@ -42,7 +42,7 @@ func (bs Bytes) Clone() Bytes {
 }
 
 func (bs Bytes) newFile(path string) (*os.File, error) {
-	flag := os.O_CREATE | os.O_APPEND | os.O_WRONLY
+	flag := os.O_CREATE | os.O_EXCL | os.O_WRONLY
 	mode := os.FileMode(0644)
 
 	return os.OpenFile(path, flag, mode)
