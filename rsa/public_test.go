@@ -1,10 +1,11 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
 package rsa
 
 import (
+	"bytes"
 	"crypto/rand"
 	"crypto/rsa"
 	"testing"
@@ -25,41 +26,41 @@ uwIDAQAB
 
 	publicKey, err := ParsePublicKey(keyBytes)
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	return publicKey
 }
 
-// go test -v -cover -run=^TestPublicKey$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestPublicKey$
 func TestPublicKey(t *testing.T) {
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	publicKey := &privateKey.PublicKey
 
 	publicKeyBytes, err := X509.PKIXPublicKeyEncoder(publicKey)
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	key := newPublicKey(publicKey, publicKeyBytes)
 	if key.key != publicKey {
-		t.Errorf("key.key %+v != publicKey %+v", key.key, publicKey)
+		t.Fatalf("key.key %+v != publicKey %+v", key.key, publicKey)
 	}
 
-	if key.keyBytes.String() != publicKeyBytes.String() {
-		t.Errorf("key.keyBytes %+v != publicKeyBytes %+v", key.keyBytes, publicKeyBytes)
+	if !bytes.Equal(key.keyBytes, publicKeyBytes) {
+		t.Fatalf("key.keyBytes %+v != publicKeyBytes %+v", key.keyBytes, publicKeyBytes)
 	}
 
 	if key.Key() != publicKey {
-		t.Errorf("key.Key() %+v != publicKey %+v", key.Key(), publicKey)
+		t.Fatalf("key.Key() %+v != publicKey %+v", key.Key(), publicKey)
 	}
 
-	if key.Bytes().String() != publicKeyBytes.String() {
-		t.Errorf("key.Bytes() %+v != publicKeyBytes %+v", key.Bytes(), publicKeyBytes)
+	if !bytes.Equal(key.Bytes(), publicKeyBytes) {
+		t.Fatalf("key.Bytes() %+v != publicKeyBytes %+v", key.Bytes(), publicKeyBytes)
 	}
 
 	expectPublicKey := PublicKey{
@@ -68,15 +69,15 @@ func TestPublicKey(t *testing.T) {
 	}
 
 	if !key.EqualsTo(expectPublicKey) {
-		t.Errorf("key %+v != expectPublicKey %+v", key, expectPublicKey)
+		t.Fatalf("key %+v != expectPublicKey %+v", key, expectPublicKey)
 	}
 
-	if key.String() != publicKeyBytes.String() {
-		t.Errorf("key.String() %+v != publicKeyBytes %+v", key.String(), publicKeyBytes)
+	if key.String() != string(publicKeyBytes) {
+		t.Fatalf("key.String() %s != publicKeyBytes %s", key.String(), publicKeyBytes)
 	}
 }
 
-// go test -v -cover -run=^TestPublicKeyEncryptPKCS1v15$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestPublicKeyEncryptPKCS1v15$
 func TestPublicKeyEncryptPKCS1v15(t *testing.T) {
 	publicKey := newTestPublicKey(t)
 	privateKey := newTestPrivateKey(t)
@@ -88,21 +89,21 @@ func TestPublicKeyEncryptPKCS1v15(t *testing.T) {
 	for _, msg := range cases {
 		encrypted, err := publicKey.EncryptPKCS1v15(cryptox.Bytes(msg))
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 
 		decrypted, err := privateKey.DecryptPKCS1v15(encrypted)
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 
-		if decrypted.String() != msg {
-			t.Errorf("decrypted %s != msg %s", decrypted, msg)
+		if string(decrypted) != msg {
+			t.Fatalf("decrypted %s != msg %s", decrypted, msg)
 		}
 	}
 }
 
-// go test -v -cover -run=^TestPublicKeyEncryptOAEP$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestPublicKeyEncryptOAEP$
 func TestPublicKeyEncryptOAEP(t *testing.T) {
 	publicKey := newTestPublicKey(t)
 	privateKey := newTestPrivateKey(t)
@@ -114,16 +115,16 @@ func TestPublicKeyEncryptOAEP(t *testing.T) {
 	for _, msg := range cases {
 		encrypted, err := publicKey.EncryptOAEP(cryptox.Bytes(msg), cryptox.Bytes(msg))
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 
 		decrypted, err := privateKey.DecryptOAEP(encrypted, cryptox.Bytes(msg))
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 
-		if decrypted.String() != msg {
-			t.Errorf("decrypted %s != msg %s", decrypted, msg)
+		if string(decrypted) != msg {
+			t.Fatalf("decrypted %s != msg %s", decrypted, msg)
 		}
 	}
 }

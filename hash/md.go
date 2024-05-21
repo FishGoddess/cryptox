@@ -2,14 +2,16 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
-package aes
+package hash
 
 import (
+	"crypto/md5"
+
 	"github.com/FishGoddess/cryptox"
 )
 
-// GenerateGCMNonce generates a standard nonce for gcm.
-func GenerateGCMNonce() cryptox.Bytes {
-	standardNonceSize := 12
-	return cryptox.GenerateBytes(standardNonceSize)
+// MD5 uses md5 to hash bs.
+func MD5(bs cryptox.Bytes) cryptox.Bytes {
+	sum := md5.Sum(bs)
+	return sum[:]
 }

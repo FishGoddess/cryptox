@@ -1,10 +1,11 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
 package rsa
 
 import (
+	"bytes"
 	"crypto/rand"
 	"crypto/rsa"
 	"testing"
@@ -43,39 +44,39 @@ jqy/B5Twb/tggfdM5id+3frrF2xf7/bgPwNij9zLKovJgEIALil4
 
 	privateKey, err := ParsePrivateKey(keyBytes)
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	return privateKey
 }
 
-// go test -v -cover -run=^TestPrivateKey$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestPrivateKey$
 func TestPrivateKey(t *testing.T) {
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	privateKeyBytes, err := X509.PKCS1PrivateKeyEncoder(privateKey)
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	key := newPrivateKey(privateKey, privateKeyBytes)
 	if key.key != privateKey {
-		t.Errorf("key.key %+v != privateKey %+v", key.key, privateKey)
+		t.Fatalf("key.key %+v != privateKey %+v", key.key, privateKey)
 	}
 
-	if key.keyBytes.String() != privateKeyBytes.String() {
-		t.Errorf("key.keyBytes %+v != privateKeyBytes %+v", key.keyBytes, privateKeyBytes)
+	if !bytes.Equal(key.keyBytes, privateKeyBytes) {
+		t.Fatalf("key.keyBytes %+v != privateKeyBytes %+v", key.keyBytes, privateKeyBytes)
 	}
 
 	if key.Key() != privateKey {
-		t.Errorf("key.Key() %+v != privateKey %+v", key.Key(), privateKey)
+		t.Fatalf("key.Key() %+v != privateKey %+v", key.Key(), privateKey)
 	}
 
-	if key.Bytes().String() != privateKeyBytes.String() {
-		t.Errorf("key.Bytes() %+v != privateKeyBytes %+v", key.Bytes(), privateKeyBytes)
+	if !bytes.Equal(key.Bytes(), privateKeyBytes) {
+		t.Fatalf("key.Bytes() %+v != privateKeyBytes %+v", key.Bytes(), privateKeyBytes)
 	}
 
 	expectPrivateKey := PrivateKey{
@@ -84,15 +85,15 @@ func TestPrivateKey(t *testing.T) {
 	}
 
 	if !key.EqualsTo(expectPrivateKey) {
-		t.Errorf("key %+v != expectPrivateKey %+v", key, expectPrivateKey)
+		t.Fatalf("key %+v != expectPrivateKey %+v", key, expectPrivateKey)
 	}
 
-	if key.String() != privateKeyBytes.String() {
-		t.Errorf("key.String() %+v != privateKeyBytes %+v", key.String(), privateKeyBytes)
+	if key.String() != string(privateKeyBytes) {
+		t.Fatalf("key.String() %s != privateKeyBytes %s", key.String(), privateKeyBytes)
 	}
 }
 
-// go test -v -cover -run=^TestPrivateKeySignPKCS1v15$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestPrivateKeySignPKCS1v15$
 func TestPrivateKeySignPKCS1v15(t *testing.T) {
 	publicKey := newTestPublicKey(t)
 	privateKey := newTestPrivateKey(t)
@@ -104,17 +105,17 @@ func TestPrivateKeySignPKCS1v15(t *testing.T) {
 	for _, msg := range cases {
 		signature, err := privateKey.SignPKCS1v15(cryptox.Bytes(msg))
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 
 		err = publicKey.VerifyPKCS1v15(cryptox.Bytes(msg), signature)
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 	}
 }
 
-// go test -v -cover -run=^TestPrivateKeySignPSS$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestPrivateKeySignPSS$
 func TestPrivateKeySignPSS(t *testing.T) {
 	publicKey := newTestPublicKey(t)
 	privateKey := newTestPrivateKey(t)
@@ -126,12 +127,12 @@ func TestPrivateKeySignPSS(t *testing.T) {
 	for _, msg := range cases {
 		signature, err := privateKey.SignPSS(cryptox.Bytes(msg), 0)
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 
 		err = publicKey.VerifyPSS(cryptox.Bytes(msg), signature, 0)
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 	}
 }

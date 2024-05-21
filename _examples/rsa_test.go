@@ -1,4 +1,4 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -25,7 +25,7 @@ func BenchmarkRSAEncryptPKCS1v15(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := publicKey.EncryptPKCS1v15(rsaBenchData)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -40,7 +40,7 @@ func BenchmarkRSAEncryptOAEP(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := publicKey.EncryptOAEP(rsaBenchData, nil)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -50,18 +50,18 @@ func BenchmarkRSADecryptPKCS1v15(b *testing.B) {
 	privateKey := rsa.MustLoadPrivateKey("rsa.key")
 	publicKey := rsa.MustLoadPublicKey("rsa.pub")
 
-	benchCrypted, err := publicKey.EncryptPKCS1v15(rsaBenchData)
+	encrypted, err := publicKey.EncryptPKCS1v15(rsaBenchData)
 	if err != nil {
-		b.Error(err)
+		b.Fatal(err)
 	}
 
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := privateKey.DecryptPKCS1v15(benchCrypted)
+		_, err := privateKey.DecryptPKCS1v15(encrypted)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -71,18 +71,18 @@ func BenchmarkRSADecryptPKCS1v15SessionKey(b *testing.B) {
 	privateKey := rsa.MustLoadPrivateKey("rsa.key")
 	publicKey := rsa.MustLoadPublicKey("rsa.pub")
 
-	benchCrypted, err := publicKey.EncryptPKCS1v15(rsaBenchData)
+	encrypted, err := publicKey.EncryptPKCS1v15(rsaBenchData)
 	if err != nil {
-		b.Error(err)
+		b.Fatal(err)
 	}
 
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		err := privateKey.DecryptPKCS1v15SessionKey(benchCrypted, nil)
+		err := privateKey.DecryptPKCS1v15SessionKey(encrypted, nil)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -92,18 +92,18 @@ func BenchmarkRSADecryptOAEP(b *testing.B) {
 	privateKey := rsa.MustLoadPrivateKey("rsa.key")
 	publicKey := rsa.MustLoadPublicKey("rsa.pub")
 
-	benchCrypted, err := publicKey.EncryptOAEP(rsaBenchData, nil)
+	encrypted, err := publicKey.EncryptOAEP(rsaBenchData, nil)
 	if err != nil {
-		b.Error(err)
+		b.Fatal(err)
 	}
 
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := privateKey.DecryptOAEP(benchCrypted, nil)
+		_, err := privateKey.DecryptOAEP(encrypted, nil)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -111,19 +111,15 @@ func BenchmarkRSADecryptOAEP(b *testing.B) {
 // go test -v -bench=^BenchmarkRSASignPSS$ -benchtime=1s rsa_test.go
 func BenchmarkRSASignPSS(b *testing.B) {
 	privateKey := rsa.MustLoadPrivateKey("rsa.key")
-
-	digest, err := hash.SHA256(rsaBenchData)
-	if err != nil {
-		b.Error(err)
-	}
+	digest := hash.SHA256(rsaBenchData)
 
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err = privateKey.SignPSS(digest, 4)
+		_, err := privateKey.SignPSS(digest, 4)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -131,19 +127,15 @@ func BenchmarkRSASignPSS(b *testing.B) {
 // go test -v -bench=^BenchmarkRSASignPKCS1v15$ -benchtime=1s rsa_test.go
 func BenchmarkRSASignPKCS1v15(b *testing.B) {
 	privateKey := rsa.MustLoadPrivateKey("rsa.key")
-
-	hashed, err := hash.SHA256(rsaBenchData)
-	if err != nil {
-		b.Error(err)
-	}
+	hashed := hash.SHA256(rsaBenchData)
 
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err = privateKey.SignPKCS1v15(hashed)
+		_, err := privateKey.SignPKCS1v15(hashed)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -152,16 +144,12 @@ func BenchmarkRSASignPKCS1v15(b *testing.B) {
 func BenchmarkRSAVerifyPSS(b *testing.B) {
 	privateKey := rsa.MustLoadPrivateKey("rsa.key")
 	publicKey := rsa.MustLoadPublicKey("rsa.pub")
-
-	digest, err := hash.SHA256(rsaBenchData)
-	if err != nil {
-		b.Error(err)
-	}
+	digest := hash.SHA256(rsaBenchData)
 
 	saltLength := 4
 	signed, err := privateKey.SignPSS(digest, saltLength)
 	if err != nil {
-		b.Error(err)
+		b.Fatal(err)
 	}
 
 	b.ReportAllocs()
@@ -170,7 +158,7 @@ func BenchmarkRSAVerifyPSS(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err = publicKey.VerifyPSS(digest, signed, saltLength)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }
@@ -179,15 +167,11 @@ func BenchmarkRSAVerifyPSS(b *testing.B) {
 func BenchmarkRSAVerifyPKCS1v15(b *testing.B) {
 	privateKey := rsa.MustLoadPrivateKey("rsa.key")
 	publicKey := rsa.MustLoadPublicKey("rsa.pub")
-
-	hashed, err := hash.SHA256(rsaBenchData)
-	if err != nil {
-		b.Error(err)
-	}
+	hashed := hash.SHA256(rsaBenchData)
 
 	signed, err := privateKey.SignPKCS1v15(hashed)
 	if err != nil {
-		b.Error(err)
+		b.Fatal(err)
 	}
 
 	b.ReportAllocs()
@@ -196,7 +180,7 @@ func BenchmarkRSAVerifyPKCS1v15(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err = publicKey.VerifyPKCS1v15(hashed, signed)
 		if err != nil {
-			b.Error(err)
+			b.Fatal(err)
 		}
 	}
 }

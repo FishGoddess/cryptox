@@ -1,4 +1,4 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -8,15 +8,9 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"io"
-	"io/ioutil"
+	"os"
 
 	"github.com/FishGoddess/cryptox"
-)
-
-var (
-	// Primes is the prime of rsa key.
-	// See rsa.GenerateMultiPrimeKey.
-	Primes = 2
 )
 
 // GenerateKeys generates a key set of bits.
@@ -36,14 +30,14 @@ func GenerateKeys(bits int, opts ...KeyOption) (PrivateKey, PublicKey, error) {
 
 // GeneratePrivateKey generates a private key of bits.
 func GeneratePrivateKey(bits int, opts ...KeyOption) (PrivateKey, error) {
-	cfg := fromKeyOptions(opts)
+	conf := newKeyConfig(opts)
 
-	privateKey, err := rsa.GenerateMultiPrimeKey(rand.Reader, Primes, bits)
+	privateKey, err := rsa.GenerateKey(rand.Reader, bits)
 	if err != nil {
 		return PrivateKey{}, err
 	}
 
-	privateKeyBytes, err := cfg.privateKeyEncoder.Encode(privateKey)
+	privateKeyBytes, err := conf.privateKeyEncoder.Encode(privateKey)
 	if err != nil {
 		return PrivateKey{}, err
 	}
@@ -53,10 +47,10 @@ func GeneratePrivateKey(bits int, opts ...KeyOption) (PrivateKey, error) {
 
 // GeneratePublicKey generates a public key from private key.
 func GeneratePublicKey(privateKey PrivateKey, opts ...KeyOption) (PublicKey, error) {
-	cfg := fromKeyOptions(opts)
+	conf := newKeyConfig(opts)
 	publicKey := &(privateKey.Key().PublicKey)
 
-	publicKeyBytes, err := cfg.publicKeyEncoder.Encode(publicKey)
+	publicKeyBytes, err := conf.publicKeyEncoder.Encode(publicKey)
 	if err != nil {
 		return PublicKey{}, err
 	}
@@ -64,11 +58,11 @@ func GeneratePublicKey(privateKey PrivateKey, opts ...KeyOption) (PublicKey, err
 	return newPublicKey(publicKey, publicKeyBytes), nil
 }
 
-// ParsePrivateKey parses private key from pem bytes.
+// ParsePrivateKey parses a private key from pem bytes.
 func ParsePrivateKey(keyBytes cryptox.Bytes, opts ...KeyOption) (PrivateKey, error) {
-	cfg := fromKeyOptions(opts)
+	conf := newKeyConfig(opts)
 
-	privateKey, err := cfg.privateKeyDecoder.Decode(keyBytes)
+	privateKey, err := conf.privateKeyDecoder.Decode(keyBytes)
 	if err != nil {
 		return PrivateKey{}, err
 	}
@@ -76,11 +70,11 @@ func ParsePrivateKey(keyBytes cryptox.Bytes, opts ...KeyOption) (PrivateKey, err
 	return newPrivateKey(privateKey, keyBytes), nil
 }
 
-// ParsePublicKey parses public key from pem bytes.
+// ParsePublicKey parses a public key from pem bytes.
 func ParsePublicKey(keyBytes cryptox.Bytes, opts ...KeyOption) (PublicKey, error) {
-	cfg := fromKeyOptions(opts)
+	conf := newKeyConfig(opts)
 
-	publicKey, err := cfg.publicKeyDecoder.Decode(keyBytes)
+	publicKey, err := conf.publicKeyDecoder.Decode(keyBytes)
 	if err != nil {
 		return PublicKey{}, err
 	}
@@ -88,9 +82,9 @@ func ParsePublicKey(keyBytes cryptox.Bytes, opts ...KeyOption) (PublicKey, error
 	return newPublicKey(publicKey, keyBytes), nil
 }
 
-// ReadPrivateKey reads private key from a reader.
+// ReadPrivateKey reads a private key from a reader.
 func ReadPrivateKey(keyReader io.Reader, opts ...KeyOption) (PrivateKey, error) {
-	keyBytes, err := ioutil.ReadAll(keyReader)
+	keyBytes, err := io.ReadAll(keyReader)
 	if err != nil {
 		return PrivateKey{}, err
 	}
@@ -98,9 +92,9 @@ func ReadPrivateKey(keyReader io.Reader, opts ...KeyOption) (PrivateKey, error) 
 	return ParsePrivateKey(keyBytes, opts...)
 }
 
-// ReadPublicKey reads public key from a reader.
+// ReadPublicKey reads a public key from a reader.
 func ReadPublicKey(keyReader io.Reader, opts ...KeyOption) (PublicKey, error) {
-	keyBytes, err := ioutil.ReadAll(keyReader)
+	keyBytes, err := io.ReadAll(keyReader)
 	if err != nil {
 		return PublicKey{}, err
 	}
@@ -108,9 +102,9 @@ func ReadPublicKey(keyReader io.Reader, opts ...KeyOption) (PublicKey, error) {
 	return ParsePublicKey(keyBytes, opts...)
 }
 
-// LoadPrivateKey loads private key from a file.
+// LoadPrivateKey loads a private key from a file.
 func LoadPrivateKey(keyFile string, opts ...KeyOption) (PrivateKey, error) {
-	keyBytes, err := ioutil.ReadFile(keyFile)
+	keyBytes, err := os.ReadFile(keyFile)
 	if err != nil {
 		return PrivateKey{}, err
 	}
@@ -118,9 +112,9 @@ func LoadPrivateKey(keyFile string, opts ...KeyOption) (PrivateKey, error) {
 	return ParsePrivateKey(keyBytes, opts...)
 }
 
-// LoadPublicKey loads public key from a file.
+// LoadPublicKey loads a public key from a file.
 func LoadPublicKey(keyFile string, opts ...KeyOption) (PublicKey, error) {
-	keyBytes, err := ioutil.ReadFile(keyFile)
+	keyBytes, err := os.ReadFile(keyFile)
 	if err != nil {
 		return PublicKey{}, err
 	}
@@ -128,7 +122,7 @@ func LoadPublicKey(keyFile string, opts ...KeyOption) (PublicKey, error) {
 	return ParsePublicKey(keyBytes, opts...)
 }
 
-// MustLoadPrivateKey loads private key from a file or panic on failed.
+// MustLoadPrivateKey loads private key from a file or panic if failed.
 func MustLoadPrivateKey(keyFile string, opts ...KeyOption) PrivateKey {
 	key, err := LoadPrivateKey(keyFile, opts...)
 	if err != nil {
@@ -138,7 +132,7 @@ func MustLoadPrivateKey(keyFile string, opts ...KeyOption) PrivateKey {
 	return key
 }
 
-// MustLoadPublicKey loads public key from a file or panic on failed.
+// MustLoadPublicKey loads public key from a file or panic if failed.
 func MustLoadPublicKey(keyFile string, opts ...KeyOption) PublicKey {
 	key, err := LoadPublicKey(keyFile, opts...)
 	if err != nil {

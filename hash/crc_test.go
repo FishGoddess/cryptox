@@ -1,4 +1,4 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -8,11 +8,9 @@ import (
 	"hash/crc32"
 	"hash/crc64"
 	"testing"
-
-	"github.com/FishGoddess/cryptox"
 )
 
-// go test -v -cover -run=^TestCRC32$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestCRC32$
 func TestCRC32(t *testing.T) {
 	cases := map[string]uint32{
 		"":      0,
@@ -21,19 +19,19 @@ func TestCRC32(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crc := CRC32(cryptox.FromString(input), tableIEEE)
+		crc := CRC32([]byte(input), tableIEEE)
 		if crc != expect {
-			t.Errorf("input %s: crc %d != expect %d", input, crc, expect)
+			t.Fatalf("input %s: crc %d != expect %d", input, crc, expect)
 		}
 
 		expectNumber := crc32.ChecksumIEEE([]byte(input))
 		if crc != expectNumber {
-			t.Errorf("input %s: crc %d != expectNumber %d", input, crc, expectNumber)
+			t.Fatalf("input %s: crc %d != expectNumber %d", input, crc, expectNumber)
 		}
 	}
 }
 
-// go test -v -cover -run=^TestCRC32IEEE$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestCRC32IEEE$
 func TestCRC32IEEE(t *testing.T) {
 	cases := map[string]uint32{
 		"":      0,
@@ -42,19 +40,19 @@ func TestCRC32IEEE(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crc := CRC32IEEE(cryptox.FromString(input))
+		crc := CRC32IEEE([]byte(input))
 		if crc != expect {
-			t.Errorf("input %s: crc %d != expect %d", input, crc, expect)
+			t.Fatalf("input %s: crc %d != expect %d", input, crc, expect)
 		}
 
 		expectNumber := crc32.ChecksumIEEE([]byte(input))
 		if crc != expectNumber {
-			t.Errorf("input %s: crc %d != expectNumber %d", input, crc, expectNumber)
+			t.Fatalf("input %s: crc %d != expectNumber %d", input, crc, expectNumber)
 		}
 	}
 }
 
-// go test -v -cover -run=^TestCRC64$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestCRC64$
 func TestCRC64(t *testing.T) {
 	cases := map[string]uint64{
 		"":      0,
@@ -63,19 +61,19 @@ func TestCRC64(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crc := CRC64(cryptox.FromString(input), tableISO)
+		crc := CRC64([]byte(input), tableISO)
 		if crc != expect {
-			t.Errorf("input %s: crc %d != expect %d", input, crc, expect)
+			t.Fatalf("input %s: crc %d != expect %d", input, crc, expect)
 		}
 
 		expectNumber := crc64.Checksum([]byte(input), crc64.MakeTable(crc64.ISO))
 		if crc != expectNumber {
-			t.Errorf("input %s: crc %d != expectNumber %d", input, crc, expectNumber)
+			t.Fatalf("input %s: crc %d != expectNumber %d", input, crc, expectNumber)
 		}
 	}
 }
 
-// go test -v -cover -run=^TestCRC64ISO$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestCRC64ISO$
 func TestCRC64ISO(t *testing.T) {
 	cases := map[string]uint64{
 		"":      0,
@@ -84,19 +82,19 @@ func TestCRC64ISO(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crc := CRC64ISO(cryptox.FromString(input))
+		crc := CRC64ISO([]byte(input))
 		if crc != expect {
-			t.Errorf("input %s: crc %d != expect %d", input, crc, expect)
+			t.Fatalf("input %s: crc %d != expect %d", input, crc, expect)
 		}
 
 		expectNumber := crc64.Checksum([]byte(input), crc64.MakeTable(crc64.ISO))
 		if crc != expectNumber {
-			t.Errorf("input %s: crc %d != expectNumber %d", input, crc, expectNumber)
+			t.Fatalf("input %s: crc %d != expectNumber %d", input, crc, expectNumber)
 		}
 	}
 }
 
-// go test -v -cover -run=^TestCRC64ECMA$
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestCRC64ECMA$
 func TestCRC64ECMA(t *testing.T) {
 	cases := map[string]uint64{
 		"":      0,
@@ -105,14 +103,14 @@ func TestCRC64ECMA(t *testing.T) {
 	}
 
 	for input, expect := range cases {
-		crc := CRC64ECMA(cryptox.FromString(input))
+		crc := CRC64ECMA([]byte(input))
 		if crc != expect {
-			t.Errorf("input %s: crc %d != expect %d", input, crc, expect)
+			t.Fatalf("input %s: crc %d != expect %d", input, crc, expect)
 		}
 
 		expectNumber := crc64.Checksum([]byte(input), crc64.MakeTable(crc64.ECMA))
 		if crc != expectNumber {
-			t.Errorf("input %s: crc %d != expectNumber %d", input, crc, expectNumber)
+			t.Fatalf("input %s: crc %d != expectNumber %d", input, crc, expectNumber)
 		}
 	}
 }

@@ -1,23 +1,16 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
 package hash
 
 import (
-	"crypto/md5"
 	"crypto/sha1"
 	"crypto/sha256"
 	"crypto/sha512"
 
 	"github.com/FishGoddess/cryptox"
 )
-
-// MD5 uses md5 to hash bs.
-func MD5(bs cryptox.Bytes) cryptox.Bytes {
-	sum := md5.Sum(bs)
-	return sum[:]
-}
 
 // SHA1 uses sha1 to hash bs.
 func SHA1(bs cryptox.Bytes) cryptox.Bytes {

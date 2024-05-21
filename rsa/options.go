@@ -1,4 +1,4 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -12,7 +12,6 @@ import (
 	"io"
 )
 
-// KeyConfig stores all configurations of key.
 type KeyConfig struct {
 	privateKeyEncoder PrivateKeyEncoder
 	privateKeyDecoder PrivateKeyDecoder
@@ -20,9 +19,8 @@ type KeyConfig struct {
 	publicKeyDecoder  PublicKeyDecoder
 }
 
-// fromKeyOptions returns a key config constructed from key options.
-func fromKeyOptions(opts []KeyOption) *KeyConfig {
-	cfg := &KeyConfig{
+func newKeyConfig(opts []KeyOption) *KeyConfig {
+	conf := &KeyConfig{
 		privateKeyEncoder: X509.PKCS1PrivateKeyEncoder,
 		privateKeyDecoder: X509.PKCS1PrivateKeyDecoder,
 		publicKeyEncoder:  X509.PKIXPublicKeyEncoder,
@@ -30,95 +28,89 @@ func fromKeyOptions(opts []KeyOption) *KeyConfig {
 	}
 
 	for _, opt := range opts {
-		opt.ApplyTo(cfg)
+		opt.ApplyTo(conf)
 	}
 
-	return cfg
+	return conf
 }
 
-// KeyOption is an option for key config.
-type KeyOption func(cfg *KeyConfig)
+type KeyOption func(conf *KeyConfig)
 
-// ApplyTo applies key option to key config.
-func (ko KeyOption) ApplyTo(cfg *KeyConfig) {
-	ko(cfg)
+func (ko KeyOption) ApplyTo(conf *KeyConfig) {
+	ko(conf)
 }
 
-// WithPrivateKeyEncoder sets private key encoder to cfg.
+// WithPrivateKeyEncoder sets private key encoder to conf.
 func WithPrivateKeyEncoder(encoder PrivateKeyEncoder) KeyOption {
-	return func(cfg *KeyConfig) {
-		cfg.privateKeyEncoder = encoder
+	return func(conf *KeyConfig) {
+		conf.privateKeyEncoder = encoder
 	}
 }
 
-// WithPrivateKeyDecoder sets private key decoder to cfg.
+// WithPrivateKeyDecoder sets private key decoder to conf.
 func WithPrivateKeyDecoder(decoder PrivateKeyDecoder) KeyOption {
-	return func(cfg *KeyConfig) {
-		cfg.privateKeyDecoder = decoder
+	return func(conf *KeyConfig) {
+		conf.privateKeyDecoder = decoder
 	}
 }
 
-// WithPublicKeyEncoder sets public key encoder to cfg.
+// WithPublicKeyEncoder sets public key encoder to conf.
 func WithPublicKeyEncoder(encoder PublicKeyEncoder) KeyOption {
-	return func(cfg *KeyConfig) {
-		cfg.publicKeyEncoder = encoder
+	return func(conf *KeyConfig) {
+		conf.publicKeyEncoder = encoder
 	}
 }
 
-// WithPublicKeyDecoder sets public key decoder to cfg.
+// WithPublicKeyDecoder sets public key decoder to conf.
 func WithPublicKeyDecoder(decoder PublicKeyDecoder) KeyOption {
-	return func(cfg *KeyConfig) {
-		cfg.publicKeyDecoder = decoder
+	return func(conf *KeyConfig) {
+		conf.publicKeyDecoder = decoder
 	}
 }
 
-// Config stores all configurations used by encrypting/decrypting/signing/verifying.
 type Config struct {
 	random     io.Reader
 	hash       hash.Hash
 	cryptoHash crypto.Hash
 }
 
-// fromOptions returns a config constructed from options.
-func fromOptions(opts []Option) *Config {
-	cfg := &Config{
+func newConfig(opts []Option) *Config {
+	conf := &Config{
 		random:     rand.Reader,
 		hash:       sha256.New(),
 		cryptoHash: crypto.SHA256,
 	}
 
 	for _, opt := range opts {
-		opt.ApplyTo(cfg)
+		opt.ApplyTo(conf)
 	}
 
-	return cfg
+	return conf
 }
 
-// Option is an option for config.
-type Option func(cfg *Config)
+type Option func(conf *Config)
 
-// ApplyTo applies option to config.
-func (o Option) ApplyTo(cfg *Config) {
-	o(cfg)
+func (o Option) ApplyTo(conf *Config) {
+	o(conf)
 }
 
-// WithRandom sets random to cfg.
+// WithRandom sets random to conf.
 func WithRandom(random io.Reader) Option {
-	return func(cfg *Config) {
-		cfg.random = random
+	return func(conf *Config) {
+		conf.random = random
 	}
 }
 
-// WithHash sets hash to cfg.
+// WithHash sets hash to conf.
 func WithHash(hash hash.Hash) Option {
-	return func(cfg *Config) {
-		cfg.hash = hash
+	return func(conf *Config) {
+		conf.hash = hash
 	}
 }
 
-// WithCryptoHash sets crypto hash to cfg.
+// WithCryptoHash sets crypto hash to conf.
 func WithCryptoHash(hash crypto.Hash) Option {
-	return func(cfg *Config) {
-		cfg.cryptoHash = hash
+	return func(conf *Config) {
+		conf.cryptoHash = hash
 	}
 }
