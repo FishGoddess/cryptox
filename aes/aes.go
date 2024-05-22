@@ -179,7 +179,6 @@ func DecryptCTR(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs
 }
 
 // EncryptGCM uses gcm mode to encrypt bs.
-// NOTICE: This is an experimental function, and we haven't tested it enough yet, so be careful when using it.
 func EncryptGCM(key cryptox.Bytes, nonce cryptox.Bytes, additional cryptox.Bytes, bs cryptox.Bytes) (cryptox.Bytes, error) {
 	block, _, err := newBlock(key)
 	if err != nil {
@@ -199,7 +198,6 @@ func EncryptGCM(key cryptox.Bytes, nonce cryptox.Bytes, additional cryptox.Bytes
 }
 
 // DecryptGCM uses gcm mode to decrypt bs.
-// NOTICE: This is an experimental function, and we haven't tested it enough yet, so be careful when using it.
 func DecryptGCM(key cryptox.Bytes, nonce cryptox.Bytes, additional cryptox.Bytes, bs cryptox.Bytes) (cryptox.Bytes, error) {
 	block, _, err := newBlock(key)
 	if err != nil {
