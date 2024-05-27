@@ -93,6 +93,89 @@ func TestPrivateKey(t *testing.T) {
 	}
 }
 
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestPrivateKeyDecryptPKCS1v15$
+func TestPrivateKeyDecryptPKCS1v15(t *testing.T) {
+	publicKey := newTestPublicKey(t)
+	privateKey := newTestPrivateKey(t)
+
+	cases := []string{
+		"", "123", "你好，世界",
+	}
+
+	for _, msg := range cases {
+		encrypted, err := publicKey.EncryptPKCS1v15(cryptox.Bytes(msg))
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		decrypted, err := privateKey.DecryptPKCS1v15(encrypted)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if string(decrypted) != msg {
+			t.Fatalf("decrypted %s != msg %s", decrypted, msg)
+		}
+	}
+}
+
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestPrivateKeyDecryptPKCS1v15SessionKey$
+func TestPrivateKeyDecryptPKCS1v15SessionKey(t *testing.T) {
+	publicKey := newTestPublicKey(t)
+	privateKey := newTestPrivateKey(t)
+
+	cases := []string{
+		"", "123", "你好，世界",
+	}
+
+	for _, msg := range cases {
+		encrypted, err := publicKey.EncryptPKCS1v15(cryptox.Bytes(msg))
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		sessionKey := cryptox.GenerateBytes(32)
+		if err = privateKey.DecryptPKCS1v15SessionKey(encrypted, sessionKey); err != nil {
+			t.Fatal(err)
+		}
+
+		decrypted, err := privateKey.DecryptPKCS1v15(encrypted)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if string(decrypted) != msg {
+			t.Fatalf("decrypted %s != msg %s", decrypted, msg)
+		}
+	}
+}
+
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestPrivateKeyDecryptOAEP$
+func TestPrivateKeyDecryptOAEP(t *testing.T) {
+	publicKey := newTestPublicKey(t)
+	privateKey := newTestPrivateKey(t)
+
+	cases := []string{
+		"", "123", "你好，世界",
+	}
+
+	for _, msg := range cases {
+		encrypted, err := publicKey.EncryptOAEP(cryptox.Bytes(msg), cryptox.Bytes(msg))
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		decrypted, err := privateKey.DecryptOAEP(encrypted, cryptox.Bytes(msg))
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if string(decrypted) != msg {
+			t.Fatalf("decrypted %s != msg %s", decrypted, msg)
+		}
+	}
+}
+
 // go test -v -cover -count=1 -test.cpu=1 -run=^TestPrivateKeySignPKCS1v15$
 func TestPrivateKeySignPKCS1v15(t *testing.T) {
 	publicKey := newTestPublicKey(t)

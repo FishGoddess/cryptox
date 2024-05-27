@@ -113,8 +113,8 @@ func TestParseHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestFromBase64$
-func TestFromBase64(t *testing.T) {
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestParseBase64$
+func TestParseBase64(t *testing.T) {
 	cases := map[string]string{
 		"":                     "",
 		"MTIz":                 "123",

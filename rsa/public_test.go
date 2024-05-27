@@ -128,3 +128,47 @@ func TestPublicKeyEncryptOAEP(t *testing.T) {
 		}
 	}
 }
+
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestPublicKeyVerifyPKCS1v15$
+func TestPublicKeyVerifyPKCS1v15(t *testing.T) {
+	publicKey := newTestPublicKey(t)
+	privateKey := newTestPrivateKey(t)
+
+	cases := []string{
+		"d41d8cd98f00b204e9800998ecf8427e", "202cb962ac59075b964b07152d234b70", "dbefd3ada018615b35588a01e216ae6e",
+	}
+
+	for _, msg := range cases {
+		signature, err := privateKey.SignPKCS1v15(cryptox.Bytes(msg))
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = publicKey.VerifyPKCS1v15(cryptox.Bytes(msg), signature)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+}
+
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestPublicKeyVerifyPSS$
+func TestPublicKeyVerifyPSS(t *testing.T) {
+	publicKey := newTestPublicKey(t)
+	privateKey := newTestPrivateKey(t)
+
+	cases := []string{
+		"d41d8cd98f00b204e9800998ecf8427e", "202cb962ac59075b964b07152d234b70", "dbefd3ada018615b35588a01e216ae6e",
+	}
+
+	for _, msg := range cases {
+		signature, err := privateKey.SignPSS(cryptox.Bytes(msg), 0)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = publicKey.VerifyPSS(cryptox.Bytes(msg), signature, 0)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+}

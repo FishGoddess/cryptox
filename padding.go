@@ -14,8 +14,6 @@ var (
 )
 
 // Padding paddings and undo paddings to a byte slice.
-// You should know the returned bytes is always cloned from the passed bytes,
-// so they are two different byte slices.
 type Padding interface {
 	Padding(bs Bytes, blockSize int) Bytes
 	UndoPadding(bs Bytes, blockSize int) (Bytes, error)
@@ -24,17 +22,16 @@ type Padding interface {
 type paddingNone struct{}
 
 func (paddingNone) Padding(bs Bytes, blockSize int) Bytes {
-	return bs.Clone()
+	return bs
 }
 
 func (paddingNone) UndoPadding(bs Bytes, blockSize int) (Bytes, error) {
-	return bs.Clone(), nil
+	return bs, nil
 }
 
 type paddingZero struct{}
 
 func (paddingZero) Padding(bs Bytes, blockSize int) Bytes {
-	bs = bs.Clone()
 	padding := blockSize - (len(bs) % blockSize)
 
 	for i := 0; i < padding; i++ {
@@ -45,7 +42,6 @@ func (paddingZero) Padding(bs Bytes, blockSize int) Bytes {
 }
 
 func (paddingZero) UndoPadding(bs Bytes, blockSize int) (Bytes, error) {
-	bs = bs.Clone()
 	length := len(bs)
 
 	var i int
@@ -66,7 +62,6 @@ func (paddingZero) UndoPadding(bs Bytes, blockSize int) (Bytes, error) {
 type paddingPKCS7 struct{}
 
 func (paddingPKCS7) Padding(bs Bytes, blockSize int) Bytes {
-	bs = bs.Clone()
 	padding := blockSize - (len(bs) % blockSize)
 
 	for i := 0; i < padding; i++ {
@@ -77,7 +72,6 @@ func (paddingPKCS7) Padding(bs Bytes, blockSize int) Bytes {
 }
 
 func (paddingPKCS7) UndoPadding(bs Bytes, blockSize int) (Bytes, error) {
-	bs = bs.Clone()
 	length := len(bs)
 	number := int(bs[length-1])
 
