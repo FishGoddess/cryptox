@@ -28,6 +28,7 @@ func EncryptECB(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (c
 		return nil, err
 	}
 
+	bs = bs.Clone()
 	src := padding.Padding(bs, blockSize)
 	dst := src.Clone()
 
@@ -80,6 +81,7 @@ func EncryptCBC(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs
 		return nil, err
 	}
 
+	bs = bs.Clone()
 	src := padding.Padding(bs, blockSize)
 	dst := src.Clone()
 
@@ -106,6 +108,7 @@ func EncryptCFB(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs
 		return nil, err
 	}
 
+	bs = bs.Clone()
 	src := padding.Padding(bs, blockSize)
 	dst := src.Clone()
 
@@ -132,6 +135,7 @@ func EncryptOFB(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs
 		return nil, err
 	}
 
+	bs = bs.Clone()
 	src := padding.Padding(bs, blockSize)
 	dst := src.Clone()
 
@@ -158,6 +162,7 @@ func EncryptCTR(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs
 		return nil, err
 	}
 
+	bs = bs.Clone()
 	src := padding.Padding(bs, blockSize)
 	dst := src.Clone()
 

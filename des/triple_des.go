@@ -28,6 +28,7 @@ func EncryptECBTriple(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Byt
 		return nil, err
 	}
 
+	bs = bs.Clone()
 	src := padding.Padding(bs, blockSize)
 	dst := src.Clone()
 
@@ -80,6 +81,7 @@ func EncryptCBCTriple(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Paddi
 		return nil, err
 	}
 
+	bs = bs.Clone()
 	src := padding.Padding(bs, blockSize)
 	dst := src.Clone()
 
@@ -106,6 +108,7 @@ func EncryptCFBTriple(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Paddi
 		return nil, err
 	}
 
+	bs = bs.Clone()
 	src := padding.Padding(bs, blockSize)
 	dst := src.Clone()
 
@@ -132,6 +135,7 @@ func EncryptOFBTriple(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Paddi
 		return nil, err
 	}
 
+	bs = bs.Clone()
 	src := padding.Padding(bs, blockSize)
 	dst := src.Clone()
 
@@ -158,6 +162,7 @@ func EncryptCTRTriple(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Paddi
 		return nil, err
 	}
 
+	bs = bs.Clone()
 	src := padding.Padding(bs, blockSize)
 	dst := src.Clone()
 
