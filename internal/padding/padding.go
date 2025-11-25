@@ -11,11 +11,11 @@ var (
 	PKCS7 Padding = paddingPKCS7{}
 )
 
-// Padding will pad a byte slice with some []byte and unpad them with the same []byte.
+// Padding will pad a byte slice with some bytes and unpad them with the same bytes.
 type Padding interface {
-	// Pad pads some []byte to the byte slice.
+	// Pad pads some bytes to the byte slice.
 	Pad(bs []byte, blockSize int) []byte
 
-	// Unpad unpads the []byte from the byte slice.
+	// Unpad unpads the bytes from the byte slice.
 	Unpad(bs []byte, blockSize int) ([]byte, error)
 }
