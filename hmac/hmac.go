@@ -10,53 +10,48 @@ import (
 	"crypto/sha1"
 	"crypto/sha256"
 	"crypto/sha512"
-	"fmt"
 	stdhash "hash"
 
-	"github.com/FishGoddess/cryptox"
+	"github.com/FishGoddess/cryptox/bytes/encoding"
 )
 
-func hash(hashFunc func() stdhash.Hash, key cryptox.Bytes, bs cryptox.Bytes) (cryptox.Bytes, error) {
+type hashFunc = func() stdhash.Hash
+
+func hash(hashFunc hashFunc, key []byte, bs []byte, encoding encoding.Encoding) []byte {
 	h := hmac.New(hashFunc, key)
+	h.Write(bs)
 
-	n, err := h.Write(bs)
-	if err != nil {
-		return nil, err
-	}
-
-	if n != len(bs) {
-		return nil, fmt.Errorf("cryptox/hmac: hashed n %d != len(bs) %d", n, len(bs))
-	}
-
-	return h.Sum(nil), nil
+	bs = h.Sum(nil)
+	bs = encoding.Encode(bs)
+	return bs
 }
 
 // MD5 uses hmac-md5 to hash bs and returns an error if failed.
-func MD5(key cryptox.Bytes, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	return hash(md5.New, key, bs)
+func MD5(key []byte, bs []byte, encoding encoding.Encoding) []byte {
+	return hash(md5.New, key, bs, encoding)
 }
 
 // SHA1 uses hmac-sha1 to hash bs and returns an error if failed.
-func SHA1(key cryptox.Bytes, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	return hash(sha1.New, key, bs)
+func SHA1(key []byte, bs []byte, encoding encoding.Encoding) []byte {
+	return hash(sha1.New, key, bs, encoding)
 }
 
 // SHA224 uses hmac-sha224 to hash bs and returns an error if failed.
-func SHA224(key cryptox.Bytes, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	return hash(sha256.New224, key, bs)
+func SHA224(key []byte, bs []byte, encoding encoding.Encoding) []byte {
+	return hash(sha256.New224, key, bs, encoding)
 }
 
 // SHA256 uses hmac-sha256 to hash bs and returns an error if failed.
-func SHA256(key cryptox.Bytes, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	return hash(sha256.New, key, bs)
+func SHA256(key []byte, bs []byte, encoding encoding.Encoding) []byte {
+	return hash(sha256.New, key, bs, encoding)
 }
 
 // SHA384 uses hmac-sha384 to hash bs and returns an error if failed.
-func SHA384(key cryptox.Bytes, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	return hash(sha512.New384, key, bs)
+func SHA384(key []byte, bs []byte, encoding encoding.Encoding) []byte {
+	return hash(sha512.New384, key, bs, encoding)
 }
 
 // SHA512 uses hmac-sha512 to hash bs and returns an error if failed.
-func SHA512(key cryptox.Bytes, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	return hash(sha512.New, key, bs)
+func SHA512(key []byte, bs []byte, encoding encoding.Encoding) []byte {
+	return hash(sha512.New, key, bs, encoding)
 }

@@ -15,8 +15,8 @@ var (
 	benchData = []byte("你好，世界")
 )
 
-// go test -v -bench=^BenchmarkMD5$ -benchtime=1s hash_test.go
-func BenchmarkMD5(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_MD5$ -benchtime=1s hash_test.go
+func BenchmarkHash_MD5(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
@@ -25,8 +25,8 @@ func BenchmarkMD5(b *testing.B) {
 	}
 }
 
-// go test -v -bench=^BenchmarkSHA1$ -benchtime=1s hash_test.go
-func BenchmarkSHA1(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_SHA1$ -benchtime=1s hash_test.go
+func BenchmarkHash_SHA1(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
@@ -35,8 +35,8 @@ func BenchmarkSHA1(b *testing.B) {
 	}
 }
 
-// go test -v -bench=^BenchmarkSHA224$ -benchtime=1s hash_test.go
-func BenchmarkSHA224(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_SHA224$ -benchtime=1s hash_test.go
+func BenchmarkHash_SHA224(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
@@ -45,8 +45,8 @@ func BenchmarkSHA224(b *testing.B) {
 	}
 }
 
-// go test -v -bench=^BenchmarkSHA256$ -benchtime=1s hash_test.go
-func BenchmarkSHA256(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_SHA256$ -benchtime=1s hash_test.go
+func BenchmarkHash_SHA256(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
@@ -55,8 +55,8 @@ func BenchmarkSHA256(b *testing.B) {
 	}
 }
 
-// go test -v -bench=^BenchmarkSHA384$ -benchtime=1s hash_test.go
-func BenchmarkSHA384(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_SHA384$ -benchtime=1s hash_test.go
+func BenchmarkHash_SHA384(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
@@ -65,8 +65,8 @@ func BenchmarkSHA384(b *testing.B) {
 	}
 }
 
-// go test -v -bench=^BenchmarkSHA512$ -benchtime=1s hash_test.go
-func BenchmarkSHA512(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_SHA512$ -benchtime=1s hash_test.go
+func BenchmarkHash_SHA512(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
@@ -75,8 +75,8 @@ func BenchmarkSHA512(b *testing.B) {
 	}
 }
 
-// go test -v -bench=^BenchmarkCRC32IEEE$ -benchtime=1s hash_test.go
-func BenchmarkCRC32IEEE(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_CRC32IEEE$ -benchtime=1s hash_test.go
+func BenchmarkHash_CRC32IEEE(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
@@ -85,8 +85,8 @@ func BenchmarkCRC32IEEE(b *testing.B) {
 	}
 }
 
-// go test -v -bench=^BenchmarkCRC64ISO$ -benchtime=1s hash_test.go
-func BenchmarkCRC64ISO(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_CRC64ISO$ -benchtime=1s hash_test.go
+func BenchmarkHash_CRC64ISO(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
@@ -95,8 +95,8 @@ func BenchmarkCRC64ISO(b *testing.B) {
 	}
 }
 
-// go test -v -bench=^BenchmarkCRC64ECMA$ -benchtime=1s hash_test.go
-func BenchmarkCRC64ECMA(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_CRC64ECMA$ -benchtime=1s hash_test.go
+func BenchmarkHash_CRC64ECMA(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
@@ -105,8 +105,8 @@ func BenchmarkCRC64ECMA(b *testing.B) {
 	}
 }
 
-// go test -v -bench=^BenchmarkFnv32$ -benchtime=1s hash_test.go
-func BenchmarkFnv32(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_Fnv32$ -benchtime=1s hash_test.go
+func BenchmarkHash_Fnv32(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
@@ -115,8 +115,8 @@ func BenchmarkFnv32(b *testing.B) {
 	}
 }
 
-// go test -v -bench=^BenchmarkFnv32a$ -benchtime=1s hash_test.go
-func BenchmarkFnv32a(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_Fnv32a$ -benchtime=1s hash_test.go
+func BenchmarkHash_Fnv32a(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
@@ -125,8 +125,8 @@ func BenchmarkFnv32a(b *testing.B) {
 	}
 }
 
-// go test -v -bench=^BenchmarkFnv64$ -benchtime=1s hash_test.go
-func BenchmarkFnv64(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_Fnv64$ -benchtime=1s hash_test.go
+func BenchmarkHash_Fnv64(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
@@ -135,8 +135,8 @@ func BenchmarkFnv64(b *testing.B) {
 	}
 }
 
-// go test -v -bench=^BenchmarkFnv64a$ -benchtime=1s hash_test.go
-func BenchmarkFnv64a(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_Fnv64a$ -benchtime=1s hash_test.go
+func BenchmarkHash_Fnv64a(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
@@ -145,8 +145,8 @@ func BenchmarkFnv64a(b *testing.B) {
 	}
 }
 
-// go test -v -bench=^BenchmarkFnv128$ -benchtime=1s hash_test.go
-func BenchmarkFnv128(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_Fnv128$ -benchtime=1s hash_test.go
+func BenchmarkHash_Fnv128(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
@@ -155,8 +155,8 @@ func BenchmarkFnv128(b *testing.B) {
 	}
 }
 
-// go test -v -bench=^BenchmarkFnv128a$ -benchtime=1s hash_test.go
-func BenchmarkFnv128a(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_Fnv128a$ -benchtime=1s hash_test.go
+func BenchmarkHash_Fnv128a(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
