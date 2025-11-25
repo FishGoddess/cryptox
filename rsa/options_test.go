@@ -12,7 +12,7 @@ import (
 	"testing"
 )
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestNewKeyConfig$
+// go test -v -cover -run=^TestNewKeyConfig$
 func TestNewKeyConfig(t *testing.T) {
 	opts := []KeyOption{
 		WithPrivateKeyEncoder(X509.PKCS8PrivateKeyEncoder),
@@ -52,7 +52,7 @@ func TestNewKeyConfig(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestWithPrivateKeyEncoder$
+// go test -v -cover -run=^TestWithPrivateKeyEncoder$
 func TestWithPrivateKeyEncoder(t *testing.T) {
 	conf := &KeyConfig{privateKeyEncoder: nil}
 
@@ -67,7 +67,7 @@ func TestWithPrivateKeyEncoder(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestWithPrivateKeyDecoder$
+// go test -v -cover -run=^TestWithPrivateKeyDecoder$
 func TestWithPrivateKeyDecoder(t *testing.T) {
 	conf := &KeyConfig{privateKeyDecoder: nil}
 
@@ -82,7 +82,7 @@ func TestWithPrivateKeyDecoder(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestWithPublicKeyEncoder$
+// go test -v -cover -run=^TestWithPublicKeyEncoder$
 func TestWithPublicKeyEncoder(t *testing.T) {
 	conf := &KeyConfig{publicKeyEncoder: nil}
 
@@ -97,7 +97,7 @@ func TestWithPublicKeyEncoder(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestWithPublicKeyDecoder$
+// go test -v -cover -run=^TestWithPublicKeyDecoder$
 func TestWithPublicKeyDecoder(t *testing.T) {
 	conf := &KeyConfig{publicKeyDecoder: nil}
 
@@ -112,7 +112,7 @@ func TestWithPublicKeyDecoder(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestNewConfig$
+// go test -v -cover -run=^TestNewConfig$
 func TestNewConfig(t *testing.T) {
 	hash := sha256.New()
 
@@ -143,7 +143,7 @@ func TestNewConfig(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestWithRandom$
+// go test -v -cover -run=^TestWithRandom$
 func TestWithRandom(t *testing.T) {
 	conf := &Config{random: nil}
 
@@ -158,7 +158,7 @@ func TestWithRandom(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestWithHash$
+// go test -v -cover -run=^TestWithHash$
 func TestWithHash(t *testing.T) {
 	conf := &Config{random: nil}
 
@@ -174,7 +174,7 @@ func TestWithHash(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestWithCryptoHash$
+// go test -v -cover -run=^TestWithCryptoHash$
 func TestWithCryptoHash(t *testing.T) {
 	conf := &Config{cryptoHash: 0}
 

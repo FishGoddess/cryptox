@@ -10,107 +10,107 @@ import (
 	"testing"
 )
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestCRC32$
+// go test -v -cover -run=^TestCRC32$
 func TestCRC32(t *testing.T) {
-	cases := map[string]uint32{
+	testCases := map[string]uint32{
 		"":      0,
 		"123":   2286445522,
 		"你好，世界": 2901793364,
 	}
 
-	for input, expect := range cases {
-		crc := CRC32([]byte(input), tableIEEE)
-		if crc != expect {
-			t.Fatalf("input %s: crc %d != expect %d", input, crc, expect)
+	for data, expect := range testCases {
+		got := CRC32([]byte(data), tableIEEE)
+		if got != expect {
+			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
 		}
 
-		expectNumber := crc32.ChecksumIEEE([]byte(input))
-		if crc != expectNumber {
-			t.Fatalf("input %s: crc %d != expectNumber %d", input, crc, expectNumber)
+		expect = crc32.ChecksumIEEE([]byte(data))
+		if got != expect {
+			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
 		}
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestCRC32IEEE$
+// go test -v -cover -run=^TestCRC32IEEE$
 func TestCRC32IEEE(t *testing.T) {
-	cases := map[string]uint32{
+	testCases := map[string]uint32{
 		"":      0,
 		"123":   2286445522,
 		"你好，世界": 2901793364,
 	}
 
-	for input, expect := range cases {
-		crc := CRC32IEEE([]byte(input))
-		if crc != expect {
-			t.Fatalf("input %s: crc %d != expect %d", input, crc, expect)
+	for data, expect := range testCases {
+		got := CRC32IEEE([]byte(data))
+		if got != expect {
+			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
 		}
 
-		expectNumber := crc32.ChecksumIEEE([]byte(input))
-		if crc != expectNumber {
-			t.Fatalf("input %s: crc %d != expectNumber %d", input, crc, expectNumber)
+		expect = crc32.ChecksumIEEE([]byte(data))
+		if got != expect {
+			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
 		}
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestCRC64$
+// go test -v -cover -run=^TestCRC64$
 func TestCRC64(t *testing.T) {
-	cases := map[string]uint64{
+	testCases := map[string]uint64{
 		"":      0,
 		"123":   4612164443424423936,
 		"你好，世界": 10914630407878818662,
 	}
 
-	for input, expect := range cases {
-		crc := CRC64([]byte(input), tableISO)
-		if crc != expect {
-			t.Fatalf("input %s: crc %d != expect %d", input, crc, expect)
+	for data, expect := range testCases {
+		got := CRC64([]byte(data), tableISO)
+		if got != expect {
+			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
 		}
 
-		expectNumber := crc64.Checksum([]byte(input), crc64.MakeTable(crc64.ISO))
-		if crc != expectNumber {
-			t.Fatalf("input %s: crc %d != expectNumber %d", input, crc, expectNumber)
+		expect = crc64.Checksum([]byte(data), crc64.MakeTable(crc64.ISO))
+		if got != expect {
+			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
 		}
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestCRC64ISO$
+// go test -v -cover -run=^TestCRC64ISO$
 func TestCRC64ISO(t *testing.T) {
-	cases := map[string]uint64{
+	testCases := map[string]uint64{
 		"":      0,
 		"123":   4612164443424423936,
 		"你好，世界": 10914630407878818662,
 	}
 
-	for input, expect := range cases {
-		crc := CRC64ISO([]byte(input))
-		if crc != expect {
-			t.Fatalf("input %s: crc %d != expect %d", input, crc, expect)
+	for data, expect := range testCases {
+		got := CRC64ISO([]byte(data))
+		if got != expect {
+			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
 		}
 
-		expectNumber := crc64.Checksum([]byte(input), crc64.MakeTable(crc64.ISO))
-		if crc != expectNumber {
-			t.Fatalf("input %s: crc %d != expectNumber %d", input, crc, expectNumber)
+		expect = crc64.Checksum([]byte(data), crc64.MakeTable(crc64.ISO))
+		if got != expect {
+			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
 		}
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestCRC64ECMA$
+// go test -v -cover -run=^TestCRC64ECMA$
 func TestCRC64ECMA(t *testing.T) {
-	cases := map[string]uint64{
+	testCases := map[string]uint64{
 		"":      0,
 		"123":   3468660410647627105,
 		"你好，世界": 4520057941183021051,
 	}
 
-	for input, expect := range cases {
-		crc := CRC64ECMA([]byte(input))
-		if crc != expect {
-			t.Fatalf("input %s: crc %d != expect %d", input, crc, expect)
+	for data, expect := range testCases {
+		got := CRC64ECMA([]byte(data))
+		if got != expect {
+			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
 		}
 
-		expectNumber := crc64.Checksum([]byte(input), crc64.MakeTable(crc64.ECMA))
-		if crc != expectNumber {
-			t.Fatalf("input %s: crc %d != expectNumber %d", input, crc, expectNumber)
+		expect = crc64.Checksum([]byte(data), crc64.MakeTable(crc64.ECMA))
+		if got != expect {
+			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
 		}
 	}
 }

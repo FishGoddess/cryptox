@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestPKCS1PrivateKey$
+// go test -v -cover -run=^TestPKCS1PrivateKey$
 func TestPKCS1PrivateKey(t *testing.T) {
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
@@ -32,7 +32,7 @@ func TestPKCS1PrivateKey(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestPKCS8PrivateKey$
+// go test -v -cover -run=^TestPKCS8PrivateKey$
 func TestPKCS8PrivateKey(t *testing.T) {
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
@@ -54,7 +54,7 @@ func TestPKCS8PrivateKey(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestPKIXPublicKey$
+// go test -v -cover -run=^TestPKIXPublicKey$
 func TestPKIXPublicKey(t *testing.T) {
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
@@ -78,7 +78,7 @@ func TestPKIXPublicKey(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestPKCS1PublicKey$
+// go test -v -cover -run=^TestPKCS1PublicKey$
 func TestPKCS1PublicKey(t *testing.T) {
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {

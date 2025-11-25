@@ -18,7 +18,7 @@
 * 支持 DES/3DES/AES 等对称加密算法。
 * 支持 RSA/ECC 等非对称加密算法。
 * 支持 ECB/CBC/OFB/CFB/CTR/GCM 等分组模式。
-* 支持 NONE/ZERO/PKCS5/PKCS7 等填充方式。
+* 支持 ZERO/PKCS5/PKCS7 等字节填充方式。
 
 _历史版本的特性请查看 [HISTORY.md](./HISTORY.md)。未来版本的新特性和计划请查看 [FUTURE.md](./FUTURE.md)。_
 

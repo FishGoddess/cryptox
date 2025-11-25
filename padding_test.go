@@ -34,7 +34,7 @@ func testPadding(t *testing.T, padding Padding, testCases []paddingTestCase) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestPaddingNone$
+// go test -v -cover -run=^TestPaddingNone$
 func TestPaddingNone(t *testing.T) {
 	testCases := []paddingTestCase{
 		{Data: Bytes{}, Want: Bytes{}},
@@ -46,7 +46,7 @@ func TestPaddingNone(t *testing.T) {
 	testPadding(t, PaddingNone, testCases)
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestPaddingZero$
+// go test -v -cover -run=^TestPaddingZero$
 func TestPaddingZero(t *testing.T) {
 	testCases := []paddingTestCase{
 		{Data: Bytes{}, Want: Bytes{0, 0, 0, 0, 0, 0, 0, 0}},
@@ -58,7 +58,7 @@ func TestPaddingZero(t *testing.T) {
 	testPadding(t, PaddingZero, testCases)
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestPaddingPKCS5$
+// go test -v -cover -run=^TestPaddingPKCS5$
 func TestPaddingPKCS5(t *testing.T) {
 	testCases := []paddingTestCase{
 		{Data: Bytes{}, Want: Bytes{8, 8, 8, 8, 8, 8, 8, 8}},
@@ -70,7 +70,7 @@ func TestPaddingPKCS5(t *testing.T) {
 	testPadding(t, PaddingPKCS5, testCases)
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestPaddingPKCS7$
+// go test -v -cover -run=^TestPaddingPKCS7$
 func TestPaddingPKCS7(t *testing.T) {
 	testCases := []paddingTestCase{
 		{Data: Bytes{}, Want: Bytes{8, 8, 8, 8, 8, 8, 8, 8}},

@@ -7,20 +7,20 @@ package main
 import (
 	"fmt"
 
-	"github.com/FishGoddess/cryptox"
+	"github.com/FishGoddess/cryptox/bytes/rand"
 )
 
 func main() {
 	// We provide some rand functions for you.
 	// If you want to generate some keys or ivs, just feel free to use them.
-	bs := cryptox.GenerateBytes(32)
-	fmt.Println(bs)
+	bs := rand.Bytes(32)
+	fmt.Printf("%s\n", bs)
 
-	str := cryptox.GenerateString(64)
-	fmt.Println(str)
+	str := rand.String(64)
+	fmt.Printf("%s\n", str)
 
 	// Already have a byte slice? Try AppendBytes:
-	bs = make(cryptox.Bytes, 0, 16)
-	bs = cryptox.AppendBytes(bs, 16)
-	fmt.Println(bs)
+	bs = []byte{'a', 'b', 'c', '-'}
+	bs = rand.AppendBytes(bs, 16)
+	fmt.Printf("%s\n", bs)
 }

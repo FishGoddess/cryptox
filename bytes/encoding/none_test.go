@@ -6,13 +6,13 @@ package encoding
 
 import "testing"
 
-// go test -v -cover -run=^TestBase64$
-func TestBase64(t *testing.T) {
+// go test -v -cover -run=^TestNone$
+func TestNone(t *testing.T) {
 	testCases := []testCase{
 		{Data: []byte{}, EncodingData: []byte{}},
-		{Data: []byte("Hello World"), EncodingData: []byte("SGVsbG8gV29ybGQ=")},
-		{Data: []byte("你好，世界"), EncodingData: []byte("5L2g5aW977yM5LiW55WM")},
+		{Data: []byte("123"), EncodingData: []byte("123")},
+		{Data: []byte("你好，世界"), EncodingData: []byte("你好，世界")},
 	}
 
-	testEncoding(t, Base64, testCases)
+	testEncoding(t, None, testCases)
 }

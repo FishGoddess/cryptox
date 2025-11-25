@@ -18,7 +18,7 @@
 * DES/3DES/AES encrypt and decrypt supports.
 * RSA/ECC encrypt and decrypt supports.
 * ECB/CBC/OFB/CFB/CTR/GCM mode supports.
-* NONE/ZERO/PKCS5/PKCS7 padding supports.
+* ZERO/PKCS5/PKCS7 padding supports.
 
 _Check [HISTORY.md](./HISTORY.md) and [FUTURE.md](./FUTURE.md) to know about more information._
 

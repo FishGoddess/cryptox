@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestGenerateKeys$
+// go test -v -cover -run=^TestGenerateKeys$
 func TestGenerateKeys(t *testing.T) {
 	privateKey, publicKey, err := GenerateKeys(2048)
 	if err != nil {
@@ -21,7 +21,7 @@ func TestGenerateKeys(t *testing.T) {
 	t.Log("Private Key:", publicKey)
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestGeneratePrivateKey$
+// go test -v -cover -run=^TestGeneratePrivateKey$
 func TestGeneratePrivateKey(t *testing.T) {
 	privateKey, err := GeneratePrivateKey(2048)
 	if err != nil {
@@ -31,7 +31,7 @@ func TestGeneratePrivateKey(t *testing.T) {
 	t.Log("Private Key:", privateKey)
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestGeneratePublicKey$
+// go test -v -cover -run=^TestGeneratePublicKey$
 func TestGeneratePublicKey(t *testing.T) {
 	privateKey, publicKey1, err := GenerateKeys(2048)
 	if err != nil {
@@ -48,7 +48,7 @@ func TestGeneratePublicKey(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestParsePrivateKey$
+// go test -v -cover -run=^TestParsePrivateKey$
 func TestParsePrivateKey(t *testing.T) {
 	privateKey, err := GeneratePrivateKey(2048)
 	if err != nil {
@@ -65,7 +65,7 @@ func TestParsePrivateKey(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestParsePublicKey$
+// go test -v -cover -run=^TestParsePublicKey$
 func TestParsePublicKey(t *testing.T) {
 	privateKey, err := GeneratePrivateKey(2048)
 	if err != nil {
@@ -87,7 +87,7 @@ func TestParsePublicKey(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestReadPrivateKey$
+// go test -v -cover -run=^TestReadPrivateKey$
 func TestReadPrivateKey(t *testing.T) {
 	privateKey, err := GeneratePrivateKey(2048)
 	if err != nil {
@@ -106,7 +106,7 @@ func TestReadPrivateKey(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestReadPublicKey$
+// go test -v -cover -run=^TestReadPublicKey$
 func TestReadPublicKey(t *testing.T) {
 	privateKey, err := GeneratePrivateKey(2048)
 	if err != nil {
@@ -130,7 +130,7 @@ func TestReadPublicKey(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestLoadPrivateKey$
+// go test -v -cover -run=^TestLoadPrivateKey$
 func TestLoadPrivateKey(t *testing.T) {
 	privateKey, err := GeneratePrivateKey(2048)
 	if err != nil {
@@ -154,7 +154,7 @@ func TestLoadPrivateKey(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestLoadPublicKey$
+// go test -v -cover -run=^TestLoadPublicKey$
 func TestLoadPublicKey(t *testing.T) {
 	privateKey, err := GeneratePrivateKey(2048)
 	if err != nil {
@@ -183,7 +183,7 @@ func TestLoadPublicKey(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestMustLoadPrivateKey$
+// go test -v -cover -run=^TestMustLoadPrivateKey$
 func TestMustLoadPrivateKey(t *testing.T) {
 	privateKey, err := GeneratePrivateKey(2048)
 	if err != nil {
@@ -210,7 +210,7 @@ func TestMustLoadPrivateKey(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestMustLoadPublicKey$
+// go test -v -cover -run=^TestMustLoadPublicKey$
 func TestMustLoadPublicKey(t *testing.T) {
 	privateKey, err := GeneratePrivateKey(2048)
 	if err != nil {

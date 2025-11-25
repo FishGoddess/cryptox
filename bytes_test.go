@@ -13,7 +13,7 @@ import (
 	"testing"
 )
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestBytes$
+// go test -v -cover -run=^TestBytes$
 func TestBytes(t *testing.T) {
 	str := "Hello World"
 
@@ -33,7 +33,7 @@ func TestBytes(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestBytesClone$
+// go test -v -cover -run=^TestBytesClone$
 func TestBytesClone(t *testing.T) {
 	bs := Bytes("Hello World")
 	newSlice := bs.Clone()
@@ -48,7 +48,7 @@ func TestBytesClone(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestBytesWriteTo$
+// go test -v -cover -run=^TestBytesWriteTo$
 func TestBytesWriteTo(t *testing.T) {
 	bs := Bytes("你好，世界")
 
@@ -67,7 +67,7 @@ func TestBytesWriteTo(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestBytesWriteToFile$
+// go test -v -cover -run=^TestBytesWriteToFile$
 func TestBytesWriteToFile(t *testing.T) {
 	bs := Bytes("你好，世界")
 
@@ -93,7 +93,7 @@ func TestBytesWriteToFile(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestParseHex$
+// go test -v -cover -run=^TestParseHex$
 func TestParseHex(t *testing.T) {
 	cases := map[string]string{
 		"":                               "",
@@ -113,7 +113,7 @@ func TestParseHex(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestParseBase64$
+// go test -v -cover -run=^TestParseBase64$
 func TestParseBase64(t *testing.T) {
 	cases := map[string]string{
 		"":                     "",

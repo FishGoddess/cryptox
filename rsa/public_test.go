@@ -32,7 +32,7 @@ uwIDAQAB
 	return publicKey
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestPublicKey$
+// go test -v -cover -run=^TestPublicKey$
 func TestPublicKey(t *testing.T) {
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
@@ -77,7 +77,7 @@ func TestPublicKey(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestPublicKeyEncryptPKCS1v15$
+// go test -v -cover -run=^TestPublicKeyEncryptPKCS1v15$
 func TestPublicKeyEncryptPKCS1v15(t *testing.T) {
 	publicKey := newTestPublicKey(t)
 	privateKey := newTestPrivateKey(t)
@@ -103,7 +103,7 @@ func TestPublicKeyEncryptPKCS1v15(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestPublicKeyEncryptOAEP$
+// go test -v -cover -run=^TestPublicKeyEncryptOAEP$
 func TestPublicKeyEncryptOAEP(t *testing.T) {
 	publicKey := newTestPublicKey(t)
 	privateKey := newTestPrivateKey(t)
@@ -129,7 +129,7 @@ func TestPublicKeyEncryptOAEP(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestPublicKeyVerifyPKCS1v15$
+// go test -v -cover -run=^TestPublicKeyVerifyPKCS1v15$
 func TestPublicKeyVerifyPKCS1v15(t *testing.T) {
 	publicKey := newTestPublicKey(t)
 	privateKey := newTestPrivateKey(t)
@@ -151,7 +151,7 @@ func TestPublicKeyVerifyPKCS1v15(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestPublicKeyVerifyPSS$
+// go test -v -cover -run=^TestPublicKeyVerifyPSS$
 func TestPublicKeyVerifyPSS(t *testing.T) {
 	publicKey := newTestPublicKey(t)
 	privateKey := newTestPrivateKey(t)

@@ -7,25 +7,25 @@ package main
 import (
 	"testing"
 
-	"github.com/FishGoddess/cryptox"
+	"github.com/FishGoddess/cryptox/bytes/rand"
 )
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^$ -bench=^BenchmarkGenerateBytes$
-func BenchmarkGenerateBytes(b *testing.B) {
+// go test -v -cover -run=^$ -bench=^BenchmarkBytes$
+func BenchmarkBytes(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		cryptox.GenerateBytes(16)
+		rand.Bytes(16)
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^$ -bench=^BenchmarkGenerateString$
-func BenchmarkGenerateString(b *testing.B) {
+// go test -v -cover -run=^$ -bench=^BenchmarkString$
+func BenchmarkString(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		cryptox.GenerateString(16)
+		rand.String(16)
 	}
 }

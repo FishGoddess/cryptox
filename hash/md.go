@@ -7,11 +7,11 @@ package hash
 import (
 	"crypto/md5"
 
-	"github.com/FishGoddess/cryptox"
+	"github.com/FishGoddess/cryptox/bytes/encoding"
 )
 
 // MD5 uses md5 to hash bs.
-func MD5(bs cryptox.Bytes) cryptox.Bytes {
+func MD5(bs []byte, encoding encoding.Encoding) []byte {
 	sum := md5.Sum(bs)
-	return sum[:]
+	return encoding.Encode(sum[:])
 }

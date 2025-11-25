@@ -9,35 +9,35 @@ import (
 	"crypto/sha256"
 	"crypto/sha512"
 
-	"github.com/FishGoddess/cryptox"
+	"github.com/FishGoddess/cryptox/bytes/encoding"
 )
 
 // SHA1 uses sha1 to hash bs.
-func SHA1(bs cryptox.Bytes) cryptox.Bytes {
+func SHA1(bs []byte, encoding encoding.Encoding) []byte {
 	sum := sha1.Sum(bs)
-	return sum[:]
+	return encoding.Encode(sum[:])
 }
 
 // SHA224 uses sha224 to hash bs.
-func SHA224(bs cryptox.Bytes) cryptox.Bytes {
+func SHA224(bs []byte, encoding encoding.Encoding) []byte {
 	sum := sha256.Sum224(bs)
-	return sum[:]
+	return encoding.Encode(sum[:])
 }
 
 // SHA256 uses sha256 to hash bs.
-func SHA256(bs cryptox.Bytes) cryptox.Bytes {
+func SHA256(bs []byte, encoding encoding.Encoding) []byte {
 	sum := sha256.Sum256(bs)
-	return sum[:]
+	return encoding.Encode(sum[:])
 }
 
 // SHA384 uses sha384 to hash bs.
-func SHA384(bs cryptox.Bytes) cryptox.Bytes {
+func SHA384(bs []byte, encoding encoding.Encoding) []byte {
 	sum := sha512.Sum384(bs)
-	return sum[:]
+	return encoding.Encode(sum[:])
 }
 
 // SHA512 uses sha512 to hash bs.
-func SHA512(bs cryptox.Bytes) cryptox.Bytes {
+func SHA512(bs []byte, encoding encoding.Encoding) []byte {
 	sum := sha512.Sum512(bs)
-	return sum[:]
+	return encoding.Encode(sum[:])
 }

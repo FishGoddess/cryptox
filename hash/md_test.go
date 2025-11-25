@@ -4,20 +4,35 @@
 
 package hash
 
-import "testing"
+import (
+	"crypto/md5"
+	"slices"
+	"testing"
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestMD5$
+	"github.com/FishGoddess/cryptox/bytes/encoding"
+)
+
+// go test -v -cover -run=^TestMD5$
 func TestMD5(t *testing.T) {
-	cases := map[string]string{
-		"":      "d41d8cd98f00b204e9800998ecf8427e",
-		"123":   "202cb962ac59075b964b07152d234b70",
-		"你好，世界": "dbefd3ada018615b35588a01e216ae6e",
+	testCases := map[string][]byte{
+		"":      []byte("d41d8cd98f00b204e9800998ecf8427e"),
+		"123":   []byte("202cb962ac59075b964b07152d234b70"),
+		"你好，世界": []byte("dbefd3ada018615b35588a01e216ae6e"),
 	}
 
-	for input, expect := range cases {
-		sum := MD5([]byte(input))
-		if sum.Hex() != expect {
-			t.Fatalf("input %s: sum.Hex() %s != expect %s", input, sum.Hex(), expect)
+	for data, expect := range testCases {
+		got := MD5([]byte(data), encoding.Hex)
+		if !slices.Equal(got, expect) {
+			t.Fatalf("data %s: got %s != expect %s", data, got, expect)
+		}
+
+		h := md5.New()
+		h.Write([]byte(data))
+
+		expect = h.Sum(nil)
+		expect = encoding.Hex.Encode(expect)
+		if !slices.Equal(got, expect) {
+			t.Fatalf("data %s: got %s != expect %s", data, got, expect)
 		}
 	}
 }

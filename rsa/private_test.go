@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"github.com/FishGoddess/cryptox"
+	bsrand "github.com/FishGoddess/cryptox/bytes/rand"
 )
 
 func newTestPrivateKey(t *testing.T) PrivateKey {
@@ -50,7 +51,7 @@ jqy/B5Twb/tggfdM5id+3frrF2xf7/bgPwNij9zLKovJgEIALil4
 	return privateKey
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestPrivateKey$
+// go test -v -cover -run=^TestPrivateKey$
 func TestPrivateKey(t *testing.T) {
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
@@ -93,7 +94,7 @@ func TestPrivateKey(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestPrivateKeyDecryptPKCS1v15$
+// go test -v -cover -run=^TestPrivateKeyDecryptPKCS1v15$
 func TestPrivateKeyDecryptPKCS1v15(t *testing.T) {
 	publicKey := newTestPublicKey(t)
 	privateKey := newTestPrivateKey(t)
@@ -119,7 +120,7 @@ func TestPrivateKeyDecryptPKCS1v15(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestPrivateKeyDecryptPKCS1v15SessionKey$
+// go test -v -cover -run=^TestPrivateKeyDecryptPKCS1v15SessionKey$
 func TestPrivateKeyDecryptPKCS1v15SessionKey(t *testing.T) {
 	publicKey := newTestPublicKey(t)
 	privateKey := newTestPrivateKey(t)
@@ -134,7 +135,7 @@ func TestPrivateKeyDecryptPKCS1v15SessionKey(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		sessionKey := cryptox.GenerateBytes(32)
+		sessionKey := bsrand.Bytes(32)
 		if err = privateKey.DecryptPKCS1v15SessionKey(encrypted, sessionKey); err != nil {
 			t.Fatal(err)
 		}
@@ -150,7 +151,7 @@ func TestPrivateKeyDecryptPKCS1v15SessionKey(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestPrivateKeyDecryptOAEP$
+// go test -v -cover -run=^TestPrivateKeyDecryptOAEP$
 func TestPrivateKeyDecryptOAEP(t *testing.T) {
 	publicKey := newTestPublicKey(t)
 	privateKey := newTestPrivateKey(t)
@@ -176,7 +177,7 @@ func TestPrivateKeyDecryptOAEP(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestPrivateKeySignPKCS1v15$
+// go test -v -cover -run=^TestPrivateKeySignPKCS1v15$
 func TestPrivateKeySignPKCS1v15(t *testing.T) {
 	publicKey := newTestPublicKey(t)
 	privateKey := newTestPrivateKey(t)
@@ -198,7 +199,7 @@ func TestPrivateKeySignPKCS1v15(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestPrivateKeySignPSS$
+// go test -v -cover -run=^TestPrivateKeySignPSS$
 func TestPrivateKeySignPSS(t *testing.T) {
 	publicKey := newTestPublicKey(t)
 	privateKey := newTestPrivateKey(t)

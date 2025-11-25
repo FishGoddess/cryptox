@@ -39,7 +39,7 @@ func (tr *testResult) compareTo(bs cryptox.Bytes) error {
 	return nil
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestNewBlock$
+// go test -v -cover -run=^TestNewBlock$
 func TestNewBlock(t *testing.T) {
 	block, blockSize, err := newBlock(testKey)
 	if err != nil {
@@ -64,7 +64,7 @@ func TestNewBlock(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestECB$
+// go test -v -cover -run=^TestECB$
 func TestECB(t *testing.T) {
 	cases := map[string]*testResult{
 		"": {
@@ -105,7 +105,7 @@ func TestECB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestCBC$
+// go test -v -cover -run=^TestCBC$
 func TestCBC(t *testing.T) {
 	cases := map[string]*testResult{
 		"": {
@@ -146,7 +146,7 @@ func TestCBC(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestCFB$
+// go test -v -cover -run=^TestCFB$
 func TestCFB(t *testing.T) {
 	cases := map[string]*testResult{
 		"": {
@@ -187,7 +187,7 @@ func TestCFB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestOFB$
+// go test -v -cover -run=^TestOFB$
 func TestOFB(t *testing.T) {
 	cases := map[string]*testResult{
 		"": {
@@ -228,7 +228,7 @@ func TestOFB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestCTR$
+// go test -v -cover -run=^TestCTR$
 func TestCTR(t *testing.T) {
 	cases := map[string]*testResult{
 		"": {

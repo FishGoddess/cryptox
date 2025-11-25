@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestMD5$
+// go test -v -cover -run=^TestMD5$
 func TestMD5(t *testing.T) {
 	cases := map[string]string{
 		"":      "63530468a04e386459855da0063b6596",
@@ -29,7 +29,7 @@ func TestMD5(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestSHA1$
+// go test -v -cover -run=^TestSHA1$
 func TestSHA1(t *testing.T) {
 	cases := map[string]string{
 		"":      "f42bb0eeb018ebbd4597ae7213711ec60760843f",
@@ -50,7 +50,7 @@ func TestSHA1(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestSHA224$
+// go test -v -cover -run=^TestSHA224$
 func TestSHA224(t *testing.T) {
 	cases := map[string]string{
 		"":      "5aa677c13ce1128eeb3a5c01cef7f16557cd0b76d18fd557d6ac3962",
@@ -71,7 +71,7 @@ func TestSHA224(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestSHA256$
+// go test -v -cover -run=^TestSHA256$
 func TestSHA256(t *testing.T) {
 	cases := map[string]string{
 		"":      "5d5d139563c95b5967b9bd9a8c9b233a9dedb45072794cd232dc1b74832607d0",
@@ -92,7 +92,7 @@ func TestSHA256(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestSHA384$
+// go test -v -cover -run=^TestSHA384$
 func TestSHA384(t *testing.T) {
 	cases := map[string]string{
 		"":      "99f44bb4e73c9d0ef26533596c8d8a32a5f8c10a9b997d30d89a7e35ba1ccf200b985f72431202b891fe350da410e43f",
@@ -113,7 +113,7 @@ func TestSHA384(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestSHA512$
+// go test -v -cover -run=^TestSHA512$
 func TestSHA512(t *testing.T) {
 	cases := map[string]string{
 		"":      "84fa5aa0279bbc473267d05a53ea03310a987cecc4c1535ff29b6d76b8f1444a728df3aadb89d4a9a6709e1998f373566e8f824a8ca93b1821f0b69bc2a2f65e",

@@ -15,7 +15,7 @@ var (
 	testTripleKey = []byte("123456788765432112345678")
 )
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestNewTripleBlock$
+// go test -v -cover -run=^TestNewTripleBlock$
 func TestNewTripleBlock(t *testing.T) {
 	block, blockSize, err := newTripleBlock(testTripleKey)
 	if err != nil {
@@ -40,7 +40,7 @@ func TestNewTripleBlock(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestTripleECB$
+// go test -v -cover -run=^TestTripleECB$
 func TestTripleECB(t *testing.T) {
 	cases := map[string]*testResult{
 		"": {
@@ -81,7 +81,7 @@ func TestTripleECB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestTripleCBC$
+// go test -v -cover -run=^TestTripleCBC$
 func TestTripleCBC(t *testing.T) {
 	cases := map[string]*testResult{
 		"": {
@@ -122,7 +122,7 @@ func TestTripleCBC(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestTripleCFB$
+// go test -v -cover -run=^TestTripleCFB$
 func TestTripleCFB(t *testing.T) {
 	cases := map[string]*testResult{
 		"": {
@@ -163,7 +163,7 @@ func TestTripleCFB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestTripleOFB$
+// go test -v -cover -run=^TestTripleOFB$
 func TestTripleOFB(t *testing.T) {
 	cases := map[string]*testResult{
 		"": {
@@ -204,7 +204,7 @@ func TestTripleOFB(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestTripleCTR$
+// go test -v -cover -run=^TestTripleCTR$
 func TestTripleCTR(t *testing.T) {
 	cases := map[string]*testResult{
 		"": {
