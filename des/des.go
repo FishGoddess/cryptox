@@ -5,14 +5,16 @@
 package des
 
 import (
+	"bytes"
 	"crypto/cipher"
 	"crypto/des"
 	"fmt"
 
-	"github.com/FishGoddess/cryptox"
+	"github.com/FishGoddess/cryptox/bytes/encoding"
+	"github.com/FishGoddess/cryptox/bytes/padding"
 )
 
-func newBlock(key cryptox.Bytes) (cipher.Block, int, error) {
+func newBlock(key []byte) (cipher.Block, int, error) {
 	block, err := des.NewCipher(key)
 	if err != nil {
 		return nil, 0, err
@@ -22,15 +24,15 @@ func newBlock(key cryptox.Bytes) (cipher.Block, int, error) {
 	return block, blockSize, nil
 }
 
-func EncryptECB(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+func EncryptECB(bs []byte, key []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	bs = bs.Clone()
-	src := padding.Padding(bs, blockSize)
-	dst := src.Clone()
+	src := bytes.Clone(bs)
+	src = padding.Pad(src, blockSize)
+	dst := bytes.Clone(src)
 
 	if len(src)%blockSize != 0 {
 		return nil, fmt.Errorf("cryptox/des: encrypt ecb len(src) %d %% blockSize %d != 0", len(src), blockSize)
@@ -46,17 +48,22 @@ func EncryptECB(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (c
 		end += blockSize
 	}
 
+	dst = encoding.Encode(dst)
 	return dst, nil
 }
 
-func DecryptECB(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+func DecryptECB(bs []byte, key []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	src := bs
-	dst := bs.Clone()
+	src, err := encoding.Decode(bs)
+	if err != nil {
+		return nil, err
+	}
+
+	dst := bytes.Clone(src)
 
 	if len(src)%blockSize != 0 {
 		return nil, fmt.Errorf("cryptox/des: decrypt ecb len(src) %d %% blockSize %d != 0", len(src), blockSize)
@@ -72,113 +79,133 @@ func DecryptECB(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (c
 		end += blockSize
 	}
 
-	return padding.UndoPadding(dst, blockSize)
+	return padding.Unpad(dst, blockSize)
 }
 
-func EncryptCBC(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+func EncryptCBC(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	bs = bs.Clone()
-	src := padding.Padding(bs, blockSize)
-	dst := src.Clone()
+	src := bytes.Clone(bs)
+	src = padding.Pad(src, blockSize)
+	dst := bytes.Clone(src)
 
 	cipher.NewCBCEncrypter(block, iv).CryptBlocks(dst, src)
+	dst = encoding.Encode(dst)
 	return dst, nil
 }
 
-func DecryptCBC(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+func DecryptCBC(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	src := bs
-	dst := src.Clone()
+	src, err := encoding.Decode(bs)
+	if err != nil {
+		return nil, err
+	}
+
+	dst := bytes.Clone(src)
 
 	cipher.NewCBCDecrypter(block, iv).CryptBlocks(dst, src)
-	return padding.UndoPadding(dst, blockSize)
+	return padding.Unpad(dst, blockSize)
 }
 
-func EncryptCFB(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+func EncryptCFB(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	bs = bs.Clone()
-	src := padding.Padding(bs, blockSize)
-	dst := src.Clone()
+	src := bytes.Clone(bs)
+	src = padding.Pad(src, blockSize)
+	dst := bytes.Clone(src)
 
 	cipher.NewCFBEncrypter(block, iv).XORKeyStream(dst, src)
+	dst = encoding.Encode(dst)
 	return dst, nil
 }
 
-func DecryptCFB(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+func DecryptCFB(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	src := bs
-	dst := bs.Clone()
+	src, err := encoding.Decode(bs)
+	if err != nil {
+		return nil, err
+	}
+
+	dst := bytes.Clone(src)
 
 	cipher.NewCFBDecrypter(block, iv).XORKeyStream(dst, src)
-	return padding.UndoPadding(dst, blockSize)
+	return padding.Unpad(dst, blockSize)
 }
 
-func EncryptOFB(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+func EncryptOFB(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	bs = bs.Clone()
-	src := padding.Padding(bs, blockSize)
-	dst := src.Clone()
+	src := bytes.Clone(bs)
+	src = padding.Pad(src, blockSize)
+	dst := bytes.Clone(src)
 
 	cipher.NewOFB(block, iv).XORKeyStream(dst, src)
+	dst = encoding.Encode(dst)
 	return dst, nil
 }
 
-func DecryptOFB(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+func DecryptOFB(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	src := bs
-	dst := bs.Clone()
+	src, err := encoding.Decode(bs)
+	if err != nil {
+		return nil, err
+	}
+
+	dst := bytes.Clone(src)
 
 	cipher.NewOFB(block, iv).XORKeyStream(dst, src)
-	return padding.UndoPadding(dst, blockSize)
+	return padding.Unpad(dst, blockSize)
 }
 
-func EncryptCTR(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+func EncryptCTR(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	bs = bs.Clone()
-	src := padding.Padding(bs, blockSize)
-	dst := src.Clone()
+	src := bytes.Clone(bs)
+	src = padding.Pad(src, blockSize)
+	dst := bytes.Clone(src)
 
 	cipher.NewCTR(block, iv).XORKeyStream(dst, src)
+	dst = encoding.Encode(dst)
 	return dst, nil
 }
 
-func DecryptCTR(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+func DecryptCTR(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	src := bs
-	dst := bs.Clone()
+	src, err := encoding.Decode(bs)
+	if err != nil {
+		return nil, err
+	}
+
+	dst := bytes.Clone(src)
 
 	cipher.NewCTR(block, iv).XORKeyStream(dst, src)
-	return padding.UndoPadding(dst, blockSize)
+	return padding.Unpad(dst, blockSize)
 }

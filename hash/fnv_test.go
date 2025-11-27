@@ -23,7 +23,7 @@ func TestFnv32(t *testing.T) {
 	for data, expect := range testCases {
 		got := Fnv32([]byte(data))
 		if got != expect {
-			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 
 		hash32 := fnv.New32()
@@ -31,7 +31,7 @@ func TestFnv32(t *testing.T) {
 
 		expect = hash32.Sum32()
 		if got != expect {
-			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 	}
 }
@@ -47,7 +47,7 @@ func TestFnv32a(t *testing.T) {
 	for data, expect := range testCases {
 		got := Fnv32a([]byte(data))
 		if got != expect {
-			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 
 		hash32 := fnv.New32a()
@@ -55,7 +55,7 @@ func TestFnv32a(t *testing.T) {
 
 		expect = hash32.Sum32()
 		if got != expect {
-			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 	}
 }
@@ -71,7 +71,7 @@ func TestFnv64(t *testing.T) {
 	for data, expect := range testCases {
 		got := Fnv64([]byte(data))
 		if got != expect {
-			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 
 		hash64 := fnv.New64()
@@ -79,7 +79,7 @@ func TestFnv64(t *testing.T) {
 
 		expect = hash64.Sum64()
 		if got != expect {
-			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 	}
 }
@@ -95,7 +95,7 @@ func TestFnv64a(t *testing.T) {
 	for data, expect := range testCases {
 		got := Fnv64a([]byte(data))
 		if got != expect {
-			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 
 		hash64 := fnv.New64a()
@@ -103,7 +103,7 @@ func TestFnv64a(t *testing.T) {
 
 		expect = hash64.Sum64()
 		if got != expect {
-			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 	}
 }
@@ -119,7 +119,7 @@ func TestFnv128(t *testing.T) {
 	for data, expect := range testCases {
 		got := Fnv128([]byte(data), encoding.Hex)
 		if !slices.Equal(got, expect) {
-			t.Fatalf("data %s: got %s != expect %s", data, got, expect)
+			t.Fatalf("data %q: got %s != expect %s", data, got, expect)
 		}
 
 		hash128 := fnv.New128()
@@ -128,7 +128,7 @@ func TestFnv128(t *testing.T) {
 		expect = hash128.Sum(nil)
 		expect = encoding.Hex.Encode(expect)
 		if !slices.Equal(got, expect) {
-			t.Fatalf("data %s: got %s != expectBytes %s", data, got, expect)
+			t.Fatalf("data %q: got %s != expectBytes %s", data, got, expect)
 		}
 	}
 }
@@ -144,7 +144,7 @@ func TestFnv128a(t *testing.T) {
 	for data, expect := range testCases {
 		got := Fnv128a([]byte(data), encoding.Hex)
 		if !slices.Equal(got, expect) {
-			t.Fatalf("data %s: got %s != expect %s", data, got, expect)
+			t.Fatalf("data %q: got %s != expect %s", data, got, expect)
 		}
 
 		hash128 := fnv.New128a()
@@ -153,7 +153,7 @@ func TestFnv128a(t *testing.T) {
 		expect = hash128.Sum(nil)
 		expect = encoding.Hex.Encode(expect)
 		if !slices.Equal(got, expect) {
-			t.Fatalf("data %s: got %s != expect %s", data, got, expect)
+			t.Fatalf("data %q: got %s != expect %s", data, got, expect)
 		}
 	}
 }

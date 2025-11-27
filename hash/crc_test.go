@@ -21,12 +21,12 @@ func TestCRC32(t *testing.T) {
 	for data, expect := range testCases {
 		got := CRC32([]byte(data), tableIEEE)
 		if got != expect {
-			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 
 		expect = crc32.ChecksumIEEE([]byte(data))
 		if got != expect {
-			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 	}
 }
@@ -42,12 +42,12 @@ func TestCRC32IEEE(t *testing.T) {
 	for data, expect := range testCases {
 		got := CRC32IEEE([]byte(data))
 		if got != expect {
-			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 
 		expect = crc32.ChecksumIEEE([]byte(data))
 		if got != expect {
-			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 	}
 }
@@ -63,12 +63,12 @@ func TestCRC64(t *testing.T) {
 	for data, expect := range testCases {
 		got := CRC64([]byte(data), tableISO)
 		if got != expect {
-			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 
 		expect = crc64.Checksum([]byte(data), crc64.MakeTable(crc64.ISO))
 		if got != expect {
-			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 	}
 }
@@ -84,12 +84,12 @@ func TestCRC64ISO(t *testing.T) {
 	for data, expect := range testCases {
 		got := CRC64ISO([]byte(data))
 		if got != expect {
-			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 
 		expect = crc64.Checksum([]byte(data), crc64.MakeTable(crc64.ISO))
 		if got != expect {
-			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 	}
 }
@@ -105,12 +105,12 @@ func TestCRC64ECMA(t *testing.T) {
 	for data, expect := range testCases {
 		got := CRC64ECMA([]byte(data))
 		if got != expect {
-			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 
 		expect = crc64.Checksum([]byte(data), crc64.MakeTable(crc64.ECMA))
 		if got != expect {
-			t.Fatalf("data %s: got %d != expect %d", data, got, expect)
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 	}
 }

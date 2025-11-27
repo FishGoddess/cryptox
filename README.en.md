@@ -28,7 +28,6 @@ _Check [HISTORY.md](./HISTORY.md) and [FUTURE.md](./FUTURE.md) to know about mor
 $ go get -u github.com/FishGoddess/cryptox
 ```
 
-* [rand](_examples/rand.go)
 * [hash](_examples/hash.go)
 * [hmac](_examples/hmac.go)
 * [des](_examples/des.go)

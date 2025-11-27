@@ -28,7 +28,6 @@ _历史版本的特性请查看 [HISTORY.md](./HISTORY.md)。未来版本的新�
 $ go get -u github.com/FishGoddess/cryptox
 ```
 
-* [rand](_examples/rand.go)
 * [hash](_examples/hash.go)
 * [hmac](_examples/hmac.go)
 * [des](_examples/des.go)
