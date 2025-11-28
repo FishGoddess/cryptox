@@ -5,14 +5,16 @@
 package des
 
 import (
+	"bytes"
 	"crypto/cipher"
 	"crypto/des"
 	"fmt"
 
-	"github.com/FishGoddess/cryptox"
+	"github.com/FishGoddess/cryptox/bytes/encoding"
+	"github.com/FishGoddess/cryptox/bytes/padding"
 )
 
-func newTripleBlock(key cryptox.Bytes) (cipher.Block, int, error) {
+func newTripleBlock(key []byte) (cipher.Block, int, error) {
 	block, err := des.NewTripleDESCipher(key)
 	if err != nil {
 		return nil, 0, err
@@ -22,15 +24,15 @@ func newTripleBlock(key cryptox.Bytes) (cipher.Block, int, error) {
 	return block, blockSize, nil
 }
 
-func EncryptECBTriple(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+func EncryptTripleECB(bs []byte, key []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	bs = bs.Clone()
-	src := padding.Padding(bs, blockSize)
-	dst := src.Clone()
+	src := bytes.Clone(bs)
+	src = padding.Pad(src, blockSize)
+	dst := bytes.Clone(src)
 
 	if len(src)%blockSize != 0 {
 		return nil, fmt.Errorf("cryptox/des: encrypt ecb triple len(src) %d %% blockSize %d != 0", len(src), blockSize)
@@ -46,17 +48,22 @@ func EncryptECBTriple(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Byt
 		end += blockSize
 	}
 
+	dst = encoding.Encode(dst)
 	return dst, nil
 }
 
-func DecryptECBTriple(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+func DecryptTripleECB(bs []byte, key []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	src := bs
-	dst := bs.Clone()
+	src, err := encoding.Decode(bs)
+	if err != nil {
+		return nil, err
+	}
+
+	dst := bytes.Clone(src)
 
 	if len(src)%blockSize != 0 {
 		return nil, fmt.Errorf("cryptox/des: decrypt ecb triple len(src) %d %% blockSize %d != 0", len(src), blockSize)
@@ -72,113 +79,133 @@ func DecryptECBTriple(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Byt
 		end += blockSize
 	}
 
-	return padding.UndoPadding(dst, blockSize)
+	return padding.Unpad(dst, blockSize)
 }
 
-func EncryptCBCTriple(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+func EncryptTripleCBC(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	bs = bs.Clone()
-	src := padding.Padding(bs, blockSize)
-	dst := src.Clone()
+	src := bytes.Clone(bs)
+	src = padding.Pad(src, blockSize)
+	dst := bytes.Clone(src)
 
 	cipher.NewCBCEncrypter(block, iv).CryptBlocks(dst, src)
+	dst = encoding.Encode(dst)
 	return dst, nil
 }
 
-func DecryptCBCTriple(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+func DecryptTripleCBC(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	src := bs
-	dst := src.Clone()
+	src, err := encoding.Decode(bs)
+	if err != nil {
+		return nil, err
+	}
+
+	dst := bytes.Clone(src)
 
 	cipher.NewCBCDecrypter(block, iv).CryptBlocks(dst, src)
-	return padding.UndoPadding(dst, blockSize)
+	return padding.Unpad(dst, blockSize)
 }
 
-func EncryptCFBTriple(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+func EncryptTripleCFB(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	bs = bs.Clone()
-	src := padding.Padding(bs, blockSize)
-	dst := src.Clone()
+	src := bytes.Clone(bs)
+	src = padding.Pad(src, blockSize)
+	dst := bytes.Clone(src)
 
 	cipher.NewCFBEncrypter(block, iv).XORKeyStream(dst, src)
+	dst = encoding.Encode(dst)
 	return dst, nil
 }
 
-func DecryptCFBTriple(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+func DecryptTripleCFB(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	src := bs
-	dst := bs.Clone()
+	src, err := encoding.Decode(bs)
+	if err != nil {
+		return nil, err
+	}
+
+	dst := bytes.Clone(src)
 
 	cipher.NewCFBDecrypter(block, iv).XORKeyStream(dst, src)
-	return padding.UndoPadding(dst, blockSize)
+	return padding.Unpad(dst, blockSize)
 }
 
-func EncryptOFBTriple(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+func EncryptTripleOFB(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	bs = bs.Clone()
-	src := padding.Padding(bs, blockSize)
-	dst := src.Clone()
+	src := bytes.Clone(bs)
+	src = padding.Pad(src, blockSize)
+	dst := bytes.Clone(src)
 
 	cipher.NewOFB(block, iv).XORKeyStream(dst, src)
+	dst = encoding.Encode(dst)
 	return dst, nil
 }
 
-func DecryptOFBTriple(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+func DecryptTripleOFB(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	src := bs
-	dst := bs.Clone()
+	src, err := encoding.Decode(bs)
+	if err != nil {
+		return nil, err
+	}
+
+	dst := bytes.Clone(src)
 
 	cipher.NewOFB(block, iv).XORKeyStream(dst, src)
-	return padding.UndoPadding(dst, blockSize)
+	return padding.Unpad(dst, blockSize)
 }
 
-func EncryptCTRTriple(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+func EncryptTripleCTR(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	bs = bs.Clone()
-	src := padding.Padding(bs, blockSize)
-	dst := src.Clone()
+	src := bytes.Clone(bs)
+	src = padding.Pad(src, blockSize)
+	dst := bytes.Clone(src)
 
 	cipher.NewCTR(block, iv).XORKeyStream(dst, src)
+	dst = encoding.Encode(dst)
 	return dst, nil
 }
 
-func DecryptCTRTriple(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+func DecryptTripleCTR(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	src := bs
-	dst := bs.Clone()
+	src, err := encoding.Decode(bs)
+	if err != nil {
+		return nil, err
+	}
+
+	dst := bytes.Clone(src)
 
 	cipher.NewCTR(block, iv).XORKeyStream(dst, src)
-	return padding.UndoPadding(dst, blockSize)
+	return padding.Unpad(dst, blockSize)
 }

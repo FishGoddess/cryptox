@@ -10,7 +10,6 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/FishGoddess/cryptox"
 	"github.com/FishGoddess/cryptox/bytes/encoding"
 	"github.com/FishGoddess/cryptox/bytes/padding"
 )
@@ -89,28 +88,6 @@ func testEncryptAndDecrypt(name string, encrypt testEncryptFunc, decrypt testDec
 		if !slices.Equal(decrypted, testCase.Data) {
 			return fmt.Errorf("%s encrypted base64 %q: got %s != expect %s", name, encrypted, decrypted, testCase.Data)
 		}
-	}
-
-	return nil
-}
-
-type testResult struct {
-	bs           []byte
-	hexString    string
-	base64String string
-}
-
-func (tr *testResult) compareTo(bs cryptox.Bytes) error {
-	if string(tr.bs) != string(bs) {
-		return fmt.Errorf("result bs %s != bs %s", tr.bs, bs)
-	}
-
-	if tr.hexString != bs.Hex() {
-		return fmt.Errorf("result hexString %s != bs hex %s", tr.hexString, bs.Hex())
-	}
-
-	if tr.base64String != bs.Base64() {
-		return fmt.Errorf("result base64String %s != bs base64 %s", tr.base64String, bs.Base64())
 	}
 
 	return nil

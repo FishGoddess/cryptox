@@ -8,7 +8,8 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/FishGoddess/cryptox"
+	"github.com/FishGoddess/cryptox/bytes/encoding"
+	"github.com/FishGoddess/cryptox/bytes/padding"
 	"github.com/FishGoddess/cryptox/des"
 )
 
@@ -21,26 +22,48 @@ func main() {
 	msg := []byte("你好，世界")
 	fmt.Printf("msg: %s\n", msg)
 
-	// We use ctr mode and no padding to encrypt data.
-	// Of course, you can choose another mode if you want.
-	// Also, you can choose no/zero/pkcs5/pkcs7 to padding data.
-	encrypted, err := des.EncryptCTR(key, iv, cryptox.PaddingNone, msg)
+	// For example, we can use ctr mode and no padding to encrypt data.
+	encrypt, err := des.EncryptCTR(msg, key, iv, padding.PaddingNone, encoding.None)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println("encrypted:", encrypted)
-	fmt.Println("encrypted hex:", encrypted.Hex())
-	fmt.Println("encrypted base64:", encrypted.Base64())
+	// Use encoding to output hex bytes.
+	encryptHex, err := des.EncryptCTR(msg, key, iv, padding.PaddingNone, encoding.Hex)
+	if err != nil {
+		panic(err)
+	}
+
+	// Use encoding to output base64 bytes.
+	encryptBase64, err := des.EncryptCTR(msg, key, iv, padding.PaddingNone, encoding.Base64)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("encrypt: %+v\n", encrypt)
+	fmt.Printf("encrypt hex: %s", encryptHex)
+	fmt.Printf("encrypt base64: %s", encryptBase64)
 
 	// We use ctr mode and no padding to decrypt data.
-	// Of course, you can choose another mode if you want.
-	// Also, you can choose no/zero/pkcs5/pkcs7 to undo padding data.
-	decrypted, err := des.DecryptCTR(key, iv, cryptox.PaddingNone, encrypted)
+	decrypt, err := des.DecryptCTR(encrypt, key, iv, padding.PaddingNone, encoding.None)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("decrypted: %s\n", decrypted)
-	fmt.Println("decrypted == msg", bytes.Equal(decrypted, msg))
+	// Use encoding to input hex bytes.
+	decryptHex, err := des.DecryptCTR(encryptHex, key, iv, padding.PaddingNone, encoding.Hex)
+	if err != nil {
+		panic(err)
+	}
+
+	// Use encoding to input base64 bytes..
+	decryptBase64, err := des.DecryptCTR(encryptBase64, key, iv, padding.PaddingNone, encoding.Base64)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("decrypt: %s\n", decrypt)
+	fmt.Printf("decrypt hex: %s\n", decryptHex)
+	fmt.Printf("decrypt base64: %s\n", decryptBase64)
+	fmt.Println("decrypt is right: %+v", bytes.Equal(decrypt, msg))
 }
