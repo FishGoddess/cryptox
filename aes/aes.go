@@ -217,8 +217,9 @@ func EncryptGCM(bs []byte, key []byte, nonce []byte, additional []byte, encoding
 		return nil, err
 	}
 
-	src := bytes.Clone(bs)
-	dst := src[:0]
+	src := bs
+	dst := bytes.Clone(src)
+	dst = dst[:0]
 
 	gcm, err := cipher.NewGCM(block)
 	if err != nil {
@@ -242,7 +243,8 @@ func DecryptGCM(bs []byte, key []byte, nonce []byte, additional []byte, encoding
 		return nil, err
 	}
 
-	dst := src[:0]
+	dst := bytes.Clone(src)
+	dst = dst[:0]
 
 	gcm, err := cipher.NewGCM(block)
 	if err != nil {

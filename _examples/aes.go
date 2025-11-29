@@ -10,20 +10,19 @@ import (
 
 	"github.com/FishGoddess/cryptox/aes"
 	"github.com/FishGoddess/cryptox/bytes/encoding"
-	"github.com/FishGoddess/cryptox/bytes/padding"
 )
 
 func main() {
 	// As you know, key is necessary in aes.
 	// However, not all modes need iv, such as ecb.
 	key := []byte("12345678876543211234567887654321")
-	iv := []byte("8765432112345678")
+	nonce := []byte("123456abcdef")
 
 	msg := []byte("你好，世界")
 	fmt.Printf("msg: %s\n", msg)
 
-	// Use ctr mode to encrypt data with no padding and encoding base64.
-	encrypt, err := aes.EncryptCTR(msg, key, iv, padding.None, encoding.Base64)
+	// Use gcm mode to encrypt data with no padding and encoding base64.
+	encrypt, err := aes.EncryptGCM(msg, key, nonce, nil, encoding.Base64)
 	if err != nil {
 		panic(err)
 	}
@@ -31,7 +30,7 @@ func main() {
 	fmt.Printf("encrypt: %s\n", encrypt)
 
 	// Decrypt data in the same way.
-	decrypt, err := aes.DecryptCTR(encrypt, key, iv, padding.None, encoding.Base64)
+	decrypt, err := aes.DecryptGCM(encrypt, key, nonce, nil, encoding.Base64)
 	if err != nil {
 		panic(err)
 	}

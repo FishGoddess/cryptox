@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	testKey = []byte("123456788765432112345678")
+	testKey = []byte("12345678876543211234567887654321")
 	testIV  = []byte("8765432112345678")
 )
 
@@ -123,21 +123,21 @@ func TestECB(t *testing.T) {
 	testCases := []testCase{
 		{
 			Data:              []byte(""),
-			EncryptData:       []byte{254, 194, 2, 244, 7, 195, 25, 158, 172, 88, 119, 145, 234, 39, 193, 11},
-			EncryptDataHex:    []byte("fec202f407c3199eac587791ea27c10b"),
-			EncryptDataBase64: []byte("/sIC9AfDGZ6sWHeR6ifBCw=="),
+			EncryptData:       []byte{46, 71, 207, 219, 18, 238, 77, 216, 177, 177, 186, 232, 19, 197, 96, 172},
+			EncryptDataHex:    []byte("2e47cfdb12ee4dd8b1b1bae813c560ac"),
+			EncryptDataBase64: []byte("LkfP2xLuTdixsbroE8VgrA=="),
 		},
 		{
 			Data:              []byte("123"),
-			EncryptData:       []byte{106, 180, 23, 31, 55, 116, 164, 43, 132, 49, 25, 42, 117, 236, 143, 154},
-			EncryptDataHex:    []byte("6ab4171f3774a42b8431192a75ec8f9a"),
-			EncryptDataBase64: []byte("arQXHzd0pCuEMRkqdeyPmg=="),
+			EncryptData:       []byte{173, 62, 123, 195, 111, 6, 34, 76, 86, 148, 68, 12, 179, 251, 241, 79},
+			EncryptDataHex:    []byte("ad3e7bc36f06224c5694440cb3fbf14f"),
+			EncryptDataBase64: []byte("rT57w28GIkxWlEQMs/vxTw=="),
 		},
 		{
 			Data:              []byte("你好，世界"),
-			EncryptData:       []byte{100, 112, 82, 33, 74, 230, 164, 206, 182, 33, 100, 255, 171, 204, 229, 193},
-			EncryptDataHex:    []byte("647052214ae6a4ceb62164ffabcce5c1"),
-			EncryptDataBase64: []byte("ZHBSIUrmpM62IWT/q8zlwQ=="),
+			EncryptData:       []byte{219, 84, 167, 180, 5, 230, 163, 133, 6, 168, 131, 20, 69, 151, 26, 163},
+			EncryptDataHex:    []byte("db54a7b405e6a38506a8831445971aa3"),
+			EncryptDataBase64: []byte("21SntAXmo4UGqIMURZcaow=="),
 		},
 	}
 
@@ -159,21 +159,21 @@ func TestCBC(t *testing.T) {
 	testCases := []testCase{
 		{
 			Data:              []byte(""),
-			EncryptData:       []byte{18, 228, 65, 237, 113, 28, 196, 195, 209, 118, 249, 189, 134, 92, 184, 59},
-			EncryptDataHex:    []byte("12e441ed711cc4c3d176f9bd865cb83b"),
-			EncryptDataBase64: []byte("EuRB7XEcxMPRdvm9hly4Ow=="),
+			EncryptData:       []byte{204, 67, 101, 243, 145, 108, 173, 196, 169, 232, 196, 238, 119, 228, 54, 135},
+			EncryptDataHex:    []byte("cc4365f3916cadc4a9e8c4ee77e43687"),
+			EncryptDataBase64: []byte("zENl85FsrcSp6MTud+Q2hw=="),
 		},
 		{
 			Data:              []byte("123"),
-			EncryptData:       []byte{239, 166, 198, 112, 30, 48, 8, 15, 67, 248, 202, 52, 213, 118, 239, 235},
-			EncryptDataHex:    []byte("efa6c6701e30080f43f8ca34d576efeb"),
-			EncryptDataBase64: []byte("76bGcB4wCA9D+Mo01Xbv6w=="),
+			EncryptData:       []byte{75, 118, 159, 30, 23, 149, 246, 32, 15, 157, 198, 43, 188, 232, 232, 176},
+			EncryptDataHex:    []byte("4b769f1e1795f6200f9dc62bbce8e8b0"),
+			EncryptDataBase64: []byte("S3afHheV9iAPncYrvOjosA=="),
 		},
 		{
 			Data:              []byte("你好，世界"),
-			EncryptData:       []byte{31, 24, 138, 155, 181, 90, 114, 79, 168, 189, 154, 134, 242, 22, 7, 90},
-			EncryptDataHex:    []byte("1f188a9bb55a724fa8bd9a86f216075a"),
-			EncryptDataBase64: []byte("HxiKm7Vack+ovZqG8hYHWg=="),
+			EncryptData:       []byte{102, 137, 142, 49, 76, 207, 80, 189, 78, 85, 77, 31, 166, 172, 180, 144},
+			EncryptDataHex:    []byte("66898e314ccf50bd4e554d1fa6acb490"),
+			EncryptDataBase64: []byte("ZomOMUzPUL1OVU0fpqy0kA=="),
 		},
 	}
 
@@ -195,21 +195,21 @@ func TestCFB(t *testing.T) {
 	testCases := []testCase{
 		{
 			Data:              []byte(""),
-			EncryptData:       []byte{129, 42, 238, 182, 0, 143, 73, 239, 33, 57, 26, 89, 78, 230, 185, 139},
-			EncryptDataHex:    []byte("812aeeb6008f49ef21391a594ee6b98b"),
-			EncryptDataBase64: []byte("gSrutgCPSe8hORpZTua5iw=="),
+			EncryptData:       []byte{77, 179, 6, 120, 99, 255, 246, 149, 205, 253, 145, 227, 5, 180, 233, 252},
+			EncryptDataHex:    []byte("4db3067863fff695cdfd91e305b4e9fc"),
+			EncryptDataBase64: []byte("TbMGeGP/9pXN/ZHjBbTp/A=="),
 		},
 		{
 			Data:              []byte("123"),
-			EncryptData:       []byte{160, 8, 205, 171, 29, 146, 84, 242, 60, 36, 7, 68, 83, 251, 164, 150},
-			EncryptDataHex:    []byte("a008cdab1d9254f23c24074453fba496"),
-			EncryptDataBase64: []byte("oAjNqx2SVPI8JAdEU/uklg=="),
+			EncryptData:       []byte{108, 145, 37, 101, 126, 226, 235, 136, 208, 224, 140, 254, 24, 169, 244, 225},
+			EncryptDataHex:    []byte("6c9125657ee2eb88d0e08cfe18a9f4e1"),
+			EncryptDataBase64: []byte("bJElZX7i64jQ4Iz+GKn04Q=="),
 		},
 		{
 			Data:              []byte("你好，世界"),
-			EncryptData:       []byte{117, 135, 94, 67, 181, 34, 182, 67, 189, 205, 178, 223, 185, 99, 37, 154},
-			EncryptDataHex:    []byte("75875e43b522b643bdcdb2dfb963259a"),
-			EncryptDataBase64: []byte("dYdeQ7UitkO9zbLfuWMlmg=="),
+			EncryptData:       []byte{185, 30, 182, 141, 214, 82, 9, 57, 81, 9, 57, 101, 242, 49, 117, 237},
+			EncryptDataHex:    []byte("b91eb68dd652093951093965f23175ed"),
+			EncryptDataBase64: []byte("uR62jdZSCTlRCTll8jF17Q=="),
 		},
 	}
 
@@ -231,21 +231,21 @@ func TestOFB(t *testing.T) {
 	testCases := []testCase{
 		{
 			Data:              []byte(""),
-			EncryptData:       []byte{129, 42, 238, 182, 0, 143, 73, 239, 33, 57, 26, 89, 78, 230, 185, 139},
-			EncryptDataHex:    []byte("812aeeb6008f49ef21391a594ee6b98b"),
-			EncryptDataBase64: []byte("gSrutgCPSe8hORpZTua5iw=="),
+			EncryptData:       []byte{77, 179, 6, 120, 99, 255, 246, 149, 205, 253, 145, 227, 5, 180, 233, 252},
+			EncryptDataHex:    []byte("4db3067863fff695cdfd91e305b4e9fc"),
+			EncryptDataBase64: []byte("TbMGeGP/9pXN/ZHjBbTp/A=="),
 		},
 		{
 			Data:              []byte("123"),
-			EncryptData:       []byte{160, 8, 205, 171, 29, 146, 84, 242, 60, 36, 7, 68, 83, 251, 164, 150},
-			EncryptDataHex:    []byte("a008cdab1d9254f23c24074453fba496"),
-			EncryptDataBase64: []byte("oAjNqx2SVPI8JAdEU/uklg=="),
+			EncryptData:       []byte{108, 145, 37, 101, 126, 226, 235, 136, 208, 224, 140, 254, 24, 169, 244, 225},
+			EncryptDataHex:    []byte("6c9125657ee2eb88d0e08cfe18a9f4e1"),
+			EncryptDataBase64: []byte("bJElZX7i64jQ4Iz+GKn04Q=="),
 		},
 		{
 			Data:              []byte("你好，世界"),
-			EncryptData:       []byte{117, 135, 94, 67, 181, 34, 182, 67, 189, 205, 178, 223, 185, 99, 37, 154},
-			EncryptDataHex:    []byte("75875e43b522b643bdcdb2dfb963259a"),
-			EncryptDataBase64: []byte("dYdeQ7UitkO9zbLfuWMlmg=="),
+			EncryptData:       []byte{185, 30, 182, 141, 214, 82, 9, 57, 81, 9, 57, 101, 242, 49, 117, 237},
+			EncryptDataHex:    []byte("b91eb68dd652093951093965f23175ed"),
+			EncryptDataBase64: []byte("uR62jdZSCTlRCTll8jF17Q=="),
 		},
 	}
 
@@ -267,21 +267,21 @@ func TestCTR(t *testing.T) {
 	testCases := []testCase{
 		{
 			Data:              []byte(""),
-			EncryptData:       []byte{129, 42, 238, 182, 0, 143, 73, 239, 33, 57, 26, 89, 78, 230, 185, 139},
-			EncryptDataHex:    []byte("812aeeb6008f49ef21391a594ee6b98b"),
-			EncryptDataBase64: []byte("gSrutgCPSe8hORpZTua5iw=="),
+			EncryptData:       []byte{77, 179, 6, 120, 99, 255, 246, 149, 205, 253, 145, 227, 5, 180, 233, 252},
+			EncryptDataHex:    []byte("4db3067863fff695cdfd91e305b4e9fc"),
+			EncryptDataBase64: []byte("TbMGeGP/9pXN/ZHjBbTp/A=="),
 		},
 		{
 			Data:              []byte("123"),
-			EncryptData:       []byte{160, 8, 205, 171, 29, 146, 84, 242, 60, 36, 7, 68, 83, 251, 164, 150},
-			EncryptDataHex:    []byte("a008cdab1d9254f23c24074453fba496"),
-			EncryptDataBase64: []byte("oAjNqx2SVPI8JAdEU/uklg=="),
+			EncryptData:       []byte{108, 145, 37, 101, 126, 226, 235, 136, 208, 224, 140, 254, 24, 169, 244, 225},
+			EncryptDataHex:    []byte("6c9125657ee2eb88d0e08cfe18a9f4e1"),
+			EncryptDataBase64: []byte("bJElZX7i64jQ4Iz+GKn04Q=="),
 		},
 		{
 			Data:              []byte("你好，世界"),
-			EncryptData:       []byte{117, 135, 94, 67, 181, 34, 182, 67, 189, 205, 178, 223, 185, 99, 37, 154},
-			EncryptDataHex:    []byte("75875e43b522b643bdcdb2dfb963259a"),
-			EncryptDataBase64: []byte("dYdeQ7UitkO9zbLfuWMlmg=="),
+			EncryptData:       []byte{185, 30, 182, 141, 214, 82, 9, 57, 81, 9, 57, 101, 242, 49, 117, 237},
+			EncryptDataHex:    []byte("b91eb68dd652093951093965f23175ed"),
+			EncryptDataBase64: []byte("uR62jdZSCTlRCTll8jF17Q=="),
 		},
 	}
 
@@ -301,34 +301,35 @@ func TestCTR(t *testing.T) {
 // go test -v -cover -run=^TestGCM$
 func TestGCM(t *testing.T) {
 	testCases := []testCase{
-		// {
-		// 	Data:              []byte(""),
-		// 	EncryptData:       []byte{181, 199, 133, 45, 117, 141, 195, 175, 157, 6, 27, 16, 98, 103, 77, 186},
-		// 	EncryptDataHex:    []byte("b5c7852d758dc3af9d061b1062674dba"),
-		// 	EncryptDataBase64: []byte("+YQqKJgRdgQuYdipoz5HlkO9SQ=="),
-		// },
+		{
+			Data:              []byte(""),
+			EncryptData:       []byte{135, 179, 184, 127, 41, 243, 84, 60, 61, 129, 163, 91, 171, 195, 246, 98},
+			EncryptDataHex:    []byte("87b3b87f29f3543c3d81a35babc3f662"),
+			EncryptDataBase64: []byte("h7O4fynzVDw9gaNbq8P2Yg=="),
+		},
 		{
 			Data:              []byte("123"),
-			EncryptData:       []byte{249, 132, 42, 40, 152, 17, 118, 4, 46, 97, 216, 169, 163, 62, 71, 150, 67, 189, 73},
-			EncryptDataHex:    []byte("f9842a28981176042e61d8a9a33e479643bd49"),
-			EncryptDataBase64: []byte("+YQqKJgRdgQuYdipoz5HlkO9SQ=="),
+			EncryptData:       []byte{224, 234, 86, 29, 157, 167, 33, 35, 34, 123, 227, 204, 243, 177, 205, 151, 173, 141, 174},
+			EncryptDataHex:    []byte("e0ea561d9da72123227be3ccf3b1cd97ad8dae"),
+			EncryptDataBase64: []byte("4OpWHZ2nISMie+PM87HNl62Nrg=="),
 		},
 		{
 			Data:              []byte("你好，世界"),
-			EncryptData:       []byte{44, 11, 185, 159, 152, 100, 94, 1, 82, 180, 112, 131, 14, 35, 63, 39, 98, 215, 167, 243, 173, 80, 155, 27, 228, 197, 155, 234, 236, 204, 91},
-			EncryptDataHex:    []byte("2c0bb99f98645e0152b470830e233f2762d7a7f3ad509b1be4c59beaeccc5b"),
-			EncryptDataBase64: []byte("LAu5n5hkXgFStHCDDiM/J2LXp/OtUJsb5MWb6uzMWw=="),
+			EncryptData:       []byte{53, 101, 197, 113, 143, 115, 148, 86, 178, 196, 74, 153, 208, 219, 180, 14, 230, 66, 70, 95, 244, 28, 225, 107, 243, 182, 147, 187, 199, 202, 220},
+			EncryptDataHex:    []byte("3565c5718f739456b2c44a99d0dbb40ee642465ff41ce16bf3b693bbc7cadc"),
+			EncryptDataBase64: []byte("NWXFcY9zlFayxEqZ0Nu0DuZCRl/0HOFr87aTu8fK3A=="),
 		},
 	}
 
 	nonce := []byte("123456abcdef")
+	additional := []byte("8765432112345678")
 
 	encrypt := func(data []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
-		return EncryptGCM(data, testKey, nonce, nil, encoding)
+		return EncryptGCM(data, testKey, nonce, additional, encoding)
 	}
 
 	decrypt := func(data []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
-		return DecryptGCM(data, testKey, nonce, nil, encoding)
+		return DecryptGCM(data, testKey, nonce, additional, encoding)
 	}
 
 	if err := testEncryptAndDecrypt(t.Name(), encrypt, decrypt, testCases); err != nil {
