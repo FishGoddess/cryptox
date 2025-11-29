@@ -13,21 +13,21 @@ func TestSHA1(t *testing.T) {
 	testCases := []testCase{
 		{
 			Data:           []byte(""),
-			HashData:       []byte{0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55, 0xbf, 0xef, 0x95, 0x60, 0x18, 0x90, 0xaf, 0xd8, 0x07, 0x09},
+			HashData:       []byte{218, 57, 163, 238, 94, 107, 75, 13, 50, 85, 191, 239, 149, 96, 24, 144, 175, 216, 7, 9},
 			HashDataHex:    []byte("da39a3ee5e6b4b0d3255bfef95601890afd80709"),
 			HashDataBase64: []byte("2jmj7l5rSw0yVb/vlWAYkK/YBwk="),
 		},
 		{
 			Data:           []byte("123"),
-			HashData:       []byte{0x40, 0xbd, 0x00, 0x15, 0x63, 0x08, 0x5f, 0xc3, 0x51, 0x65, 0x32, 0x9e, 0xa1, 0xff, 0x5c, 0x5e, 0xcb, 0xdb, 0xbe, 0xef},
+			HashData:       []byte{64, 189, 0, 21, 99, 8, 95, 195, 81, 101, 50, 158, 161, 255, 92, 94, 203, 219, 190, 239},
 			HashDataHex:    []byte("40bd001563085fc35165329ea1ff5c5ecbdbbeef"),
 			HashDataBase64: []byte("QL0AFWMIX8NRZTKeof9cXsvbvu8="),
 		},
 		{
 			Data:           []byte("你好，世界"),
-			HashData:       []byte{0x3b, 0xec, 0xb0, 0x3b, 0x01, 0x5e, 0xd4, 0x80, 0x50, 0x61, 0x1c, 0x8d, 0x7a, 0xfe, 0x4b, 0x88, 0xf7, 0x0d, 0x5a, 0x20},
+			HashData:       []byte{59, 236, 176, 59, 1, 94, 212, 128, 80, 97, 28, 141, 122, 254, 75, 136, 247, 13, 90, 32},
 			HashDataHex:    []byte("3becb03b015ed48050611c8d7afe4b88f70d5a20"),
-			HashDataBase64: []byte("O+zwOwFexUAFYRyNev5LiPcNWSA="),
+			HashDataBase64: []byte("O+ywOwFe1IBQYRyNev5LiPcNWiA="),
 		},
 	}
 
@@ -41,21 +41,21 @@ func TestSHA224(t *testing.T) {
 	testCases := []testCase{
 		{
 			Data:           []byte(""),
-			HashData:       []byte{0xd1, 0x4a, 0x02, 0x8c, 0x2a, 0x3a, 0x2b, 0xc9, 0x47, 0x61, 0x02, 0xbb, 0x28, 0x82, 0x34, 0xc4, 0x15, 0xa2, 0xb0, 0x1f, 0x82, 0x8e, 0xa6, 0x2a, 0xc5, 0xb3, 0xe4, 0x2f},
+			HashData:       []byte{209, 74, 2, 140, 42, 58, 43, 201, 71, 97, 2, 187, 40, 130, 52, 196, 21, 162, 176, 31, 130, 142, 166, 42, 197, 179, 228, 47},
 			HashDataHex:    []byte("d14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f"),
 			HashDataBase64: []byte("0UoCjCo6K8lHYQK7KII0xBWisB+CjqYqxbPkLw=="),
 		},
 		{
 			Data:           []byte("123"),
-			HashData:       []byte{0x78, 0xd8, 0x04, 0x5d, 0x68, 0x4a, 0xbd, 0x2e, 0xec, 0xe9, 0x23, 0x75, 0x8f, 0x3c, 0xd7, 0x81, 0x48, 0x9d, 0xf3, 0xa4, 0x8e, 0x12, 0x78, 0x98, 0x24, 0x66, 0x01, 0x7f},
+			HashData:       []byte{120, 216, 4, 93, 104, 74, 189, 46, 236, 233, 35, 117, 143, 60, 215, 129, 72, 157, 243, 164, 142, 18, 120, 152, 36, 102, 1, 127},
 			HashDataHex:    []byte("78d8045d684abd2eece923758f3cd781489df3a48e1278982466017f"),
-			HashDataBase64: []byte("eNgEXWSr0u7s6SN1jzzXgUiTn/KOEnKYJGYBfw=="),
+			HashDataBase64: []byte("eNgEXWhKvS7s6SN1jzzXgUid86SOEniYJGYBfw=="),
 		},
 		{
 			Data:           []byte("你好，世界"),
-			HashData:       []byte{0x9a, 0x65, 0xa1, 0x28, 0x18, 0xb8, 0xe6, 0xac, 0x35, 0x7c, 0xee, 0x93, 0x33, 0x75, 0x65, 0x33, 0x3f, 0x55, 0xbd, 0xa8, 0xa4, 0x5b, 0x0c, 0x1b, 0xfb, 0x9f, 0x44, 0x03},
+			HashData:       []byte{154, 101, 161, 40, 24, 184, 230, 172, 53, 124, 238, 147, 55, 86, 83, 55, 245, 91, 218, 138, 69, 176, 193, 191, 185, 244, 64, 60},
 			HashDataHex:    []byte("9a65a12818b8e6ac357cee9337565337f55bda8a45b0c1bfb9f4403c"),
-			HashDataBase64: []byte("mmWhKBi45qw1fO6TN3VVM39VvaikWwwb+59EA8w="),
+			HashDataBase64: []byte("mmWhKBi45qw1fO6TN1ZTN/Vb2opFsMG/ufRAPA=="),
 		},
 	}
 
@@ -69,21 +69,21 @@ func TestSHA256(t *testing.T) {
 	testCases := []testCase{
 		{
 			Data:           []byte(""),
-			HashData:       []byte{0xe3, 0xb0, 0xc4, 0x42, 0x98, 0xfc, 0x1c, 0x14, 0x9a, 0xfb, 0xf4, 0xc8, 0x99, 0x6f, 0xb9, 0x24, 0x27, 0xae, 0x41, 0xe4, 0x64, 0x9b, 0x93, 0x4c, 0xa4, 0x95, 0x99, 0x1b, 0x78, 0x52, 0xb8, 0x55},
+			HashData:       []byte{227, 176, 196, 66, 152, 252, 28, 20, 154, 251, 244, 200, 153, 111, 185, 36, 39, 174, 65, 228, 100, 155, 147, 76, 164, 149, 153, 27, 120, 82, 184, 85},
 			HashDataHex:    []byte("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"),
 			HashDataBase64: []byte("47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU="),
 		},
 		{
 			Data:           []byte("123"),
-			HashData:       []byte{0xa6, 0x65, 0xa4, 0x59, 0x20, 0x42, 0x2f, 0x9d, 0x41, 0x7e, 0x48, 0x67, 0xef, 0xdc, 0x4f, 0xb8, 0xa0, 0x4a, 0x1f, 0x3f, 0xff, 0x1f, 0xa0, 0x7e, 0x99, 0x8e, 0x86, 0xf7, 0xf7, 0xa2, 0x7a, 0xe3},
+			HashData:       []byte{166, 101, 164, 89, 32, 66, 47, 157, 65, 126, 72, 103, 239, 220, 79, 184, 160, 74, 31, 63, 255, 31, 160, 126, 153, 142, 134, 247, 247, 162, 122, 227},
 			HashDataHex:    []byte("a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"),
 			HashDataBase64: []byte("pmWkWSBCL51Bfkhn79xPuKBKHz//H6B+mY6G9/eieuM="),
 		},
 		{
 			Data:           []byte("你好，世界"),
-			HashData:       []byte{0x46, 0x93, 0x2f, 0x1e, 0x6e, 0xa5, 0x21, 0x6e, 0x77, 0xf5, 0x8b, 0x19, 0x08, 0xd7, 0x2e, 0xc9, 0x32, 0x2e, 0xd1, 0x29, 0x93, 0x18, 0xc6, 0xd4, 0xbd, 0x44, 0x50, 0xb5, 0xea, 0xab, 0x9d, 0xe7},
+			HashData:       []byte{70, 147, 47, 30, 110, 165, 33, 110, 119, 245, 139, 25, 8, 215, 46, 201, 50, 46, 209, 41, 49, 140, 109, 75, 212, 69, 11, 94, 170, 185, 215, 231},
 			HashDataHex:    []byte("46932f1e6ea5216e77f58b1908d72ec9322ed129318c6d4bd4450b5eaab9d7e7"),
-			HashDataBase64: []byte("O+ywOwFe1IBQYRyNev5LiPcNWiA="),
+			HashDataBase64: []byte("RpMvHm6lIW539YsZCNcuyTIu0SkxjG1L1EULXqq51+c="),
 		},
 	}
 
@@ -97,21 +97,21 @@ func TestSHA384(t *testing.T) {
 	testCases := []testCase{
 		{
 			Data:           []byte(""),
-			HashData:       []byte{0x38, 0xb0, 0x60, 0xa7, 0x51, 0xac, 0x96, 0x38, 0x4c, 0xd9, 0x32, 0x7e, 0xb1, 0xb1, 0xe3, 0x6a, 0x21, 0xfd, 0xb7, 0x11, 0x14, 0xbe, 0x07, 0x43, 0x4c, 0x0c, 0xc7, 0xbf, 0x63, 0xf6, 0xe1, 0xda, 0x27, 0x4e, 0xde, 0xbf, 0xe7, 0x6f, 0x65, 0xfb, 0xd5, 0x1a, 0xd2, 0xf1, 0x48, 0x98, 0xb9, 0x5b},
+			HashData:       []byte{56, 176, 96, 167, 81, 172, 150, 56, 76, 217, 50, 126, 177, 177, 227, 106, 33, 253, 183, 17, 20, 190, 7, 67, 76, 12, 199, 191, 99, 246, 225, 218, 39, 78, 222, 191, 231, 111, 101, 251, 213, 26, 210, 241, 72, 152, 185, 91},
 			HashDataHex:    []byte("38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b"),
 			HashDataBase64: []byte("OLBgp1GsljhM2TJ+sbHjaiH9txEUvgdDTAzHv2P24donTt6/529l+9Ua0vFImLlb"),
 		},
 		{
 			Data:           []byte("123"),
-			HashData:       []byte{0x9a, 0x0a, 0x82, 0xf0, 0xc0, 0xcf, 0x31, 0x47, 0x0d, 0x7a, 0xff, 0xed, 0xe3, 0x40, 0x6c, 0xc9, 0xaa, 0x84, 0x10, 0x67, 0x51, 0x20, 0xb7, 0x27, 0x04, 0x4e, 0xda, 0x15, 0xb4, 0xc2, 0x55, 0x32, 0xa9, 0xb5, 0xcd, 0x8a, 0xaf, 0x9c, 0xec, 0x49, 0x19, 0xd7, 0x62, 0x55, 0xb6, 0xbf, 0xb0, 0x0f},
+			HashData:       []byte{154, 10, 130, 240, 192, 207, 49, 71, 13, 122, 255, 237, 227, 64, 108, 201, 170, 132, 16, 103, 21, 32, 183, 39, 4, 78, 218, 21, 180, 194, 85, 50, 169, 181, 205, 138, 175, 156, 236, 73, 25, 215, 98, 85, 182, 191, 176, 15},
 			HashDataHex:    []byte("9a0a82f0c0cf31470d7affede3406cc9aa8410671520b727044eda15b4c25532a9b5cd8aaf9cec4919d76255b6bfb00f"),
-			HashDataBase64: []byte("eNgEXWhKvS7s6SN1jzzXgUid86SOEniYJGYBfw=="),
+			HashDataBase64: []byte("mgqC8MDPMUcNev/t40BsyaqEEGcVILcnBE7aFbTCVTKptc2Kr5zsSRnXYlW2v7AP"),
 		},
 		{
 			Data:           []byte("你好，世界"),
-			HashData:       []byte{0xfb, 0xea, 0x16, 0xd8, 0xbe, 0x29, 0x93, 0xf2, 0xcd, 0xa1, 0xef, 0x9f, 0xc0, 0x55, 0xf5, 0x3f, 0x0f, 0xa2, 0x3f, 0x1e, 0x1d, 0xc4, 0xa5, 0x7a, 0x75, 0x48, 0xc3, 0x62, 0x27, 0xc3, 0xef, 0x04, 0x91, 0x48, 0x4f, 0xcf, 0x1e, 0x30, 0xc5, 0xd1, 0xff, 0x17, 0x44, 0x1a, 0x5c, 0xe8, 0x9a, 0x11},
+			HashData:       []byte{251, 234, 22, 216, 190, 41, 147, 242, 205, 161, 239, 159, 192, 85, 245, 63, 15, 162, 63, 30, 29, 196, 165, 122, 117, 72, 195, 98, 39, 195, 239, 4, 145, 72, 79, 207, 30, 48, 197, 209, 255, 23, 68, 26, 92, 232, 154, 17},
 			HashDataHex:    []byte("fbea16d8be2993f2cda1ef9fc055f53f0fa23f1e1dc4a57a7548c36227c3ef0491484fcf1e30c5d1ff17441a5ce89a11"),
-			HashDataBase64: []byte("++oW2L4pk/Idoe+fwFX1Pw+iPx4dRap1SMI2J8PvBJFI9M8eMMXR/xdEGlzoihE="),
+			HashDataBase64: []byte("++oW2L4pk/LNoe+fwFX1Pw+iPx4dxKV6dUjDYifD7wSRSE/PHjDF0f8XRBpc6JoR"),
 		},
 	}
 
@@ -125,21 +125,21 @@ func TestSHA512(t *testing.T) {
 	testCases := []testCase{
 		{
 			Data:           []byte(""),
-			HashData:       []byte{0xcf, 0x83, 0xe1, 0x35, 0x7e, 0xef, 0xb8, 0xbd, 0xf1, 0x54, 0x28, 0x50, 0xd6, 0x6d, 0x80, 0x07, 0xd6, 0x20, 0xe4, 0x05, 0x0b, 0x57, 0x15, 0xdc, 0x83, 0xf4, 0xa9, 0x21, 0xd3, 0x6c, 0xe9, 0xce, 0x47, 0xd0, 0xd1, 0x3c, 0x5d, 0x85, 0xf2, 0xb0, 0xff, 0x83, 0x18, 0xd2, 0x87, 0x7e, 0xec, 0x2f, 0x63, 0xb9, 0x31, 0xbd, 0x47, 0x41, 0x7a, 0x81, 0xa5, 0x38, 0x32, 0x7a, 0xf9, 0x27, 0xda, 0x3e},
+			HashData:       []byte{207, 131, 225, 53, 126, 239, 184, 189, 241, 84, 40, 80, 214, 109, 128, 7, 214, 32, 228, 5, 11, 87, 21, 220, 131, 244, 169, 33, 211, 108, 233, 206, 71, 208, 209, 60, 93, 133, 242, 176, 255, 131, 24, 210, 135, 126, 236, 47, 99, 185, 49, 189, 71, 65, 122, 129, 165, 56, 50, 122, 249, 39, 218, 62},
 			HashDataHex:    []byte("cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e"),
 			HashDataBase64: []byte("z4PhNX7vuL3xVChQ1m2AB9Yg5AULVxXcg/SpIdNs6c5H0NE8XYXysP+DGNKHfuwvY7kxvUdBeoGlODJ6+SfaPg=="),
 		},
 		{
 			Data:           []byte("123"),
-			HashData:       []byte{0x3c, 0x99, 0x09, 0xaf, 0xec, 0x25, 0x35, 0x4d, 0x55, 0x1d, 0xae, 0x21, 0x59, 0x0b, 0xb2, 0x2d, 0xee, 0xce, 0x92, 0x37, 0x58, 0xf3, 0xcd, 0x78, 0x14, 0x9d, 0xf3, 0xa4, 0x8e, 0x12, 0x78, 0x98, 0x24, 0x66, 0x01, 0x7f, 0x0b, 0x0b, 0x85, 0x2f, 0x9b, 0x9b, 0x9b, 0x9b, 0x9b, 0x9b, 0x9b, 0x9b, 0x9b, 0x9b, 0x9b, 0x9b, 0x9b, 0x9b, 0x9b, 0x9b, 0x9b, 0x9b, 0x9b, 0x9b, 0x9b, 0x9b, 0x9b, 0x9b},
+			HashData:       []byte{60, 153, 9, 175, 236, 37, 53, 77, 85, 29, 174, 33, 89, 11, 178, 110, 56, 213, 63, 33, 115, 184, 211, 220, 62, 238, 76, 4, 126, 122, 177, 193, 235, 139, 133, 16, 62, 59, 231, 186, 97, 59, 49, 187, 92, 156, 54, 33, 77, 201, 241, 74, 66, 253, 122, 47, 219, 132, 133, 107, 202, 92, 68, 194},
 			HashDataHex:    []byte("3c9909afec25354d551dae21590bb26e38d53f2173b8d3dc3eee4c047e7ab1c1eb8b85103e3be7ba613b31bb5c9c36214dc9f14a42fd7a2fdb84856bca5c44c2"),
-			HashDataBase64: []byte("PJkJr+wlNU1VGdrhFZC7JujVPiFzuNPcPu5MRH56sbHOuFECPjvnukE7MbucnDYhTcmfFKQvXor9uIRYbypcRMWBye6ckQ=="),
+			HashDataBase64: []byte("PJkJr+wlNU1VHa4hWQuybjjVPyFzuNPcPu5MBH56scHri4UQPjvnumE7MbtcnDYhTcnxSkL9ei/bhIVrylxEwg=="),
 		},
 		{
 			Data:           []byte("你好，世界"),
-			HashData:       []byte{0x45, 0xa6, 0xe3, 0xfe, 0x78, 0xaf, 0x4a, 0x33, 0x26, 0xda, 0x9b, 0xf8, 0xc3, 0x40, 0x7b, 0xca, 0x5f, 0xef, 0x80, 0xb3, 0x34, 0xc0, 0x46, 0xd2, 0x05, 0x44, 0xb0, 0xb2, 0x8b, 0xe6, 0xc7, 0x61, 0x71, 0x8c, 0xfa, 0xf5, 0xb7, 0x52, 0xea, 0xa8, 0x98, 0x49, 0xb8, 0x3a, 0x4d, 0x4e, 0x5f, 0x6d, 0xf4, 0x90, 0x8e, 0x19, 0x5c, 0xd8, 0xc1, 0x59, 0x18, 0x1e, 0x78, 0x97, 0x19, 0x10, 0xdb, 0x13},
+			HashData:       []byte{69, 166, 227, 254, 120, 175, 74, 51, 38, 218, 155, 248, 195, 64, 123, 202, 95, 239, 128, 179, 52, 192, 70, 210, 5, 68, 176, 178, 139, 230, 199, 97, 113, 140, 250, 245, 183, 82, 234, 168, 152, 73, 184, 58, 77, 78, 95, 109, 244, 144, 142, 25, 92, 216, 193, 89, 24, 30, 120, 151, 25, 16, 219, 19},
 			HashDataHex:    []byte("45a6e3fe78af4a3326da9bf8c3407bca5fef80b334c046d20544b0b28be6c761718cfaf5b752eaa89849b83a4d4e5f6df4908e195cd8c159181e78971910db13"),
-			HashDataBase64: []byte("Rabj/nivSjMm2pv4w0B7ynXv4LMTwEbSBUSwsrjmxxhxjPyvtbUuqolJuDpNTl9t9JCOnFzYwVkYGH54lxkQ2xM="),
+			HashDataBase64: []byte("Rabj/nivSjMm2pv4w0B7yl/vgLM0wEbSBUSwsovmx2FxjPr1t1LqqJhJuDpNTl9t9JCOGVzYwVkYHniXGRDbEw=="),
 		},
 	}
 
