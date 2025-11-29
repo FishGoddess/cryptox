@@ -24,19 +24,19 @@ type testCase struct {
 func testHash(name string, hash testHashFunc, testCases []testCase) error {
 	for _, testCase := range testCases {
 		// None
-		got := hash([]byte(testCase.Data), encoding.None)
+		got := hash(testCase.Data, encoding.None)
 		if !slices.Equal(got, testCase.HashData) {
 			return fmt.Errorf("%s data %q: got %+v != expect %+v", name, testCase.Data, got, testCase.HashData)
 		}
 
 		// Hex
-		got = hash([]byte(testCase.Data), encoding.Hex)
+		got = hash(testCase.Data, encoding.Hex)
 		if !slices.Equal(got, testCase.HashDataHex) {
 			return fmt.Errorf("%s data %q: got hex %s != expect hex %s", name, testCase.Data, got, testCase.HashDataHex)
 		}
 
 		// Base64
-		got = hash([]byte(testCase.Data), encoding.Base64)
+		got = hash(testCase.Data, encoding.Base64)
 		if !slices.Equal(got, testCase.HashDataBase64) {
 			return fmt.Errorf("%s data %q: got base64 %s != expect base64 %s", name, testCase.Data, got, testCase.HashDataBase64)
 		}

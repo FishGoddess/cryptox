@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	hmacBenchKey  = []byte("12345678")
+	hmacBenchKey  = []byte("key")
 	hmacBenchData = []byte("你好，世界")
 )
 
@@ -22,7 +22,7 @@ func BenchmarkHMAC_MD5(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hmac.MD5(hmacBenchKey, hmacBenchData, encoding.None)
+		hmac.MD5(hmacBenchData, hmacBenchKey, encoding.None)
 	}
 }
 
@@ -32,7 +32,7 @@ func BenchmarkHMAC_SHA1(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hmac.SHA1(hmacBenchKey, hmacBenchData, encoding.None)
+		hmac.SHA1(hmacBenchData, hmacBenchKey, encoding.None)
 	}
 }
 
@@ -42,7 +42,7 @@ func BenchmarkHMAC_SHA224(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hmac.SHA224(hmacBenchKey, hmacBenchData, encoding.None)
+		hmac.SHA224(hmacBenchData, hmacBenchKey, encoding.None)
 	}
 }
 
@@ -52,7 +52,7 @@ func BenchmarkHMAC_SHA256(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hmac.SHA256(hmacBenchKey, hmacBenchData, encoding.None)
+		hmac.SHA256(hmacBenchData, hmacBenchKey, encoding.None)
 	}
 }
 
@@ -62,7 +62,7 @@ func BenchmarkHMAC_SHA384(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hmac.SHA384(hmacBenchKey, hmacBenchData, encoding.None)
+		hmac.SHA384(hmacBenchData, hmacBenchKey, encoding.None)
 	}
 }
 
@@ -72,6 +72,6 @@ func BenchmarkHMAC_SHA512(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hmac.SHA512(hmacBenchKey, hmacBenchData, encoding.None)
+		hmac.SHA512(hmacBenchData, hmacBenchKey, encoding.None)
 	}
 }

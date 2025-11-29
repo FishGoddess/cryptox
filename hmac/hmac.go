@@ -17,7 +17,7 @@ import (
 
 type hashFunc = func() stdhash.Hash
 
-func hash(hashFunc hashFunc, key []byte, bs []byte, encoding encoding.Encoding) []byte {
+func hash(hashFunc hashFunc, bs []byte, key []byte, encoding encoding.Encoding) []byte {
 	h := hmac.New(hashFunc, key)
 	h.Write(bs)
 
@@ -27,31 +27,31 @@ func hash(hashFunc hashFunc, key []byte, bs []byte, encoding encoding.Encoding) 
 }
 
 // MD5 uses hmac-md5 to hash bs and returns an error if failed.
-func MD5(key []byte, bs []byte, encoding encoding.Encoding) []byte {
-	return hash(md5.New, key, bs, encoding)
+func MD5(bs []byte, key []byte, encoding encoding.Encoding) []byte {
+	return hash(md5.New, bs, key, encoding)
 }
 
 // SHA1 uses hmac-sha1 to hash bs and returns an error if failed.
-func SHA1(key []byte, bs []byte, encoding encoding.Encoding) []byte {
-	return hash(sha1.New, key, bs, encoding)
+func SHA1(bs []byte, key []byte, encoding encoding.Encoding) []byte {
+	return hash(sha1.New, bs, key, encoding)
 }
 
 // SHA224 uses hmac-sha224 to hash bs and returns an error if failed.
-func SHA224(key []byte, bs []byte, encoding encoding.Encoding) []byte {
-	return hash(sha256.New224, key, bs, encoding)
+func SHA224(bs []byte, key []byte, encoding encoding.Encoding) []byte {
+	return hash(sha256.New224, bs, key, encoding)
 }
 
 // SHA256 uses hmac-sha256 to hash bs and returns an error if failed.
-func SHA256(key []byte, bs []byte, encoding encoding.Encoding) []byte {
-	return hash(sha256.New, key, bs, encoding)
+func SHA256(bs []byte, key []byte, encoding encoding.Encoding) []byte {
+	return hash(sha256.New, bs, key, encoding)
 }
 
 // SHA384 uses hmac-sha384 to hash bs and returns an error if failed.
-func SHA384(key []byte, bs []byte, encoding encoding.Encoding) []byte {
-	return hash(sha512.New384, key, bs, encoding)
+func SHA384(bs []byte, key []byte, encoding encoding.Encoding) []byte {
+	return hash(sha512.New384, bs, key, encoding)
 }
 
 // SHA512 uses hmac-sha512 to hash bs and returns an error if failed.
-func SHA512(key []byte, bs []byte, encoding encoding.Encoding) []byte {
-	return hash(sha512.New, key, bs, encoding)
+func SHA512(bs []byte, key []byte, encoding encoding.Encoding) []byte {
+	return hash(sha512.New, bs, key, encoding)
 }
