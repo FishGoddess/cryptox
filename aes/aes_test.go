@@ -322,7 +322,6 @@ func TestGCM(t *testing.T) {
 	}
 
 	nonce := []byte("123456abcdef")
-	t.Logf("nonce: %s\n", nonce)
 
 	encrypt := func(data []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 		return EncryptGCM(data, testKey, nonce, nil, encoding)
