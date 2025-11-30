@@ -42,7 +42,7 @@ $ go get -u github.com/FishGoddess/cryptox
 $ make bench
 ```
 
-_注：数据为 128 字节，ecb/cbc 为 pkcs7 填充，cfb/ofb/ctr 为不填充。_
+_注：数据为 128 字节，ecb/cbc 为 pkcs7 填充，cfb/ofb/ctr/gcm 为不填充。_
 
 ```
 goos: linux

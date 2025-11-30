@@ -6,10 +6,12 @@ package padding
 
 type paddingNone struct{}
 
+// Pad returns the original byte slice.
 func (paddingNone) Pad(bs []byte, blockSize int) []byte {
 	return bs
 }
 
+// Unpad returns the original byte slice.
 func (paddingNone) Unpad(bs []byte, blockSize int) ([]byte, error) {
 	return bs, nil
 }

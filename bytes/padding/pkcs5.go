@@ -8,6 +8,7 @@ import "fmt"
 
 type paddingPKCS5 struct{}
 
+// Pad pads some bytes to the byte slice in pkcs5 way.
 func (paddingPKCS5) Pad(bs []byte, blockSize int) []byte {
 	padding := blockSize - (len(bs) % blockSize)
 	for i := 0; i < padding; i++ {
@@ -17,6 +18,7 @@ func (paddingPKCS5) Pad(bs []byte, blockSize int) []byte {
 	return bs
 }
 
+// Unpad unpads some bytes from the byte slice in pkcs5 way.
 func (paddingPKCS5) Unpad(bs []byte, blockSize int) ([]byte, error) {
 	length := len(bs)
 	number := int(bs[length-1])

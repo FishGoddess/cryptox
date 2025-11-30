@@ -24,6 +24,7 @@ func newTripleBlock(key []byte) (cipher.Block, int, error) {
 	return block, blockSize, nil
 }
 
+// EncryptTripleECB uses ecb mode to encrypt bs.
 func EncryptTripleECB(bs []byte, key []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
@@ -52,6 +53,7 @@ func EncryptTripleECB(bs []byte, key []byte, padding padding.Padding, encoding e
 	return dst, nil
 }
 
+// DecryptTripleECB uses ecb mode to decrypt bs.
 func DecryptTripleECB(bs []byte, key []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
@@ -82,6 +84,7 @@ func DecryptTripleECB(bs []byte, key []byte, padding padding.Padding, encoding e
 	return padding.Unpad(dst, blockSize)
 }
 
+// EncryptTripleCBC uses cbc mode to encrypt bs.
 func EncryptTripleCBC(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
@@ -97,6 +100,7 @@ func EncryptTripleCBC(bs []byte, key []byte, iv []byte, padding padding.Padding,
 	return dst, nil
 }
 
+// DecryptTripleCBC uses cbc mode to decrypt bs.
 func DecryptTripleCBC(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
@@ -114,6 +118,7 @@ func DecryptTripleCBC(bs []byte, key []byte, iv []byte, padding padding.Padding,
 	return padding.Unpad(dst, blockSize)
 }
 
+// EncryptTripleCFB uses cfb mode to encrypt bs.
 func EncryptTripleCFB(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
@@ -129,6 +134,7 @@ func EncryptTripleCFB(bs []byte, key []byte, iv []byte, padding padding.Padding,
 	return dst, nil
 }
 
+// DecryptTripleCFB uses cfb mode to decrypt bs.
 func DecryptTripleCFB(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
@@ -146,6 +152,7 @@ func DecryptTripleCFB(bs []byte, key []byte, iv []byte, padding padding.Padding,
 	return padding.Unpad(dst, blockSize)
 }
 
+// EncryptTripleOFB uses ofb mode to encrypt bs.
 func EncryptTripleOFB(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
@@ -161,6 +168,7 @@ func EncryptTripleOFB(bs []byte, key []byte, iv []byte, padding padding.Padding,
 	return dst, nil
 }
 
+// DecryptTripleOFB uses ofb mode to decrypt bs.
 func DecryptTripleOFB(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
@@ -178,6 +186,7 @@ func DecryptTripleOFB(bs []byte, key []byte, iv []byte, padding padding.Padding,
 	return padding.Unpad(dst, blockSize)
 }
 
+// EncryptTripleCTR uses ctr mode to encrypt bs.
 func EncryptTripleCTR(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
@@ -193,6 +202,7 @@ func EncryptTripleCTR(bs []byte, key []byte, iv []byte, padding padding.Padding,
 	return dst, nil
 }
 
+// DecryptTripleCTR uses ctr mode to decrypt bs.
 func DecryptTripleCTR(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {

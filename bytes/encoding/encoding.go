@@ -10,7 +10,7 @@ var (
 	Base64 Encoding = encodingBase64{}
 )
 
-// Encoding encodes a byte slice to another byte slice in some way and decodes it from the byte slice.
+// Encoding transfers a byte slice to another byte slice in some way.
 type Encoding interface {
 	// Encode encodes the byte slice.
 	Encode(bs []byte) []byte

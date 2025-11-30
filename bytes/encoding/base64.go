@@ -8,6 +8,7 @@ import "encoding/base64"
 
 type encodingBase64 struct{}
 
+// Encode encodes the byte slice with base64 encoding.
 func (encodingBase64) Encode(bs []byte) []byte {
 	enc := base64.StdEncoding
 	n := enc.EncodedLen(len(bs))
@@ -17,6 +18,7 @@ func (encodingBase64) Encode(bs []byte) []byte {
 	return buffer[:n]
 }
 
+// Decode decodes the byte slice with base64 encoding.
 func (encodingBase64) Decode(bs []byte) ([]byte, error) {
 	enc := base64.StdEncoding
 	n := enc.DecodedLen(len(bs))

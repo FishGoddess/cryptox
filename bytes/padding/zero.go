@@ -6,6 +6,7 @@ package padding
 
 type paddingZero struct{}
 
+// Pad pads some bytes to the byte slice in zero way.
 func (paddingZero) Pad(bs []byte, blockSize int) []byte {
 	padding := blockSize - (len(bs) % blockSize)
 	for i := 0; i < padding; i++ {
@@ -15,6 +16,7 @@ func (paddingZero) Pad(bs []byte, blockSize int) []byte {
 	return bs
 }
 
+// Unpad unpads some bytes from the byte slice in zero way.
 func (paddingZero) Unpad(bs []byte, blockSize int) ([]byte, error) {
 	length := len(bs)
 

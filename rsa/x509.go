@@ -21,7 +21,6 @@ const (
 )
 
 var (
-	// X509 is a x509Pem instance with X509 methods.
 	X509 = x509Pem{}
 )
 
@@ -68,11 +67,8 @@ func (pke PublicKeyDecoder) Decode(keyPem cryptox.Bytes) (*rsa.PublicKey, error)
 	return pke(keyPem)
 }
 
-// x509Pem wraps some methods about x509 with pem.
-// We recommend you to use X509 variable directly.
 type x509Pem struct{}
 
-// encode encodes block to pem bytes.
 func (xp x509Pem) encode(blockType string, blockBytes cryptox.Bytes) (cryptox.Bytes, error) {
 	block := &pem.Block{
 		Type:  blockType,
@@ -87,7 +83,6 @@ func (xp x509Pem) encode(blockType string, blockBytes cryptox.Bytes) (cryptox.By
 	return keyPem.Bytes(), nil
 }
 
-// decode decodes block from pem bytes.
 func (xp x509Pem) decode(blockType string, keyPem cryptox.Bytes) (*pem.Block, error) {
 	block, _ := pem.Decode(keyPem)
 	if block == nil {

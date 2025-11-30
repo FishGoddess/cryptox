@@ -8,6 +8,7 @@ import "encoding/hex"
 
 type encodingHex struct{}
 
+// Encode encodes the byte slice with hex encoding.
 func (encodingHex) Encode(bs []byte) []byte {
 	n := hex.EncodedLen(len(bs))
 	buffer := make([]byte, n)
@@ -16,6 +17,7 @@ func (encodingHex) Encode(bs []byte) []byte {
 	return buffer[:n]
 }
 
+// Decode decodes the byte slice with hex encoding.
 func (encodingHex) Decode(bs []byte) ([]byte, error) {
 	n := hex.DecodedLen(len(bs))
 	buffer := make([]byte, n)

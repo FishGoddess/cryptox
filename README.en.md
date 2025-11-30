@@ -42,7 +42,7 @@ $ go get -u github.com/FishGoddess/cryptox
 $ make bench
 ```
 
-_Note: Data size is 128 bytes, ecb/cbc uses pkcs7 padding, cfb/ofb/ctr is no padding._
+_Note: Data size is 128 bytes, ecb/cbc uses pkcs7 padding, cfb/ofb/ctr/gcm is no padding._
 
 ```
 goos: linux
