@@ -6,169 +6,231 @@ package rsa
 
 import (
 	"bytes"
-	"crypto/rand"
-	"crypto/rsa"
+	"slices"
 	"testing"
 
-	"github.com/FishGoddess/cryptox"
+	"github.com/FishGoddess/cryptox/bytes/encoding"
 )
 
-func newTestPublicKey(t *testing.T) PublicKey {
-	keyBytes := []byte(`-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu0KvOo1/9owLI+GZuzlu
-PmixfDEeNBA+t2qppsVT9xb4huZbwXwowNP6KU4vPpdF0KhHSmaFOf8IIXSoZ/xI
-7bLxs10Te1fSqZInVuj912VLj/uwuK7OG1zfsN0mt8I2d+9zYzAGykh/U/skYALO
-zvmfvamcQGHT1TuxOsQln3Eq0477VGmk53vTMOxEU033CUEabuNOiWlM8TsaDEqx
-YWO3Two+rSNW4S48WTQhekhqtxxg0LhJfB/T9tCOmzuTln4oVk4peZW+CH0UJijt
-d/2Ypx/Hyk0yXQgGtIKUN35avn2/ga56HOxGYumk22Q4Xv4OZOmevzPLyvRZDZMW
-uwIDAQAB
------END PUBLIC KEY-----`)
+func newTestPublicKey() PublicKey {
+	reader := bytes.NewReader([]byte(`-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAp6Ap2KrXXMaNmc3K6ZHx
+2IPrP4Bq5be1sP/4ASX3AmeuJbOHw+CNAQ/l3tFh7k+aaKMOgsspdtMq72Nd6KpU
+a9OW7Jz6btmTohD34gEG/PfMYGGMKA8CxJO+VLtaMed7p4YWW0SjZ3tVdUDGBacQ
+IHgDMTC9PWZhKj6d6tATWXI2amqv9rph1TgTq6q0SWRuwD2aYsQL8G0SicxC6uNL
+NMw+hAqL2ZP91lRfARHK5sm5p257NWPPabVxWSEFSj6h11CvflWyIimbFPlCqWNv
+ViozpBC3EqxuxzGWyF4r87MBp+XNA7JF0P0281eVjcaVtOzqdLN8vRu5/pE3MrWR
+EwIDAQAB
+-----END PUBLIC KEY-----`))
 
-	publicKey, err := ParsePublicKey(keyBytes)
+	publicKey, err := ReadPublicKey(reader)
 	if err != nil {
-		t.Fatal(err)
+		panic(err)
 	}
 
 	return publicKey
 }
 
-// go test -v -cover -run=^TestPublicKey$
-func TestPublicKey(t *testing.T) {
-	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
-	if err != nil {
-		t.Fatal(err)
+// go test -v -cover -run=^TestEncryptDecryptPKCS1v15$
+func TestEncryptDecryptPKCS1v15(t *testing.T) {
+	privateKey := newTestPrivateKey()
+	publicKey := newTestPublicKey()
+
+	type testCase struct {
+		Data              []byte
+		EncryptData       []byte
+		EncryptDataHex    []byte
+		EncryptDataBase64 []byte
 	}
 
-	publicKey := &privateKey.PublicKey
-
-	publicKeyBytes, err := X509.PKIXPublicKeyEncoder(publicKey)
-	if err != nil {
-		t.Fatal(err)
+	testCases := []testCase{
+		{
+			Data:              []byte(""),
+			EncryptData:       []byte(""),
+			EncryptDataHex:    []byte(""),
+			EncryptDataBase64: []byte(""),
+		},
+		{
+			Data:              []byte("123"),
+			EncryptData:       []byte(""),
+			EncryptDataHex:    []byte(""),
+			EncryptDataBase64: []byte(""),
+		},
+		{
+			Data:              []byte("你好，世界"),
+			EncryptData:       []byte(""),
+			EncryptDataHex:    []byte(""),
+			EncryptDataBase64: []byte(""),
+		},
 	}
 
-	key := newPublicKey(publicKey, publicKeyBytes)
-	if key.key != publicKey {
-		t.Fatalf("key.key %+v != publicKey %+v", key.key, publicKey)
-	}
-
-	if !bytes.Equal(key.keyBytes, publicKeyBytes) {
-		t.Fatalf("key.keyBytes %+v != publicKeyBytes %+v", key.keyBytes, publicKeyBytes)
-	}
-
-	if key.Key() != publicKey {
-		t.Fatalf("key.Key() %+v != publicKey %+v", key.Key(), publicKey)
-	}
-
-	if !bytes.Equal(key.Bytes(), publicKeyBytes) {
-		t.Fatalf("key.Bytes() %+v != publicKeyBytes %+v", key.Bytes(), publicKeyBytes)
-	}
-
-	expectPublicKey := PublicKey{
-		key:      publicKey,
-		keyBytes: publicKeyBytes,
-	}
-
-	if !key.EqualsTo(expectPublicKey) {
-		t.Fatalf("key %+v != expectPublicKey %+v", key, expectPublicKey)
-	}
-
-	if key.String() != string(publicKeyBytes) {
-		t.Fatalf("key.String() %s != publicKeyBytes %s", key.String(), publicKeyBytes)
-	}
-}
-
-// go test -v -cover -run=^TestPublicKeyEncryptPKCS1v15$
-func TestPublicKeyEncryptPKCS1v15(t *testing.T) {
-	publicKey := newTestPublicKey(t)
-	privateKey := newTestPrivateKey(t)
-
-	cases := []string{
-		"", "123", "你好，世界",
-	}
-
-	for _, msg := range cases {
-		encrypted, err := publicKey.EncryptPKCS1v15(cryptox.Bytes(msg))
+	sessionKey := []byte("12345678876543211234567887654321")
+	for _, testCase := range testCases {
+		// None
+		encrypted, err := publicKey.EncryptPKCS1v15(testCase.Data, encoding.None)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		decrypted, err := privateKey.DecryptPKCS1v15(encrypted)
+		if !slices.Equal(encrypted, testCase.EncryptData) {
+			t.Fatalf("data %q: got %+v != expect %+v", testCase.Data, encrypted, testCase.EncryptData)
+		}
+
+		if err = privateKey.DecryptPKCS1v15SessionKey(encrypted, sessionKey, encoding.None); err != nil {
+			t.Fatal(err)
+		}
+
+		decrypted, err := privateKey.DecryptPKCS1v15(encrypted, encoding.None)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		if string(decrypted) != msg {
-			t.Fatalf("decrypted %s != msg %s", decrypted, msg)
+		if !slices.Equal(decrypted, testCase.Data) {
+			t.Fatalf("encrypted %q: got %+v != expect %+v", encrypted, decrypted, testCase.Data)
 		}
-	}
-}
 
-// go test -v -cover -run=^TestPublicKeyEncryptOAEP$
-func TestPublicKeyEncryptOAEP(t *testing.T) {
-	publicKey := newTestPublicKey(t)
-	privateKey := newTestPrivateKey(t)
-
-	cases := []string{
-		"", "123", "你好，世界",
-	}
-
-	for _, msg := range cases {
-		encrypted, err := publicKey.EncryptOAEP(cryptox.Bytes(msg), cryptox.Bytes(msg))
+		// Hex
+		encrypted, err = publicKey.EncryptPKCS1v15(testCase.Data, encoding.Hex)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		decrypted, err := privateKey.DecryptOAEP(encrypted, cryptox.Bytes(msg))
+		if !slices.Equal(encrypted, testCase.EncryptDataHex) {
+			t.Fatalf("data %q: got %+v != expect %+v", testCase.Data, encrypted, testCase.EncryptDataHex)
+		}
+
+		if err = privateKey.DecryptPKCS1v15SessionKey(encrypted, sessionKey, encoding.Hex); err != nil {
+			t.Fatal(err)
+		}
+
+		if err = privateKey.DecryptPKCS1v15SessionKey(encrypted, sessionKey, encoding.None); err != nil {
+			t.Fatal(err)
+		}
+
+		decrypted, err = privateKey.DecryptPKCS1v15(encrypted, encoding.Hex)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		if string(decrypted) != msg {
-			t.Fatalf("decrypted %s != msg %s", decrypted, msg)
+		if !slices.Equal(decrypted, testCase.Data) {
+			t.Fatalf("encrypted %q: got %+v != expect %+v", encrypted, decrypted, testCase.Data)
 		}
-	}
-}
 
-// go test -v -cover -run=^TestPublicKeyVerifyPKCS1v15$
-func TestPublicKeyVerifyPKCS1v15(t *testing.T) {
-	publicKey := newTestPublicKey(t)
-	privateKey := newTestPrivateKey(t)
-
-	cases := []string{
-		"d41d8cd98f00b204e9800998ecf8427e", "202cb962ac59075b964b07152d234b70", "dbefd3ada018615b35588a01e216ae6e",
-	}
-
-	for _, msg := range cases {
-		signature, err := privateKey.SignPKCS1v15(cryptox.Bytes(msg))
+		// Base64
+		encrypted, err = publicKey.EncryptPKCS1v15(testCase.Data, encoding.Base64)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		err = publicKey.VerifyPKCS1v15(cryptox.Bytes(msg), signature)
+		if !slices.Equal(encrypted, testCase.EncryptDataBase64) {
+			t.Fatalf("data %q: got %+v != expect %+v", testCase.Data, encrypted, testCase.EncryptDataBase64)
+		}
+
+		if err = privateKey.DecryptPKCS1v15SessionKey(encrypted, sessionKey, encoding.Base64); err != nil {
+			t.Fatal(err)
+		}
+
+		decrypted, err = privateKey.DecryptPKCS1v15(encrypted, encoding.Base64)
 		if err != nil {
 			t.Fatal(err)
+		}
+
+		if !slices.Equal(decrypted, testCase.Data) {
+			t.Fatalf("encrypted %q: got %+v != expect %+v", encrypted, decrypted, testCase.Data)
 		}
 	}
 }
 
-// go test -v -cover -run=^TestPublicKeyVerifyPSS$
-func TestPublicKeyVerifyPSS(t *testing.T) {
-	publicKey := newTestPublicKey(t)
-	privateKey := newTestPrivateKey(t)
+// go test -v -cover -run=^TestEncryptDecryptOAEP$
+func TestEncryptDecryptOAEP(t *testing.T) {
+	privateKey := newTestPrivateKey()
+	publicKey := newTestPublicKey()
 
-	cases := []string{
-		"d41d8cd98f00b204e9800998ecf8427e", "202cb962ac59075b964b07152d234b70", "dbefd3ada018615b35588a01e216ae6e",
+	type testCase struct {
+		Data              []byte
+		EncryptData       []byte
+		EncryptDataHex    []byte
+		EncryptDataBase64 []byte
 	}
 
-	for _, msg := range cases {
-		signature, err := privateKey.SignPSS(cryptox.Bytes(msg), 0)
+	testCases := []testCase{
+		{
+			Data:              []byte(""),
+			EncryptData:       []byte(""),
+			EncryptDataHex:    []byte(""),
+			EncryptDataBase64: []byte(""),
+		},
+		{
+			Data:              []byte("123"),
+			EncryptData:       []byte(""),
+			EncryptDataHex:    []byte(""),
+			EncryptDataBase64: []byte(""),
+		},
+		{
+			Data:              []byte("你好，世界"),
+			EncryptData:       []byte(""),
+			EncryptDataHex:    []byte(""),
+			EncryptDataBase64: []byte(""),
+		},
+	}
+
+	label := []byte("label")
+	for _, testCase := range testCases {
+		// None
+		encrypted, err := publicKey.EncryptOAEP(testCase.Data, label, encoding.None)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		err = publicKey.VerifyPSS(cryptox.Bytes(msg), signature, 0)
+		if !slices.Equal(encrypted, testCase.EncryptData) {
+			t.Fatalf("data %q: got %+v != expect %+v", testCase.Data, encrypted, testCase.EncryptData)
+		}
+
+		decrypted, err := privateKey.DecryptOAEP(encrypted, label, encoding.None)
 		if err != nil {
 			t.Fatal(err)
+		}
+
+		if !slices.Equal(decrypted, testCase.Data) {
+			t.Fatalf("encrypted %q: got %+v != expect %+v", encrypted, decrypted, testCase.Data)
+		}
+
+		// Hex
+		encrypted, err = publicKey.EncryptOAEP(testCase.Data, label, encoding.Hex)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if !slices.Equal(encrypted, testCase.EncryptDataHex) {
+			t.Fatalf("data %q: got %+v != expect %+v", testCase.Data, encrypted, testCase.EncryptDataHex)
+		}
+
+		decrypted, err = privateKey.DecryptOAEP(encrypted, label, encoding.Hex)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if !slices.Equal(decrypted, testCase.Data) {
+			t.Fatalf("encrypted %q: got %+v != expect %+v", encrypted, decrypted, testCase.Data)
+		}
+
+		// Base64
+		encrypted, err = publicKey.EncryptOAEP(testCase.Data, label, encoding.Base64)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if !slices.Equal(encrypted, testCase.EncryptDataBase64) {
+			t.Fatalf("data %q: got %+v != expect %+v", testCase.Data, encrypted, testCase.EncryptDataBase64)
+		}
+
+		decrypted, err = privateKey.DecryptOAEP(encrypted, label, encoding.Base64)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if !slices.Equal(decrypted, testCase.Data) {
+			t.Fatalf("encrypted %q: got %+v != expect %+v", encrypted, decrypted, testCase.Data)
 		}
 	}
 }

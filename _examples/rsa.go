@@ -7,52 +7,59 @@ package main
 import (
 	"fmt"
 
+	"github.com/FishGoddess/cryptox/bytes/encoding"
 	"github.com/FishGoddess/cryptox/hash"
 	"github.com/FishGoddess/cryptox/rsa"
 )
 
-var (
-	// Use public key to encrypt msg.
-	publicKey = rsa.MustLoadPublicKey("rsa.pub")
-
-	// Use private key to decrypt msg.
-	privateKey = rsa.MustLoadPrivateKey("rsa.key")
-)
-
 func main() {
+	// Load the private key and the public key from file.
+	privateKey, err := rsa.LoadPrivateKey("rsa.key")
+	if err != nil {
+		panic(err)
+	}
+
+	publicKey, err := rsa.LoadPublicKey("rsa.pub")
+	if err != nil {
+		panic(err)
+	}
+
 	msg := []byte("戴上头箍，爱不了你；不戴头箍，救不了你。")
-	fmt.Printf("Msg: %s\n", msg)
+	fmt.Printf("msg: %s\n", msg)
 
-	// Use public key to encrypt msg.
-	encrypted, err := publicKey.EncryptPKCS1v15(msg)
+	// Use the public key to encrypt msg using base64 encoding.
+	label := []byte("你好，世界")
+
+	encrypt, err := publicKey.EncryptOAEP(msg, label, encoding.Base64)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("Encrypted: %s\n", encrypted.Base64())
+	fmt.Printf("encrypt: %s\n", encrypt)
 
-	// Use private key to decrypt msg.
-	decrypted, err := privateKey.DecryptPKCS1v15(encrypted)
+	// Use the private key to decrypt msg using base64 encoding.
+	decrypt, err := privateKey.DecryptOAEP(encrypt, label, encoding.Base64)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("Decrypted: %s\n", decrypted)
+	fmt.Printf("decrypt: %s\n", decrypt)
 
-	// Use private key to sign msg.
-	msg = hash.SHA256(msg)
-	signed, err := privateKey.SignPKCS1v15(msg)
+	// Use the private key to sign msg.
+	digest := hash.SHA256(msg, encoding.Hex)
+
+	sign, err := privateKey.SignPSS(digest, 0, encoding.Hex)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("Signed: %s\n", signed)
+	fmt.Printf("sign: %s\n", sign)
 
-	// Use public key to verify msg.
-	err = publicKey.VerifyPKCS1v15(msg, signed)
+	// Use the public key to verify the sign.
+	err = publicKey.VerifyPSS(digest, sign, 0, encoding.Hex)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println("Verified.")
+	fmt.Println("verify: %s\n", digest)
 }

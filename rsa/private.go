@@ -7,70 +7,72 @@ package rsa
 import (
 	"crypto/rsa"
 
-	"github.com/FishGoddess/cryptox"
+	"github.com/FishGoddess/cryptox/bytes/encoding"
 )
 
 type PrivateKey struct {
-	key      *rsa.PrivateKey
-	keyBytes cryptox.Bytes
+	key *rsa.PrivateKey
 }
 
-func newPrivateKey(key *rsa.PrivateKey, keyBytes cryptox.Bytes) PrivateKey {
-	return PrivateKey{key: key, keyBytes: keyBytes}
-}
+// DecryptPKCS1v15 decrypts bs with pkcs1 v15.
+func (pk PrivateKey) DecryptPKCS1v15(bs []byte, encoding encoding.Encoding, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
 
-// Key returns the key of pk.
-func (pk PrivateKey) Key() *rsa.PrivateKey {
-	return pk.key
-}
-
-// Bytes returns the bytes of pk.
-func (pk PrivateKey) Bytes() cryptox.Bytes {
-	return pk.keyBytes
-}
-
-// String returns the string of pk.
-func (pk PrivateKey) String() string {
-	return string(pk.keyBytes)
-}
-
-// EqualsTo returns if pk equals to privateKey.
-func (pk PrivateKey) EqualsTo(privateKey PrivateKey) bool {
-	return pk.key.Equal(privateKey.key)
-}
-
-// DecryptPKCS1v15 decrypts msg with pkcs1 v15.
-func (pk PrivateKey) DecryptPKCS1v15(msg cryptox.Bytes, opts ...Option) (cryptox.Bytes, error) {
-	conf := newConfig(opts)
-	return rsa.DecryptPKCS1v15(conf.random, pk.key, msg)
-}
-
-// DecryptPKCS1v15SessionKey decrypts msg using a session key with pkcs1 v15.
-func (pk PrivateKey) DecryptPKCS1v15SessionKey(msg cryptox.Bytes, sessionKey cryptox.Bytes, opts ...Option) error {
-	conf := newConfig(opts)
-	return rsa.DecryptPKCS1v15SessionKey(conf.random, pk.key, msg, sessionKey)
-}
-
-// DecryptOAEP decrypts msg with oaep.
-func (pk PrivateKey) DecryptOAEP(msg cryptox.Bytes, label cryptox.Bytes, opts ...Option) (cryptox.Bytes, error) {
-	conf := newConfig(opts)
-	return rsa.DecryptOAEP(conf.hash, conf.random, pk.key, msg, label)
-}
-
-// SignPKCS1v15 signs hashed data with pkcs1 v15.
-func (pk PrivateKey) SignPKCS1v15(hashed cryptox.Bytes, opts ...Option) (cryptox.Bytes, error) {
-	conf := newConfig(opts)
-	return rsa.SignPKCS1v15(conf.random, pk.key, conf.cryptoHash, hashed)
-}
-
-// SignPSS signs digest data with pss.
-func (pk PrivateKey) SignPSS(digest cryptox.Bytes, saltLength int, opts ...Option) (cryptox.Bytes, error) {
-	conf := newConfig(opts)
-
-	pssOpts := &rsa.PSSOptions{
-		Hash:       conf.cryptoHash,
-		SaltLength: saltLength,
+	bs, err := encoding.Decode(bs)
+	if err != nil {
+		return nil, err
 	}
 
-	return rsa.SignPSS(conf.random, pk.key, conf.cryptoHash, digest, pssOpts)
+	return rsa.DecryptPKCS1v15(conf.random, pk.key, bs)
+}
+
+// DecryptPKCS1v15SessionKey decrypts bs using a session key with pkcs1 v15.
+func (pk PrivateKey) DecryptPKCS1v15SessionKey(bs []byte, sessionKey []byte, encoding encoding.Encoding, opts ...Option) error {
+	conf := newConfig().Apply(opts...)
+
+	bs, err := encoding.Decode(bs)
+	if err != nil {
+		return err
+	}
+
+	return rsa.DecryptPKCS1v15SessionKey(conf.random, pk.key, bs, sessionKey)
+}
+
+// DecryptOAEP decrypts bs with oaep.
+func (pk PrivateKey) DecryptOAEP(bs []byte, label []byte, encoding encoding.Encoding, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
+	bs, err := encoding.Decode(bs)
+	if err != nil {
+		return nil, err
+	}
+
+	return rsa.DecryptOAEP(conf.hash, conf.random, pk.key, bs, label)
+}
+
+// SignPKCS1v15 signs hashed with pkcs1 v15.
+func (pk PrivateKey) SignPKCS1v15(hashed []byte, encoding encoding.Encoding, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
+	sign, err := rsa.SignPKCS1v15(conf.random, pk.key, conf.cryptoHash, hashed)
+	if err != nil {
+		return nil, err
+	}
+
+	sign = encoding.Encode(sign)
+	return sign, nil
+}
+
+// SignPSS signs digest with pss.
+func (pk PrivateKey) SignPSS(digest []byte, saltLength int, encoding encoding.Encoding, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+	pssOpts := &rsa.PSSOptions{Hash: conf.cryptoHash, SaltLength: saltLength}
+
+	sign, err := rsa.SignPSS(conf.random, pk.key, conf.cryptoHash, digest, pssOpts)
+	if err != nil {
+		return nil, err
+	}
+
+	sign = encoding.Encode(sign)
+	return sign, nil
 }

@@ -5,139 +5,133 @@
 package rsa
 
 import (
-	"crypto/rand"
 	"crypto/rsa"
 	"io"
 	"os"
-
-	"github.com/FishGoddess/cryptox"
 )
 
-// GenerateKeys generates a key set of bits.
+// GenerateKeys generates a private key of bits and a public key.
 func GenerateKeys(bits int, opts ...KeyOption) (PrivateKey, PublicKey, error) {
-	privateKey, err := GeneratePrivateKey(bits, opts...)
+	conf := newKeyConfig().Apply(opts...)
+
+	key, err := rsa.GenerateKey(conf.random, bits)
 	if err != nil {
 		return PrivateKey{}, PublicKey{}, err
 	}
 
-	publicKey, err := GeneratePublicKey(privateKey, opts...)
-	if err != nil {
-		return PrivateKey{}, PublicKey{}, err
-	}
-
+	privateKey := PrivateKey{key: key}
+	publicKey := PublicKey{key: &(key.PublicKey)}
 	return privateKey, publicKey, nil
 }
 
-// GeneratePrivateKey generates a private key of bits.
-func GeneratePrivateKey(bits int, opts ...KeyOption) (PrivateKey, error) {
-	conf := newKeyConfig(opts)
+// WritePrivateKey writes the private key to the writer.
+func WritePrivateKey(writer io.Writer, privateKey PrivateKey, opts ...KeyOption) error {
+	conf := newKeyConfig().Apply(opts...)
 
-	privateKey, err := rsa.GenerateKey(rand.Reader, bits)
+	bs, err := conf.encodePrivateKey(privateKey.key)
 	if err != nil {
-		return PrivateKey{}, err
+		return err
 	}
 
-	privateKeyBytes, err := conf.privateKeyEncoder.Encode(privateKey)
-	if err != nil {
-		return PrivateKey{}, err
-	}
-
-	return newPrivateKey(privateKey, privateKeyBytes), nil
+	_, err = writer.Write(bs)
+	return err
 }
 
-// GeneratePublicKey generates a public key from private key.
-func GeneratePublicKey(privateKey PrivateKey, opts ...KeyOption) (PublicKey, error) {
-	conf := newKeyConfig(opts)
-	publicKey := &(privateKey.Key().PublicKey)
+// WritePublicKey writes the public key to the writer.
+func WritePublicKey(writer io.Writer, publicKey PublicKey, opts ...KeyOption) error {
+	conf := newKeyConfig().Apply(opts...)
 
-	publicKeyBytes, err := conf.publicKeyEncoder.Encode(publicKey)
+	bs, err := conf.encodePublicKey(publicKey.key)
+	if err != nil {
+		return err
+	}
+
+	_, err = writer.Write(bs)
+	return err
+}
+
+// ReadPrivateKey reads the private key from the reader.
+func ReadPrivateKey(reader io.Reader, opts ...KeyOption) (PrivateKey, error) {
+	conf := newKeyConfig().Apply(opts...)
+
+	bs, err := io.ReadAll(reader)
+	if err != nil {
+		return PrivateKey{}, err
+	}
+
+	key, err := conf.decodePrivateKey(bs)
+	if err != nil {
+		return PrivateKey{}, err
+	}
+
+	privateKey := PrivateKey{key: key}
+	return privateKey, nil
+}
+
+// ReadPublicKey reads the public key from the reader.
+func ReadPublicKey(reader io.Reader, opts ...KeyOption) (PublicKey, error) {
+	conf := newKeyConfig().Apply(opts...)
+
+	bs, err := io.ReadAll(reader)
 	if err != nil {
 		return PublicKey{}, err
 	}
 
-	return newPublicKey(publicKey, publicKeyBytes), nil
-}
-
-// ParsePrivateKey parses a private key from pem bytes.
-func ParsePrivateKey(keyBytes cryptox.Bytes, opts ...KeyOption) (PrivateKey, error) {
-	conf := newKeyConfig(opts)
-
-	privateKey, err := conf.privateKeyDecoder.Decode(keyBytes)
-	if err != nil {
-		return PrivateKey{}, err
-	}
-
-	return newPrivateKey(privateKey, keyBytes), nil
-}
-
-// ParsePublicKey parses a public key from pem bytes.
-func ParsePublicKey(keyBytes cryptox.Bytes, opts ...KeyOption) (PublicKey, error) {
-	conf := newKeyConfig(opts)
-
-	publicKey, err := conf.publicKeyDecoder.Decode(keyBytes)
+	key, err := conf.decodePublicKey(bs)
 	if err != nil {
 		return PublicKey{}, err
 	}
 
-	return newPublicKey(publicKey, keyBytes), nil
+	publicKey := PublicKey{key: key}
+	return publicKey, nil
 }
 
-// ReadPrivateKey reads a private key from a reader.
-func ReadPrivateKey(keyReader io.Reader, opts ...KeyOption) (PrivateKey, error) {
-	keyBytes, err := io.ReadAll(keyReader)
+func newFile(file string) (*os.File, error) {
+	flag := os.O_CREATE | os.O_WRONLY | os.O_EXCL
+	perm := os.FileMode(0644)
+	return os.OpenFile(file, flag, perm)
+}
+
+// StorePrivateKey stores the private key to the file.
+func StorePrivateKey(file string, privateKey PrivateKey, opts ...KeyOption) error {
+	f, err := newFile(file)
+	if err != nil {
+		return err
+	}
+
+	defer f.Close()
+	return WritePrivateKey(f, privateKey, opts...)
+}
+
+// StorePublicKey stores the public key to the file.
+func StorePublicKey(file string, publicKey PublicKey, opts ...KeyOption) error {
+	f, err := newFile(file)
+	if err != nil {
+		return err
+	}
+
+	defer f.Close()
+	return WritePublicKey(f, publicKey, opts...)
+}
+
+// LoadPrivateKey loads the private key from the file.
+func LoadPrivateKey(file string, opts ...KeyOption) (PrivateKey, error) {
+	f, err := os.Open(file)
 	if err != nil {
 		return PrivateKey{}, err
 	}
 
-	return ParsePrivateKey(keyBytes, opts...)
+	defer f.Close()
+	return ReadPrivateKey(f, opts...)
 }
 
-// ReadPublicKey reads a public key from a reader.
-func ReadPublicKey(keyReader io.Reader, opts ...KeyOption) (PublicKey, error) {
-	keyBytes, err := io.ReadAll(keyReader)
+// LoadPublicKey loads the public key from the file.
+func LoadPublicKey(file string, opts ...KeyOption) (PublicKey, error) {
+	f, err := os.Open(file)
 	if err != nil {
 		return PublicKey{}, err
 	}
 
-	return ParsePublicKey(keyBytes, opts...)
-}
-
-// LoadPrivateKey loads a private key from a file.
-func LoadPrivateKey(keyFile string, opts ...KeyOption) (PrivateKey, error) {
-	keyBytes, err := os.ReadFile(keyFile)
-	if err != nil {
-		return PrivateKey{}, err
-	}
-
-	return ParsePrivateKey(keyBytes, opts...)
-}
-
-// LoadPublicKey loads a public key from a file.
-func LoadPublicKey(keyFile string, opts ...KeyOption) (PublicKey, error) {
-	keyBytes, err := os.ReadFile(keyFile)
-	if err != nil {
-		return PublicKey{}, err
-	}
-
-	return ParsePublicKey(keyBytes, opts...)
-}
-
-// MustLoadPrivateKey loads private key from a file or panic if failed.
-func MustLoadPrivateKey(keyFile string, opts ...KeyOption) PrivateKey {
-	key, err := LoadPrivateKey(keyFile, opts...)
-	if err != nil {
-		panic(err)
-	}
-
-	return key
-}
-
-// MustLoadPublicKey loads public key from a file or panic if failed.
-func MustLoadPublicKey(keyFile string, opts ...KeyOption) PublicKey {
-	key, err := LoadPublicKey(keyFile, opts...)
-	if err != nil {
-		panic(err)
-	}
-
-	return key
+	defer f.Close()
+	return ReadPublicKey(f, opts...)
 }
