@@ -46,7 +46,7 @@ func main() {
 	fmt.Printf("decrypt: %s\n", decrypt)
 
 	// Use the private key to sign msg.
-	digest := hash.SHA256(msg, encoding.Hex)
+	digest := hash.SHA256(msg, encoding.None)
 
 	sign, err := privateKey.SignPSS(digest, 0, encoding.Hex)
 	if err != nil {
@@ -61,5 +61,5 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println("verify: %s\n", digest)
+	fmt.Printf("verify: %s\n", msg)
 }
