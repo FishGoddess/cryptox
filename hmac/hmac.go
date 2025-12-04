@@ -11,47 +11,47 @@ import (
 	"crypto/sha256"
 	"crypto/sha512"
 	stdhash "hash"
-
-	"github.com/FishGoddess/cryptox/bytes/encoding"
 )
 
 type hashFunc = func() stdhash.Hash
 
-func hash(hashFunc hashFunc, bs []byte, key []byte, encoding encoding.Encoding) []byte {
+func hash(hashFunc hashFunc, bs []byte, key []byte, opts ...Option) []byte {
+	conf := newConfig().Apply(opts...)
+
 	h := hmac.New(hashFunc, key)
 	h.Write(bs)
 
 	bs = h.Sum(nil)
-	bs = encoding.Encode(bs)
+	bs = conf.encoding.Encode(bs)
 	return bs
 }
 
 // MD5 uses hmac-md5 to hash bs and returns an error if failed.
-func MD5(bs []byte, key []byte, encoding encoding.Encoding) []byte {
-	return hash(md5.New, bs, key, encoding)
+func MD5(bs []byte, key []byte, opts ...Option) []byte {
+	return hash(md5.New, bs, key, opts...)
 }
 
 // SHA1 uses hmac-sha1 to hash bs and returns an error if failed.
-func SHA1(bs []byte, key []byte, encoding encoding.Encoding) []byte {
-	return hash(sha1.New, bs, key, encoding)
+func SHA1(bs []byte, key []byte, opts ...Option) []byte {
+	return hash(sha1.New, bs, key, opts...)
 }
 
 // SHA224 uses hmac-sha224 to hash bs and returns an error if failed.
-func SHA224(bs []byte, key []byte, encoding encoding.Encoding) []byte {
-	return hash(sha256.New224, bs, key, encoding)
+func SHA224(bs []byte, key []byte, opts ...Option) []byte {
+	return hash(sha256.New224, bs, key, opts...)
 }
 
 // SHA256 uses hmac-sha256 to hash bs and returns an error if failed.
-func SHA256(bs []byte, key []byte, encoding encoding.Encoding) []byte {
-	return hash(sha256.New, bs, key, encoding)
+func SHA256(bs []byte, key []byte, opts ...Option) []byte {
+	return hash(sha256.New, bs, key, opts...)
 }
 
 // SHA384 uses hmac-sha384 to hash bs and returns an error if failed.
-func SHA384(bs []byte, key []byte, encoding encoding.Encoding) []byte {
-	return hash(sha512.New384, bs, key, encoding)
+func SHA384(bs []byte, key []byte, opts ...Option) []byte {
+	return hash(sha512.New384, bs, key, opts...)
 }
 
 // SHA512 uses hmac-sha512 to hash bs and returns an error if failed.
-func SHA512(bs []byte, key []byte, encoding encoding.Encoding) []byte {
-	return hash(sha512.New, bs, key, encoding)
+func SHA512(bs []byte, key []byte, opts ...Option) []byte {
+	return hash(sha512.New, bs, key, opts...)
 }

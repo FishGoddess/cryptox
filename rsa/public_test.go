@@ -8,8 +8,6 @@ import (
 	"bytes"
 	"slices"
 	"testing"
-
-	"github.com/FishGoddess/cryptox/bytes/encoding"
 )
 
 type testCase struct {
@@ -74,10 +72,10 @@ func TestEncryptDecryptPKCS1v15(t *testing.T) {
 		},
 	}
 
-	opt := WithRandom(testRandomReader{})
+	random := testRandomReader{}
 	for _, testCase := range testCases {
 		// None
-		encrypted, err := publicKey.EncryptPKCS1v15(testCase.Data, encoding.None, opt)
+		encrypted, err := publicKey.EncryptPKCS1v15(testCase.Data, WithRandom(random))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -86,7 +84,7 @@ func TestEncryptDecryptPKCS1v15(t *testing.T) {
 			t.Fatalf("data %q: got %+v != expect %+v", testCase.Data, encrypted, testCase.EncryptData)
 		}
 
-		decrypted, err := privateKey.DecryptPKCS1v15(encrypted, encoding.None, opt)
+		decrypted, err := privateKey.DecryptPKCS1v15(encrypted, WithRandom(random))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -96,7 +94,7 @@ func TestEncryptDecryptPKCS1v15(t *testing.T) {
 		}
 
 		// Hex
-		encrypted, err = publicKey.EncryptPKCS1v15(testCase.Data, encoding.Hex, opt)
+		encrypted, err = publicKey.EncryptPKCS1v15(testCase.Data, WithHex(), WithRandom(random))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -105,7 +103,7 @@ func TestEncryptDecryptPKCS1v15(t *testing.T) {
 			t.Fatalf("data %q: got %+v != expect %+v", testCase.Data, encrypted, testCase.EncryptDataHex)
 		}
 
-		decrypted, err = privateKey.DecryptPKCS1v15(encrypted, encoding.Hex, opt)
+		decrypted, err = privateKey.DecryptPKCS1v15(encrypted, WithHex(), WithRandom(random))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -115,7 +113,7 @@ func TestEncryptDecryptPKCS1v15(t *testing.T) {
 		}
 
 		// Base64
-		encrypted, err = publicKey.EncryptPKCS1v15(testCase.Data, encoding.Base64, opt)
+		encrypted, err = publicKey.EncryptPKCS1v15(testCase.Data, WithBase64(), WithRandom(random))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -124,7 +122,7 @@ func TestEncryptDecryptPKCS1v15(t *testing.T) {
 			t.Fatalf("data %q: got %+v != expect %+v", testCase.Data, encrypted, testCase.EncryptDataBase64)
 		}
 
-		decrypted, err = privateKey.DecryptPKCS1v15(encrypted, encoding.Base64, opt)
+		decrypted, err = privateKey.DecryptPKCS1v15(encrypted, WithBase64(), WithRandom(random))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -162,10 +160,10 @@ func TestEncryptDecryptOAEP(t *testing.T) {
 	}
 
 	label := []byte("label")
-	opt := WithRandom(testRandomReader{})
+	random := testRandomReader{}
 	for _, testCase := range testCases {
 		// None
-		encrypted, err := publicKey.EncryptOAEP(testCase.Data, label, encoding.None, opt)
+		encrypted, err := publicKey.EncryptOAEP(testCase.Data, label, WithRandom(random))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -174,7 +172,7 @@ func TestEncryptDecryptOAEP(t *testing.T) {
 			t.Fatalf("data %q: got %+v != expect %+v", testCase.Data, encrypted, testCase.EncryptData)
 		}
 
-		decrypted, err := privateKey.DecryptOAEP(encrypted, label, encoding.None, opt)
+		decrypted, err := privateKey.DecryptOAEP(encrypted, label, WithRandom(random))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -184,7 +182,7 @@ func TestEncryptDecryptOAEP(t *testing.T) {
 		}
 
 		// Hex
-		encrypted, err = publicKey.EncryptOAEP(testCase.Data, label, encoding.Hex, opt)
+		encrypted, err = publicKey.EncryptOAEP(testCase.Data, label, WithHex(), WithRandom(random))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -193,7 +191,7 @@ func TestEncryptDecryptOAEP(t *testing.T) {
 			t.Fatalf("data %q: got %+v != expect %+v", testCase.Data, encrypted, testCase.EncryptDataHex)
 		}
 
-		decrypted, err = privateKey.DecryptOAEP(encrypted, label, encoding.Hex, opt)
+		decrypted, err = privateKey.DecryptOAEP(encrypted, label, WithHex(), WithRandom(random))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -203,7 +201,7 @@ func TestEncryptDecryptOAEP(t *testing.T) {
 		}
 
 		// Base64
-		encrypted, err = publicKey.EncryptOAEP(testCase.Data, label, encoding.Base64, opt)
+		encrypted, err = publicKey.EncryptOAEP(testCase.Data, label, WithBase64(), WithRandom(random))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -212,7 +210,7 @@ func TestEncryptDecryptOAEP(t *testing.T) {
 			t.Fatalf("data %q: got %+v != expect %+v", testCase.Data, encrypted, testCase.EncryptDataBase64)
 		}
 
-		decrypted, err = privateKey.DecryptOAEP(encrypted, label, encoding.Base64, opt)
+		decrypted, err = privateKey.DecryptOAEP(encrypted, label, WithBase64(), WithRandom(random))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -229,16 +227,16 @@ func TestDecryptPKCS1v15SessionKey(t *testing.T) {
 	publicKey := newTestPublicKey()
 
 	sessionKey := []byte("12345678876543211234567887654321")
-	opt := WithRandom(testRandomReader{})
+	random := testRandomReader{}
 
-	encrypt, err := publicKey.EncryptPKCS1v15(sessionKey, encoding.None, opt)
+	encrypt, err := publicKey.EncryptPKCS1v15(sessionKey, WithRandom(random))
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	gotSessionKey := make([]byte, len(sessionKey))
 
-	err = privateKey.DecryptPKCS1v15SessionKey(encrypt, gotSessionKey, encoding.None, opt)
+	err = privateKey.DecryptPKCS1v15SessionKey(encrypt, gotSessionKey, WithRandom(random))
 	if err != nil {
 		panic(err)
 	}

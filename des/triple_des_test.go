@@ -7,9 +7,6 @@ package des
 import (
 	"crypto/des"
 	"testing"
-
-	"github.com/FishGoddess/cryptox/bytes/encoding"
-	"github.com/FishGoddess/cryptox/bytes/padding"
 )
 
 var (
@@ -64,12 +61,14 @@ func TestTripleECB(t *testing.T) {
 		},
 	}
 
-	encrypt := func(data []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
-		return EncryptTripleECB(data, testTripleKey, padding, encoding)
+	encrypt := func(data []byte, opts ...Option) ([]byte, error) {
+		opts = append(opts, WithPKCS7())
+		return EncryptTripleECB(data, testTripleKey, opts...)
 	}
 
-	decrypt := func(data []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
-		return DecryptTripleECB(data, testTripleKey, padding, encoding)
+	decrypt := func(data []byte, opts ...Option) ([]byte, error) {
+		opts = append(opts, WithPKCS7())
+		return DecryptTripleECB(data, testTripleKey, opts...)
 	}
 
 	if err := testEncryptAndDecrypt(t.Name(), encrypt, decrypt, testCases); err != nil {
@@ -100,12 +99,14 @@ func TestTripleCBC(t *testing.T) {
 		},
 	}
 
-	encrypt := func(data []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
-		return EncryptTripleCBC(data, testTripleKey, testIV, padding, encoding)
+	encrypt := func(data []byte, opts ...Option) ([]byte, error) {
+		opts = append(opts, WithPKCS7())
+		return EncryptTripleCBC(data, testTripleKey, testIV, opts...)
 	}
 
-	decrypt := func(data []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
-		return DecryptTripleCBC(data, testTripleKey, testIV, padding, encoding)
+	decrypt := func(data []byte, opts ...Option) ([]byte, error) {
+		opts = append(opts, WithPKCS7())
+		return DecryptTripleCBC(data, testTripleKey, testIV, opts...)
 	}
 
 	if err := testEncryptAndDecrypt(t.Name(), encrypt, decrypt, testCases); err != nil {
@@ -118,30 +119,30 @@ func TestTripleCFB(t *testing.T) {
 	testCases := []testCase{
 		{
 			Data:              []byte(""),
-			EncryptData:       []byte{92, 169, 236, 137, 11, 246, 123, 32},
-			EncryptDataHex:    []byte("5ca9ec890bf67b20"),
-			EncryptDataBase64: []byte("XKnsiQv2eyA="),
+			EncryptData:       []byte{},
+			EncryptDataHex:    []byte(""),
+			EncryptDataBase64: []byte(""),
 		},
 		{
 			Data:              []byte("123"),
-			EncryptData:       []byte{101, 147, 215, 132, 6, 251, 118, 45},
-			EncryptDataHex:    []byte("6593d78406fb762d"),
-			EncryptDataBase64: []byte("ZZPXhAb7di0="),
+			EncryptData:       []byte{101, 147, 215},
+			EncryptDataHex:    []byte("6593d7"),
+			EncryptDataBase64: []byte("ZZPX"),
 		},
 		{
 			Data:              []byte("你好，世界"),
-			EncryptData:       []byte{176, 28, 68, 100, 166, 67, 156, 148, 85, 69, 217, 58, 184, 136, 197, 51},
-			EncryptDataHex:    []byte("b01c4464a6439c945545d93ab888c533"),
-			EncryptDataBase64: []byte("sBxEZKZDnJRVRdk6uIjFMw=="),
+			EncryptData:       []byte{176, 28, 68, 100, 166, 67, 156, 148, 85, 69, 217, 58, 184, 136, 197},
+			EncryptDataHex:    []byte("b01c4464a6439c945545d93ab888c5"),
+			EncryptDataBase64: []byte("sBxEZKZDnJRVRdk6uIjF"),
 		},
 	}
 
-	encrypt := func(data []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
-		return EncryptTripleCFB(data, testTripleKey, testIV, padding, encoding)
+	encrypt := func(data []byte, opts ...Option) ([]byte, error) {
+		return EncryptTripleCFB(data, testTripleKey, testIV, opts...)
 	}
 
-	decrypt := func(data []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
-		return DecryptTripleCFB(data, testTripleKey, testIV, padding, encoding)
+	decrypt := func(data []byte, opts ...Option) ([]byte, error) {
+		return DecryptTripleCFB(data, testTripleKey, testIV, opts...)
 	}
 
 	if err := testEncryptAndDecrypt(t.Name(), encrypt, decrypt, testCases); err != nil {
@@ -154,30 +155,30 @@ func TestTripleOFB(t *testing.T) {
 	testCases := []testCase{
 		{
 			Data:              []byte(""),
-			EncryptData:       []byte{92, 169, 236, 137, 11, 246, 123, 32},
-			EncryptDataHex:    []byte("5ca9ec890bf67b20"),
-			EncryptDataBase64: []byte("XKnsiQv2eyA="),
+			EncryptData:       []byte{},
+			EncryptDataHex:    []byte(""),
+			EncryptDataBase64: []byte(""),
 		},
 		{
 			Data:              []byte("123"),
-			EncryptData:       []byte{101, 147, 215, 132, 6, 251, 118, 45},
-			EncryptDataHex:    []byte("6593d78406fb762d"),
-			EncryptDataBase64: []byte("ZZPXhAb7di0="),
+			EncryptData:       []byte{101, 147, 215},
+			EncryptDataHex:    []byte("6593d7"),
+			EncryptDataBase64: []byte("ZZPX"),
 		},
 		{
 			Data:              []byte("你好，世界"),
-			EncryptData:       []byte{176, 28, 68, 100, 166, 67, 156, 148, 46, 244, 26, 37, 38, 97, 62, 68},
-			EncryptDataHex:    []byte("b01c4464a6439c942ef41a2526613e44"),
-			EncryptDataBase64: []byte("sBxEZKZDnJQu9BolJmE+RA=="),
+			EncryptData:       []byte{176, 28, 68, 100, 166, 67, 156, 148, 46, 244, 26, 37, 38, 97, 62},
+			EncryptDataHex:    []byte("b01c4464a6439c942ef41a2526613e"),
+			EncryptDataBase64: []byte("sBxEZKZDnJQu9BolJmE+"),
 		},
 	}
 
-	encrypt := func(data []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
-		return EncryptTripleOFB(data, testTripleKey, testIV, padding, encoding)
+	encrypt := func(data []byte, opts ...Option) ([]byte, error) {
+		return EncryptTripleOFB(data, testTripleKey, testIV, opts...)
 	}
 
-	decrypt := func(data []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
-		return DecryptTripleOFB(data, testTripleKey, testIV, padding, encoding)
+	decrypt := func(data []byte, opts ...Option) ([]byte, error) {
+		return DecryptTripleOFB(data, testTripleKey, testIV, opts...)
 	}
 
 	if err := testEncryptAndDecrypt(t.Name(), encrypt, decrypt, testCases); err != nil {
@@ -190,30 +191,30 @@ func TestTripleCTR(t *testing.T) {
 	testCases := []testCase{
 		{
 			Data:              []byte(""),
-			EncryptData:       []byte{92, 169, 236, 137, 11, 246, 123, 32},
-			EncryptDataHex:    []byte("5ca9ec890bf67b20"),
-			EncryptDataBase64: []byte("XKnsiQv2eyA="),
+			EncryptData:       []byte{},
+			EncryptDataHex:    []byte(""),
+			EncryptDataBase64: []byte(""),
 		},
 		{
 			Data:              []byte("123"),
-			EncryptData:       []byte{101, 147, 215, 132, 6, 251, 118, 45},
-			EncryptDataHex:    []byte("6593d78406fb762d"),
-			EncryptDataBase64: []byte("ZZPXhAb7di0="),
+			EncryptData:       []byte{101, 147, 215},
+			EncryptDataHex:    []byte("6593d7"),
+			EncryptDataBase64: []byte("ZZPX"),
 		},
 		{
 			Data:              []byte("你好，世界"),
-			EncryptData:       []byte{176, 28, 68, 100, 166, 67, 156, 148, 76, 184, 154, 31, 42, 134, 28, 205},
-			EncryptDataHex:    []byte("b01c4464a6439c944cb89a1f2a861ccd"),
-			EncryptDataBase64: []byte("sBxEZKZDnJRMuJofKoYczQ=="),
+			EncryptData:       []byte{176, 28, 68, 100, 166, 67, 156, 148, 76, 184, 154, 31, 42, 134, 28},
+			EncryptDataHex:    []byte("b01c4464a6439c944cb89a1f2a861c"),
+			EncryptDataBase64: []byte("sBxEZKZDnJRMuJofKoYc"),
 		},
 	}
 
-	encrypt := func(data []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
-		return EncryptTripleCTR(data, testTripleKey, testIV, padding, encoding)
+	encrypt := func(data []byte, opts ...Option) ([]byte, error) {
+		return EncryptTripleCTR(data, testTripleKey, testIV, opts...)
 	}
 
-	decrypt := func(data []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
-		return DecryptTripleCTR(data, testTripleKey, testIV, padding, encoding)
+	decrypt := func(data []byte, opts ...Option) ([]byte, error) {
+		return DecryptTripleCTR(data, testTripleKey, testIV, opts...)
 	}
 
 	if err := testEncryptAndDecrypt(t.Name(), encrypt, decrypt, testCases); err != nil {

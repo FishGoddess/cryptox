@@ -8,11 +8,9 @@ import (
 	"fmt"
 	"slices"
 	"testing"
-
-	"github.com/FishGoddess/cryptox/bytes/encoding"
 )
 
-type testHashFunc = func(bs []byte, key []byte, encoding encoding.Encoding) []byte
+type testHashFunc = func(bs []byte, key []byte, opts ...Option) []byte
 
 type testCase struct {
 	Data           []byte
@@ -25,19 +23,19 @@ func testHash(name string, hash testHashFunc, testCases []testCase) error {
 	key := []byte("key")
 	for _, testCase := range testCases {
 		// None
-		got := hash(testCase.Data, key, encoding.None)
+		got := hash(testCase.Data, key)
 		if !slices.Equal(got, testCase.HashData) {
 			return fmt.Errorf("%s data %q: got %+v != expect %+v", name, testCase.Data, got, testCase.HashData)
 		}
 
 		// Hex
-		got = hash(testCase.Data, key, encoding.Hex)
+		got = hash(testCase.Data, key, WithHex())
 		if !slices.Equal(got, testCase.HashDataHex) {
 			return fmt.Errorf("%s data %q: got hex %s != expect hex %s", name, testCase.Data, got, testCase.HashDataHex)
 		}
 
 		// Base64
-		got = hash(testCase.Data, key, encoding.Base64)
+		got = hash(testCase.Data, key, WithBase64())
 		if !slices.Equal(got, testCase.HashDataBase64) {
 			return fmt.Errorf("%s data %q: got base64 %s != expect base64 %s", name, testCase.Data, got, testCase.HashDataBase64)
 		}

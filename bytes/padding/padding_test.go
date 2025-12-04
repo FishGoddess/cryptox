@@ -36,3 +36,51 @@ func testPadding(t *testing.T, padding Padding, testCases []testCase) {
 		}
 	}
 }
+
+// go test -v -cover -run=^TestNone$
+func TestNone(t *testing.T) {
+	testCases := []testCase{
+		{Data: []byte{}, PaddingData: []byte{}},
+		{Data: []byte{1, 2, 3, 4, 5}, PaddingData: []byte{1, 2, 3, 4, 5}},
+		{Data: []byte{1, 2, 3, 4, 5, 6, 7, 8}, PaddingData: []byte{1, 2, 3, 4, 5, 6, 7, 8}},
+		{Data: []byte{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0}, PaddingData: []byte{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0}},
+	}
+
+	testPadding(t, None{}, testCases)
+}
+
+// go test -v -cover -run=^TestZero$
+func TestZero(t *testing.T) {
+	testCases := []testCase{
+		{Data: []byte{}, PaddingData: []byte{0, 0, 0, 0, 0, 0, 0, 0}},
+		{Data: []byte{1, 2, 3, 4, 5}, PaddingData: []byte{1, 2, 3, 4, 5, 0, 0, 0}},
+		{Data: []byte{1, 2, 3, 4, 5, 6, 7, 8}, PaddingData: []byte{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0}},
+		{Data: []byte{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0}, PaddingData: []byte{1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
+	}
+
+	testPadding(t, Zero{}, testCases)
+}
+
+// go test -v -cover -run=^TestPKCS5$
+func TestPKCS5(t *testing.T) {
+	testCases := []testCase{
+		{Data: []byte{}, PaddingData: []byte{8, 8, 8, 8, 8, 8, 8, 8}},
+		{Data: []byte{1, 2, 3, 4, 5}, PaddingData: []byte{1, 2, 3, 4, 5, 3, 3, 3}},
+		{Data: []byte{1, 2, 3, 4, 5, 6, 7, 8}, PaddingData: []byte{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8}},
+		{Data: []byte{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8}, PaddingData: []byte{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8}},
+	}
+
+	testPadding(t, PKCS5{}, testCases)
+}
+
+// go test -v -cover -run=^TestPKCS7$
+func TestPKCS7(t *testing.T) {
+	testCases := []testCase{
+		{Data: []byte{}, PaddingData: []byte{8, 8, 8, 8, 8, 8, 8, 8}},
+		{Data: []byte{1, 2, 3, 4, 5}, PaddingData: []byte{1, 2, 3, 4, 5, 3, 3, 3}},
+		{Data: []byte{1, 2, 3, 4, 5, 6, 7, 8}, PaddingData: []byte{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8}},
+		{Data: []byte{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8}, PaddingData: []byte{1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8}},
+	}
+
+	testPadding(t, PKCS7{}, testCases)
+}

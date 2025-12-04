@@ -8,8 +8,6 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"testing"
-
-	"github.com/FishGoddess/cryptox/bytes/encoding"
 )
 
 func newTestPrivateKey() PrivateKey {
@@ -88,34 +86,34 @@ func TestSignVerifyPKCS1v15(t *testing.T) {
 		hashed := sum[:]
 
 		// None
-		sign, err := privateKey.SignPKCS1v15(hashed, encoding.None)
+		sign, err := privateKey.SignPKCS1v15(hashed)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		err = publicKey.VerifyPKCS1v15(hashed, sign, encoding.None)
+		err = publicKey.VerifyPKCS1v15(hashed, sign)
 		if err != nil {
 			t.Fatal(err)
 		}
 
 		// Hex
-		sign, err = privateKey.SignPKCS1v15(hashed, encoding.Hex)
+		sign, err = privateKey.SignPKCS1v15(hashed, WithHex())
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		err = publicKey.VerifyPKCS1v15(hashed, sign, encoding.Hex)
+		err = publicKey.VerifyPKCS1v15(hashed, sign, WithHex())
 		if err != nil {
 			t.Fatal(err)
 		}
 
 		// Base64
-		sign, err = privateKey.SignPKCS1v15(hashed, encoding.Base64)
+		sign, err = privateKey.SignPKCS1v15(hashed, WithBase64())
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		err = publicKey.VerifyPKCS1v15(hashed, sign, encoding.Base64)
+		err = publicKey.VerifyPKCS1v15(hashed, sign, WithBase64())
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -160,34 +158,34 @@ func TestSignVerifyPSS(t *testing.T) {
 		digest := sum[:]
 
 		// None
-		sign, err := privateKey.SignPSS(digest, 0, encoding.None)
+		sign, err := privateKey.SignPSS(digest, 0)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		err = publicKey.VerifyPSS(digest, sign, 0, encoding.None)
+		err = publicKey.VerifyPSS(digest, sign, 0)
 		if err != nil {
 			t.Fatal(err)
 		}
 
 		// Hex
-		sign, err = privateKey.SignPSS(digest, 0, encoding.Hex)
+		sign, err = privateKey.SignPSS(digest, 0, WithHex())
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		err = publicKey.VerifyPSS(digest, sign, 0, encoding.Hex)
+		err = publicKey.VerifyPSS(digest, sign, 0, WithHex())
 		if err != nil {
 			t.Fatal(err)
 		}
 
 		// Base64
-		sign, err = privateKey.SignPSS(digest, 0, encoding.Base64)
+		sign, err = privateKey.SignPSS(digest, 0, WithBase64())
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		err = publicKey.VerifyPSS(digest, sign, 0, encoding.Base64)
+		err = publicKey.VerifyPSS(digest, sign, 0, WithBase64())
 		if err != nil {
 			t.Fatal(err)
 		}

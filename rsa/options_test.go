@@ -1,4 +1,4 @@
-// Copyright 2024 FishGoddess. All rights reserved.
+// Copyright 2025 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/FishGoddess/cryptox/bytes/encoding"
 	"github.com/FishGoddess/cryptox/x509"
 )
 
@@ -63,6 +64,7 @@ func TestConfig(t *testing.T) {
 	hash := sha256.New()
 
 	opts := []Option{
+		WithHex(),
 		WithRandom(rand.Reader),
 		WithHash(hash),
 		WithCryptoHash(crypto.SHA256),
@@ -70,8 +72,22 @@ func TestConfig(t *testing.T) {
 
 	conf := newConfig().Apply(opts...)
 
-	got := fmt.Sprintf("%p", conf.random)
-	expect := fmt.Sprintf("%p", rand.Reader)
+	got := fmt.Sprintf("%T", conf.encoding)
+	expect := fmt.Sprintf("%T", encoding.Hex{})
+	if got != expect {
+		t.Fatalf("got %s != expect %s", got, expect)
+	}
+
+	conf.Apply(WithBase64())
+
+	got = fmt.Sprintf("%T", conf.encoding)
+	expect = fmt.Sprintf("%T", encoding.Base64{})
+	if got != expect {
+		t.Fatalf("got %s != expect %s", got, expect)
+	}
+
+	got = fmt.Sprintf("%p", conf.random)
+	expect = fmt.Sprintf("%p", rand.Reader)
 	if got != expect {
 		t.Fatalf("got %s != expect %s", got, expect)
 	}

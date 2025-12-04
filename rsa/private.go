@@ -6,8 +6,6 @@ package rsa
 
 import (
 	"crypto/rsa"
-
-	"github.com/FishGoddess/cryptox/bytes/encoding"
 )
 
 type PrivateKey struct {
@@ -15,10 +13,10 @@ type PrivateKey struct {
 }
 
 // DecryptPKCS1v15 decrypts bs with pkcs1 v15.
-func (pk PrivateKey) DecryptPKCS1v15(bs []byte, encoding encoding.Encoding, opts ...Option) ([]byte, error) {
+func (pk PrivateKey) DecryptPKCS1v15(bs []byte, opts ...Option) ([]byte, error) {
 	conf := newConfig().Apply(opts...)
 
-	bs, err := encoding.Decode(bs)
+	bs, err := conf.encoding.Decode(bs)
 	if err != nil {
 		return nil, err
 	}
@@ -27,10 +25,10 @@ func (pk PrivateKey) DecryptPKCS1v15(bs []byte, encoding encoding.Encoding, opts
 }
 
 // DecryptPKCS1v15SessionKey decrypts bs using a session key with pkcs1 v15.
-func (pk PrivateKey) DecryptPKCS1v15SessionKey(bs []byte, sessionKey []byte, encoding encoding.Encoding, opts ...Option) error {
+func (pk PrivateKey) DecryptPKCS1v15SessionKey(bs []byte, sessionKey []byte, opts ...Option) error {
 	conf := newConfig().Apply(opts...)
 
-	bs, err := encoding.Decode(bs)
+	bs, err := conf.encoding.Decode(bs)
 	if err != nil {
 		return err
 	}
@@ -39,10 +37,10 @@ func (pk PrivateKey) DecryptPKCS1v15SessionKey(bs []byte, sessionKey []byte, enc
 }
 
 // DecryptOAEP decrypts bs with oaep.
-func (pk PrivateKey) DecryptOAEP(bs []byte, label []byte, encoding encoding.Encoding, opts ...Option) ([]byte, error) {
+func (pk PrivateKey) DecryptOAEP(bs []byte, label []byte, opts ...Option) ([]byte, error) {
 	conf := newConfig().Apply(opts...)
 
-	bs, err := encoding.Decode(bs)
+	bs, err := conf.encoding.Decode(bs)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +49,7 @@ func (pk PrivateKey) DecryptOAEP(bs []byte, label []byte, encoding encoding.Enco
 }
 
 // SignPKCS1v15 signs hashed with pkcs1 v15.
-func (pk PrivateKey) SignPKCS1v15(hashed []byte, encoding encoding.Encoding, opts ...Option) ([]byte, error) {
+func (pk PrivateKey) SignPKCS1v15(hashed []byte, opts ...Option) ([]byte, error) {
 	conf := newConfig().Apply(opts...)
 
 	sign, err := rsa.SignPKCS1v15(conf.random, pk.key, conf.cryptoHash, hashed)
@@ -59,12 +57,12 @@ func (pk PrivateKey) SignPKCS1v15(hashed []byte, encoding encoding.Encoding, opt
 		return nil, err
 	}
 
-	sign = encoding.Encode(sign)
+	sign = conf.encoding.Encode(sign)
 	return sign, nil
 }
 
 // SignPSS signs digest with pss.
-func (pk PrivateKey) SignPSS(digest []byte, saltLength int, encoding encoding.Encoding, opts ...Option) ([]byte, error) {
+func (pk PrivateKey) SignPSS(digest []byte, saltLength int, opts ...Option) ([]byte, error) {
 	conf := newConfig().Apply(opts...)
 	pssOpts := &rsa.PSSOptions{Hash: conf.cryptoHash, SaltLength: saltLength}
 
@@ -73,6 +71,6 @@ func (pk PrivateKey) SignPSS(digest []byte, saltLength int, encoding encoding.En
 		return nil, err
 	}
 
-	sign = encoding.Encode(sign)
+	sign = conf.encoding.Encode(sign)
 	return sign, nil
 }

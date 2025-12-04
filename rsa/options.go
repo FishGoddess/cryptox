@@ -1,4 +1,4 @@
-// Copyright 2024 FishGoddess. All rights reserved.
+// Copyright 2025 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -82,14 +82,15 @@ func WithKeyDecodePublic(decode func(bs []byte) (*rsa.PublicKey, error)) KeyOpti
 }
 
 type Config struct {
+	encoding   encoding.Encoding
 	random     io.Reader
 	hash       hash.Hash
 	cryptoHash crypto.Hash
-	encoding   encoding.Encoding
 }
 
 func newConfig() *Config {
 	conf := &Config{
+		encoding:   encoding.None{},
 		random:     rand.Reader,
 		hash:       sha256.New(),
 		cryptoHash: crypto.SHA256,
@@ -107,6 +108,20 @@ func (c *Config) Apply(opts ...Option) *Config {
 }
 
 type Option func(conf *Config)
+
+// WithHex sets hex encoding to config.
+func WithHex() Option {
+	return func(conf *Config) {
+		conf.encoding = encoding.Hex{}
+	}
+}
+
+// WithBase64 sets base64 encoding to config.
+func WithBase64() Option {
+	return func(conf *Config) {
+		conf.encoding = encoding.Base64{}
+	}
+}
 
 // WithRandom sets random to config.
 func WithRandom(random io.Reader) Option {

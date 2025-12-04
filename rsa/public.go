@@ -6,8 +6,6 @@ package rsa
 
 import (
 	"crypto/rsa"
-
-	"github.com/FishGoddess/cryptox/bytes/encoding"
 )
 
 type PublicKey struct {
@@ -15,7 +13,7 @@ type PublicKey struct {
 }
 
 // EncryptPKCS1v15 encrypts bs with pkcs1 v15.
-func (pk PublicKey) EncryptPKCS1v15(bs []byte, encoding encoding.Encoding, opts ...Option) ([]byte, error) {
+func (pk PublicKey) EncryptPKCS1v15(bs []byte, opts ...Option) ([]byte, error) {
 	conf := newConfig().Apply(opts...)
 
 	bs, err := rsa.EncryptPKCS1v15(conf.random, pk.key, bs)
@@ -23,12 +21,12 @@ func (pk PublicKey) EncryptPKCS1v15(bs []byte, encoding encoding.Encoding, opts 
 		return nil, err
 	}
 
-	bs = encoding.Encode(bs)
+	bs = conf.encoding.Encode(bs)
 	return bs, nil
 }
 
 // EncryptOAEP encrypts bs with oaep.
-func (pk PublicKey) EncryptOAEP(bs []byte, label []byte, encoding encoding.Encoding, opts ...Option) ([]byte, error) {
+func (pk PublicKey) EncryptOAEP(bs []byte, label []byte, opts ...Option) ([]byte, error) {
 	conf := newConfig().Apply(opts...)
 
 	bs, err := rsa.EncryptOAEP(conf.hash, conf.random, pk.key, bs, label)
@@ -36,15 +34,15 @@ func (pk PublicKey) EncryptOAEP(bs []byte, label []byte, encoding encoding.Encod
 		return nil, err
 	}
 
-	bs = encoding.Encode(bs)
+	bs = conf.encoding.Encode(bs)
 	return bs, nil
 }
 
 // VerifyPKCS1v15 verifies hashed with pkcs1 v15.
-func (pk PublicKey) VerifyPKCS1v15(hashed []byte, sign []byte, encoding encoding.Encoding, opts ...Option) error {
+func (pk PublicKey) VerifyPKCS1v15(hashed []byte, sign []byte, opts ...Option) error {
 	conf := newConfig().Apply(opts...)
 
-	sign, err := encoding.Decode(sign)
+	sign, err := conf.encoding.Decode(sign)
 	if err != nil {
 		return err
 	}
@@ -53,11 +51,11 @@ func (pk PublicKey) VerifyPKCS1v15(hashed []byte, sign []byte, encoding encoding
 }
 
 // VerifyPSS verifies digest with pss.
-func (pk PublicKey) VerifyPSS(digest []byte, sign []byte, saltLength int, encoding encoding.Encoding, opts ...Option) error {
+func (pk PublicKey) VerifyPSS(digest []byte, sign []byte, saltLength int, opts ...Option) error {
 	conf := newConfig().Apply(opts...)
 	pssOpts := &rsa.PSSOptions{Hash: conf.cryptoHash, SaltLength: saltLength}
 
-	sign, err := encoding.Decode(sign)
+	sign, err := conf.encoding.Decode(sign)
 	if err != nil {
 		return err
 	}

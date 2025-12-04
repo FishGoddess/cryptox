@@ -6,8 +6,6 @@ package hash
 
 import (
 	"hash/fnv"
-
-	"github.com/FishGoddess/cryptox/bytes/encoding"
 )
 
 // Fnv32 uses fnv-1/32bit to hash bs.
@@ -39,19 +37,23 @@ func Fnv64a(bs []byte) uint64 {
 }
 
 // Fnv128 uses fnv-1/128bit to hash bs.
-func Fnv128(bs []byte, encoding encoding.Encoding) []byte {
+func Fnv128(bs []byte, opts ...Option) []byte {
+	conf := newConfig().Apply(opts...)
+
 	hash128 := fnv.New128()
 	hash128.Write(bs)
 
 	sum := hash128.Sum(nil)
-	return encoding.Encode(sum)
+	return conf.encoding.Encode(sum)
 }
 
 // Fnv128a uses fnv-1a/128bit to hash bs.
-func Fnv128a(bs []byte, encoding encoding.Encoding) []byte {
+func Fnv128a(bs []byte, opts ...Option) []byte {
+	conf := newConfig().Apply(opts...)
+
 	hash128 := fnv.New128a()
 	hash128.Write(bs)
 
 	sum := hash128.Sum(nil)
-	return encoding.Encode(sum)
+	return conf.encoding.Encode(sum)
 }

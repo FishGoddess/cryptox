@@ -9,9 +9,6 @@ import (
 	"crypto/cipher"
 	"crypto/des"
 	"fmt"
-
-	"github.com/FishGoddess/cryptox/bytes/encoding"
-	"github.com/FishGoddess/cryptox/bytes/padding"
 )
 
 func newTripleBlock(key []byte) (cipher.Block, int, error) {
@@ -25,14 +22,17 @@ func newTripleBlock(key []byte) (cipher.Block, int, error) {
 }
 
 // EncryptTripleECB uses ecb mode to encrypt bs.
-func EncryptTripleECB(bs []byte, key []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
+// It must specify a padding.
+func EncryptTripleECB(bs []byte, key []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
 	src := bytes.Clone(bs)
-	src = padding.Pad(src, blockSize)
+	src = conf.padding.Pad(src, blockSize)
 	dst := bytes.Clone(src)
 
 	if len(src)%blockSize != 0 {
@@ -49,18 +49,94 @@ func EncryptTripleECB(bs []byte, key []byte, padding padding.Padding, encoding e
 		end += blockSize
 	}
 
-	dst = encoding.Encode(dst)
+	dst = conf.encoding.Encode(dst)
 	return dst, nil
 }
 
-// DecryptTripleECB uses ecb mode to decrypt bs.
-func DecryptTripleECB(bs []byte, key []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
+// EncryptTripleCBC uses cbc mode to encrypt bs.
+// It must specify a padding.
+func EncryptTripleCBC(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	src, err := encoding.Decode(bs)
+	src := bytes.Clone(bs)
+	src = conf.padding.Pad(src, blockSize)
+	dst := bytes.Clone(src)
+
+	cipher.NewCBCEncrypter(block, iv).CryptBlocks(dst, src)
+	dst = conf.encoding.Encode(dst)
+	return dst, nil
+}
+
+// EncryptTripleCFB uses cfb mode to encrypt bs.
+// There is no need to specify a padding.
+func EncryptTripleCFB(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
+	block, _, err := newTripleBlock(key)
+	if err != nil {
+		return nil, err
+	}
+
+	src := bytes.Clone(bs)
+	dst := bytes.Clone(src)
+
+	cipher.NewCFBEncrypter(block, iv).XORKeyStream(dst, src)
+	dst = conf.encoding.Encode(dst)
+	return dst, nil
+}
+
+// EncryptTripleOFB uses ofb mode to encrypt bs.
+// There is no need to specify a padding.
+func EncryptTripleOFB(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
+	block, _, err := newTripleBlock(key)
+	if err != nil {
+		return nil, err
+	}
+
+	src := bytes.Clone(bs)
+	dst := bytes.Clone(src)
+
+	cipher.NewOFB(block, iv).XORKeyStream(dst, src)
+	dst = conf.encoding.Encode(dst)
+	return dst, nil
+}
+
+// EncryptTripleCTR uses ctr mode to encrypt bs.
+// There is no need to specify a padding.
+func EncryptTripleCTR(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
+	block, _, err := newTripleBlock(key)
+	if err != nil {
+		return nil, err
+	}
+
+	src := bytes.Clone(bs)
+	dst := bytes.Clone(src)
+
+	cipher.NewCTR(block, iv).XORKeyStream(dst, src)
+	dst = conf.encoding.Encode(dst)
+	return dst, nil
+}
+
+// DecryptTripleECB uses ecb mode to decrypt bs.
+// It must specify a padding.
+func DecryptTripleECB(bs []byte, key []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
+	block, blockSize, err := newTripleBlock(key)
+	if err != nil {
+		return nil, err
+	}
+
+	src, err := conf.encoding.Decode(bs)
 	if err != nil {
 		return nil, err
 	}
@@ -81,33 +157,20 @@ func DecryptTripleECB(bs []byte, key []byte, padding padding.Padding, encoding e
 		end += blockSize
 	}
 
-	return padding.Unpad(dst, blockSize)
-}
-
-// EncryptTripleCBC uses cbc mode to encrypt bs.
-func EncryptTripleCBC(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
-	block, blockSize, err := newTripleBlock(key)
-	if err != nil {
-		return nil, err
-	}
-
-	src := bytes.Clone(bs)
-	src = padding.Pad(src, blockSize)
-	dst := bytes.Clone(src)
-
-	cipher.NewCBCEncrypter(block, iv).CryptBlocks(dst, src)
-	dst = encoding.Encode(dst)
-	return dst, nil
+	return conf.padding.Unpad(dst, blockSize)
 }
 
 // DecryptTripleCBC uses cbc mode to decrypt bs.
-func DecryptTripleCBC(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
+// It must specify a padding.
+func DecryptTripleCBC(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
 	block, blockSize, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	src, err := encoding.Decode(bs)
+	src, err := conf.encoding.Decode(bs)
 	if err != nil {
 		return nil, err
 	}
@@ -115,33 +178,20 @@ func DecryptTripleCBC(bs []byte, key []byte, iv []byte, padding padding.Padding,
 	dst := bytes.Clone(src)
 
 	cipher.NewCBCDecrypter(block, iv).CryptBlocks(dst, src)
-	return padding.Unpad(dst, blockSize)
-}
-
-// EncryptTripleCFB uses cfb mode to encrypt bs.
-func EncryptTripleCFB(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
-	block, blockSize, err := newTripleBlock(key)
-	if err != nil {
-		return nil, err
-	}
-
-	src := bytes.Clone(bs)
-	src = padding.Pad(src, blockSize)
-	dst := bytes.Clone(src)
-
-	cipher.NewCFBEncrypter(block, iv).XORKeyStream(dst, src)
-	dst = encoding.Encode(dst)
-	return dst, nil
+	return conf.padding.Unpad(dst, blockSize)
 }
 
 // DecryptTripleCFB uses cfb mode to decrypt bs.
-func DecryptTripleCFB(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
-	block, blockSize, err := newTripleBlock(key)
+// There is no need to specify a padding.
+func DecryptTripleCFB(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
+	block, _, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	src, err := encoding.Decode(bs)
+	src, err := conf.encoding.Decode(bs)
 	if err != nil {
 		return nil, err
 	}
@@ -149,33 +199,20 @@ func DecryptTripleCFB(bs []byte, key []byte, iv []byte, padding padding.Padding,
 	dst := bytes.Clone(src)
 
 	cipher.NewCFBDecrypter(block, iv).XORKeyStream(dst, src)
-	return padding.Unpad(dst, blockSize)
-}
-
-// EncryptTripleOFB uses ofb mode to encrypt bs.
-func EncryptTripleOFB(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
-	block, blockSize, err := newTripleBlock(key)
-	if err != nil {
-		return nil, err
-	}
-
-	src := bytes.Clone(bs)
-	src = padding.Pad(src, blockSize)
-	dst := bytes.Clone(src)
-
-	cipher.NewOFB(block, iv).XORKeyStream(dst, src)
-	dst = encoding.Encode(dst)
 	return dst, nil
 }
 
 // DecryptTripleOFB uses ofb mode to decrypt bs.
-func DecryptTripleOFB(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
-	block, blockSize, err := newTripleBlock(key)
+// There is no need to specify a padding.
+func DecryptTripleOFB(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
+	block, _, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	src, err := encoding.Decode(bs)
+	src, err := conf.encoding.Decode(bs)
 	if err != nil {
 		return nil, err
 	}
@@ -183,33 +220,20 @@ func DecryptTripleOFB(bs []byte, key []byte, iv []byte, padding padding.Padding,
 	dst := bytes.Clone(src)
 
 	cipher.NewOFB(block, iv).XORKeyStream(dst, src)
-	return padding.Unpad(dst, blockSize)
-}
-
-// EncryptTripleCTR uses ctr mode to encrypt bs.
-func EncryptTripleCTR(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
-	block, blockSize, err := newTripleBlock(key)
-	if err != nil {
-		return nil, err
-	}
-
-	src := bytes.Clone(bs)
-	src = padding.Pad(src, blockSize)
-	dst := bytes.Clone(src)
-
-	cipher.NewCTR(block, iv).XORKeyStream(dst, src)
-	dst = encoding.Encode(dst)
 	return dst, nil
 }
 
 // DecryptTripleCTR uses ctr mode to decrypt bs.
-func DecryptTripleCTR(bs []byte, key []byte, iv []byte, padding padding.Padding, encoding encoding.Encoding) ([]byte, error) {
-	block, blockSize, err := newTripleBlock(key)
+// There is no need to specify a padding.
+func DecryptTripleCTR(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
+	block, _, err := newTripleBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	src, err := encoding.Decode(bs)
+	src, err := conf.encoding.Decode(bs)
 	if err != nil {
 		return nil, err
 	}
@@ -217,5 +241,5 @@ func DecryptTripleCTR(bs []byte, key []byte, iv []byte, padding padding.Padding,
 	dst := bytes.Clone(src)
 
 	cipher.NewCTR(block, iv).XORKeyStream(dst, src)
-	return padding.Unpad(dst, blockSize)
+	return dst, nil
 }

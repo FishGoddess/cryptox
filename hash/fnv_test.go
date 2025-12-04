@@ -117,7 +117,7 @@ func TestFnv128(t *testing.T) {
 	}
 
 	for data, expect := range testCases {
-		got := Fnv128([]byte(data), encoding.Hex)
+		got := Fnv128([]byte(data), WithHex())
 		if !slices.Equal(got, expect) {
 			t.Fatalf("data %q: got %s != expect %s", data, got, expect)
 		}
@@ -126,7 +126,7 @@ func TestFnv128(t *testing.T) {
 		hash128.Write([]byte(data))
 
 		expect = hash128.Sum(nil)
-		expect = encoding.Hex.Encode(expect)
+		expect = encoding.Hex{}.Encode(expect)
 		if !slices.Equal(got, expect) {
 			t.Fatalf("data %q: got %s != expectBytes %s", data, got, expect)
 		}
@@ -142,7 +142,7 @@ func TestFnv128a(t *testing.T) {
 	}
 
 	for data, expect := range testCases {
-		got := Fnv128a([]byte(data), encoding.Hex)
+		got := Fnv128a([]byte(data), WithHex())
 		if !slices.Equal(got, expect) {
 			t.Fatalf("data %q: got %s != expect %s", data, got, expect)
 		}
@@ -151,7 +151,7 @@ func TestFnv128a(t *testing.T) {
 		hash128.Write([]byte(data))
 
 		expect = hash128.Sum(nil)
-		expect = encoding.Hex.Encode(expect)
+		expect = encoding.Hex{}.Encode(expect)
 		if !slices.Equal(got, expect) {
 			t.Fatalf("data %q: got %s != expect %s", data, got, expect)
 		}
