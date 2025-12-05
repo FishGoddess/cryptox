@@ -17,3 +17,5 @@ bin/
 *.test
 *.out
 *.log
+*.key
+*.pub

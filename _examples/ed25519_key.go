@@ -16,7 +16,7 @@ func main() {
 	}
 
 	// Generate a key with seed.
-	seed := byte("12345678876543211234567887654321")
+	seed := []byte("12345678876543211234567887654321")
 
 	privateKey, publicKey, err = ed25519.GenerateKeys(ed25519.WithKeySeed(seed))
 	if err != nil {
