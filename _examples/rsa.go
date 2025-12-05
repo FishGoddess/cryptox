@@ -11,48 +11,55 @@ import (
 	"github.com/FishGoddess/cryptox/rsa"
 )
 
-var (
-	// Use public key to encrypt msg.
-	publicKey = rsa.MustLoadPublicKey("rsa.pub")
-
-	// Use private key to decrypt msg.
-	privateKey = rsa.MustLoadPrivateKey("rsa.key")
-)
-
 func main() {
-	msg := []byte("戴上头箍，爱不了你；不戴头箍，救不了你。")
-	fmt.Printf("Msg: %s\n", msg)
-
-	// Use public key to encrypt msg.
-	encrypted, err := publicKey.EncryptPKCS1v15(msg)
+	// Load the private key and the public key from file.
+	// Check rsa.Option for more information about file encoding.
+	privateKey, err := rsa.LoadPrivateKey("rsa.key")
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("Encrypted: %s\n", encrypted.Base64())
-
-	// Use private key to decrypt msg.
-	decrypted, err := privateKey.DecryptPKCS1v15(encrypted)
+	publicKey, err := rsa.LoadPublicKey("rsa.pub")
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("Decrypted: %s\n", decrypted)
+	data := []byte("戴上头箍，爱不了你；不戴头箍，救不了你。")
+	fmt.Printf("data: %s\n", data)
 
-	// Use private key to sign msg.
-	msg = hash.SHA256(msg)
-	signed, err := privateKey.SignPKCS1v15(msg)
+	// Use the public key to encrypt data using base64 encoding.
+	label := []byte("你好，世界")
+
+	encrypt, err := publicKey.EncryptOAEP(data, label, rsa.WithBase64())
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("Signed: %s\n", signed)
+	fmt.Printf("encrypt: %s\n", encrypt)
 
-	// Use public key to verify msg.
-	err = publicKey.VerifyPKCS1v15(msg, signed)
+	// Use the private key to decrypt data using base64 encoding.
+	decrypt, err := privateKey.DecryptOAEP(encrypt, label, rsa.WithBase64())
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println("Verified.")
+	fmt.Printf("decrypt: %s\n", decrypt)
+
+	// Use the private key to sign data.
+	digest := hash.SHA256(data)
+
+	sign, err := privateKey.SignPSS(digest, rsa.WithHex())
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("sign: %s\n", sign)
+
+	// Use the public key to verify the sign.
+	err = publicKey.VerifyPSS(digest, sign, rsa.WithHex())
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("verify: %s\n", data)
 }

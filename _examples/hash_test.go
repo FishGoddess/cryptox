@@ -11,155 +11,155 @@ import (
 )
 
 var (
-	benchData = []byte("你好，世界")
+	hashBenchData = []byte("你好，世界")
 )
 
-// go test -v -bench=^BenchmarkMD5$ -benchtime=1s hash_test.go
-func BenchmarkMD5(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_MD5$ -benchtime=1s hash_test.go
+func BenchmarkHash_MD5(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.MD5(benchData)
+		hash.MD5(hashBenchData)
 	}
 }
 
-// go test -v -bench=^BenchmarkSHA1$ -benchtime=1s hash_test.go
-func BenchmarkSHA1(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_SHA1$ -benchtime=1s hash_test.go
+func BenchmarkHash_SHA1(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.SHA1(benchData)
+		hash.SHA1(hashBenchData)
 	}
 }
 
-// go test -v -bench=^BenchmarkSHA224$ -benchtime=1s hash_test.go
-func BenchmarkSHA224(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_SHA224$ -benchtime=1s hash_test.go
+func BenchmarkHash_SHA224(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.SHA224(benchData)
+		hash.SHA224(hashBenchData)
 	}
 }
 
-// go test -v -bench=^BenchmarkSHA256$ -benchtime=1s hash_test.go
-func BenchmarkSHA256(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_SHA256$ -benchtime=1s hash_test.go
+func BenchmarkHash_SHA256(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.SHA256(benchData)
+		hash.SHA256(hashBenchData)
 	}
 }
 
-// go test -v -bench=^BenchmarkSHA384$ -benchtime=1s hash_test.go
-func BenchmarkSHA384(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_SHA384$ -benchtime=1s hash_test.go
+func BenchmarkHash_SHA384(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.SHA384(benchData)
+		hash.SHA384(hashBenchData)
 	}
 }
 
-// go test -v -bench=^BenchmarkSHA512$ -benchtime=1s hash_test.go
-func BenchmarkSHA512(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_SHA512$ -benchtime=1s hash_test.go
+func BenchmarkHash_SHA512(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.SHA512(benchData)
+		hash.SHA512(hashBenchData)
 	}
 }
 
-// go test -v -bench=^BenchmarkCRC32IEEE$ -benchtime=1s hash_test.go
-func BenchmarkCRC32IEEE(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_CRC32IEEE$ -benchtime=1s hash_test.go
+func BenchmarkHash_CRC32IEEE(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.CRC32IEEE(benchData)
+		hash.CRC32IEEE(hashBenchData)
 	}
 }
 
-// go test -v -bench=^BenchmarkCRC64ISO$ -benchtime=1s hash_test.go
-func BenchmarkCRC64ISO(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_CRC64ISO$ -benchtime=1s hash_test.go
+func BenchmarkHash_CRC64ISO(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.CRC64ISO(benchData)
+		hash.CRC64ISO(hashBenchData)
 	}
 }
 
-// go test -v -bench=^BenchmarkCRC64ECMA$ -benchtime=1s hash_test.go
-func BenchmarkCRC64ECMA(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_CRC64ECMA$ -benchtime=1s hash_test.go
+func BenchmarkHash_CRC64ECMA(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.CRC64ECMA(benchData)
+		hash.CRC64ECMA(hashBenchData)
 	}
 }
 
-// go test -v -bench=^BenchmarkFnv32$ -benchtime=1s hash_test.go
-func BenchmarkFnv32(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_Fnv32$ -benchtime=1s hash_test.go
+func BenchmarkHash_Fnv32(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.Fnv32(benchData)
+		hash.Fnv32(hashBenchData)
 	}
 }
 
-// go test -v -bench=^BenchmarkFnv32a$ -benchtime=1s hash_test.go
-func BenchmarkFnv32a(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_Fnv32a$ -benchtime=1s hash_test.go
+func BenchmarkHash_Fnv32a(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.Fnv32a(benchData)
+		hash.Fnv32a(hashBenchData)
 	}
 }
 
-// go test -v -bench=^BenchmarkFnv64$ -benchtime=1s hash_test.go
-func BenchmarkFnv64(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_Fnv64$ -benchtime=1s hash_test.go
+func BenchmarkHash_Fnv64(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.Fnv64(benchData)
+		hash.Fnv64(hashBenchData)
 	}
 }
 
-// go test -v -bench=^BenchmarkFnv64a$ -benchtime=1s hash_test.go
-func BenchmarkFnv64a(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_Fnv64a$ -benchtime=1s hash_test.go
+func BenchmarkHash_Fnv64a(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.Fnv64a(benchData)
+		hash.Fnv64a(hashBenchData)
 	}
 }
 
-// go test -v -bench=^BenchmarkFnv128$ -benchtime=1s hash_test.go
-func BenchmarkFnv128(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_Fnv128$ -benchtime=1s hash_test.go
+func BenchmarkHash_Fnv128(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.Fnv128(benchData)
+		hash.Fnv128(hashBenchData)
 	}
 }
 
-// go test -v -bench=^BenchmarkFnv128a$ -benchtime=1s hash_test.go
-func BenchmarkFnv128a(b *testing.B) {
+// go test -v -bench=^BenchmarkHash_Fnv128a$ -benchtime=1s hash_test.go
+func BenchmarkHash_Fnv128a(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.Fnv128a(benchData)
+		hash.Fnv128a(hashBenchData)
 	}
 }

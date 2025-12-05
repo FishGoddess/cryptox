@@ -1,4 +1,4 @@
-// Copyright 2024 FishGoddess. All rights reserved.
+// Copyright 2025 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -7,110 +7,148 @@ package rsa
 import (
 	"crypto"
 	"crypto/rand"
+	"crypto/rsa"
 	"crypto/sha256"
 	"hash"
 	"io"
+
+	"github.com/FishGoddess/cryptox/bytes/encoding"
+	"github.com/FishGoddess/cryptox/x509"
 )
 
 type KeyConfig struct {
-	privateKeyEncoder PrivateKeyEncoder
-	privateKeyDecoder PrivateKeyDecoder
-	publicKeyEncoder  PublicKeyEncoder
-	publicKeyDecoder  PublicKeyDecoder
+	random           io.Reader
+	encodePrivateKey func(key *rsa.PrivateKey) ([]byte, error)
+	encodePublicKey  func(key *rsa.PublicKey) ([]byte, error)
+	decodePrivateKey func(data []byte) (*rsa.PrivateKey, error)
+	decodePublicKey  func(data []byte) (*rsa.PublicKey, error)
 }
 
-func newKeyConfig(opts []KeyOption) *KeyConfig {
+func newKeyConfig() *KeyConfig {
 	conf := &KeyConfig{
-		privateKeyEncoder: X509.PKCS1PrivateKeyEncoder,
-		privateKeyDecoder: X509.PKCS1PrivateKeyDecoder,
-		publicKeyEncoder:  X509.PKIXPublicKeyEncoder,
-		publicKeyDecoder:  X509.PKIXPublicKeyDecoder,
-	}
-
-	for _, opt := range opts {
-		opt.ApplyTo(conf)
+		random:           rand.Reader,
+		encodePrivateKey: x509.EncodePrivateKeyPKCS8[*rsa.PrivateKey],
+		encodePublicKey:  x509.EncodePublicKeyPKIX[*rsa.PublicKey],
+		decodePrivateKey: x509.DecodePrivateKeyPKCS8[*rsa.PrivateKey],
+		decodePublicKey:  x509.DecodePublicKeyPKIX[*rsa.PublicKey],
 	}
 
 	return conf
+}
+
+func (kc *KeyConfig) Apply(opts ...KeyOption) *KeyConfig {
+	for _, opt := range opts {
+		opt(kc)
+	}
+
+	return kc
 }
 
 type KeyOption func(conf *KeyConfig)
 
-func (ko KeyOption) ApplyTo(conf *KeyConfig) {
-	ko(conf)
-}
-
-// WithPrivateKeyEncoder sets private key encoder to conf.
-func WithPrivateKeyEncoder(encoder PrivateKeyEncoder) KeyOption {
+// WithKeyRandom sets random to key config.
+func WithKeyRandom(random io.Reader) KeyOption {
 	return func(conf *KeyConfig) {
-		conf.privateKeyEncoder = encoder
+		conf.random = random
 	}
 }
 
-// WithPrivateKeyDecoder sets private key decoder to conf.
-func WithPrivateKeyDecoder(decoder PrivateKeyDecoder) KeyOption {
+// WithKeyEncodePrivate sets encode to key config.
+func WithKeyEncodePrivate(encode func(key *rsa.PrivateKey) ([]byte, error)) KeyOption {
 	return func(conf *KeyConfig) {
-		conf.privateKeyDecoder = decoder
+		conf.encodePrivateKey = encode
 	}
 }
 
-// WithPublicKeyEncoder sets public key encoder to conf.
-func WithPublicKeyEncoder(encoder PublicKeyEncoder) KeyOption {
+// WithKeyEncodePublic sets encode to key config.
+func WithKeyEncodePublic(encode func(key *rsa.PublicKey) ([]byte, error)) KeyOption {
 	return func(conf *KeyConfig) {
-		conf.publicKeyEncoder = encoder
+		conf.encodePublicKey = encode
 	}
 }
 
-// WithPublicKeyDecoder sets public key decoder to conf.
-func WithPublicKeyDecoder(decoder PublicKeyDecoder) KeyOption {
+// WithKeyDecodePrivate sets decode to key config.
+func WithKeyDecodePrivate(decode func(data []byte) (*rsa.PrivateKey, error)) KeyOption {
 	return func(conf *KeyConfig) {
-		conf.publicKeyDecoder = decoder
+		conf.decodePrivateKey = decode
+	}
+}
+
+// WithKeyDecodePublic sets decode to key config.
+func WithKeyDecodePublic(decode func(data []byte) (*rsa.PublicKey, error)) KeyOption {
+	return func(conf *KeyConfig) {
+		conf.decodePublicKey = decode
 	}
 }
 
 type Config struct {
+	encoding   encoding.Encoding
 	random     io.Reader
 	hash       hash.Hash
 	cryptoHash crypto.Hash
+	saltLength int
 }
 
-func newConfig(opts []Option) *Config {
+func newConfig() *Config {
 	conf := &Config{
+		encoding:   encoding.None{},
 		random:     rand.Reader,
 		hash:       sha256.New(),
 		cryptoHash: crypto.SHA256,
-	}
-
-	for _, opt := range opts {
-		opt.ApplyTo(conf)
+		saltLength: rsa.PSSSaltLengthAuto,
 	}
 
 	return conf
 }
 
-type Option func(conf *Config)
+func (c *Config) Apply(opts ...Option) *Config {
+	for _, opt := range opts {
+		opt(c)
+	}
 
-func (o Option) ApplyTo(conf *Config) {
-	o(conf)
+	return c
 }
 
-// WithRandom sets random to conf.
+type Option func(conf *Config)
+
+// WithHex sets hex encoding to config.
+func WithHex() Option {
+	return func(conf *Config) {
+		conf.encoding = encoding.Hex{}
+	}
+}
+
+// WithBase64 sets base64 encoding to config.
+func WithBase64() Option {
+	return func(conf *Config) {
+		conf.encoding = encoding.Base64{}
+	}
+}
+
+// WithRandom sets random to config.
 func WithRandom(random io.Reader) Option {
 	return func(conf *Config) {
 		conf.random = random
 	}
 }
 
-// WithHash sets hash to conf.
+// WithHash sets hash to config.
 func WithHash(hash hash.Hash) Option {
 	return func(conf *Config) {
 		conf.hash = hash
 	}
 }
 
-// WithCryptoHash sets crypto hash to conf.
+// WithCryptoHash sets crypto hash to config.
 func WithCryptoHash(hash crypto.Hash) Option {
 	return func(conf *Config) {
 		conf.cryptoHash = hash
+	}
+}
+
+// WithSalt sets salt length to config.
+func WithSalt(saltLength int) Option {
+	return func(conf *Config) {
+		conf.saltLength = saltLength
 	}
 }

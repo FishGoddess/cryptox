@@ -8,12 +8,12 @@ import (
 	"testing"
 )
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestGenerateGCMNonce$
-func TestGenerateGCMNonce(t *testing.T) {
-	nonce := GenerateGCMNonce()
+// go test -v -cover -run=^TestNonce$
+func TestNonce(t *testing.T) {
+	nonce := Nonce()
 	if len(nonce) != 12 {
 		t.Fatalf("len(nonce) %d is wrong", len(nonce))
 	}
 
-	t.Log(nonce)
+	t.Logf("%s\n", nonce)
 }

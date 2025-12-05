@@ -10,228 +10,39 @@ import (
 	"github.com/FishGoddess/cryptox/rsa"
 )
 
-// go test -v -bench=^BenchmarkRSAGenerateKey1024PKCS1PKIX$ -benchtime=1s rsa_key_test.go
-func BenchmarkRSAGenerateKey1024PKCS1PKIX(b *testing.B) {
-	opts := []rsa.KeyOption{
-		rsa.WithPrivateKeyEncoder(rsa.X509.PKCS1PrivateKeyEncoder),
-		rsa.WithPrivateKeyDecoder(rsa.X509.PKCS1PrivateKeyDecoder),
-		rsa.WithPublicKeyEncoder(rsa.X509.PKIXPublicKeyEncoder),
-	}
-
+// go test -v -bench=^BenchmarkRSA_GenerateKeys1024$ -benchtime=1s rsa_key_test.go
+func BenchmarkRSA_GenerateKeys1024(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, _, err := rsa.GenerateKeys(1024, opts...)
+		_, _, err := rsa.GenerateKeys(1024)
 		if err != nil {
 			b.Fatal(err)
 		}
 	}
 }
 
-// go test -v -bench=^BenchmarkRSAGenerateKey2048PKCS1PKIX$ -benchtime=1s rsa_key_test.go
-func BenchmarkRSAGenerateKey2048PKCS1PKIX(b *testing.B) {
-	opts := []rsa.KeyOption{
-		rsa.WithPrivateKeyEncoder(rsa.X509.PKCS1PrivateKeyEncoder),
-		rsa.WithPrivateKeyDecoder(rsa.X509.PKCS1PrivateKeyDecoder),
-		rsa.WithPublicKeyEncoder(rsa.X509.PKIXPublicKeyEncoder),
-	}
-
+// go test -v -bench=^BenchmarkRSA_GenerateKeys2048$ -benchtime=1s rsa_key_test.go
+func BenchmarkRSA_GenerateKeys2048(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, _, err := rsa.GenerateKeys(2048, opts...)
+		_, _, err := rsa.GenerateKeys(2048)
 		if err != nil {
 			b.Fatal(err)
 		}
 	}
 }
 
-// go test -v -bench=^BenchmarkRSAGenerateKey4096PKCS1PKIX$ -benchtime=1s rsa_key_test.go
-func BenchmarkRSAGenerateKey4096PKCS1PKIX(b *testing.B) {
-	opts := []rsa.KeyOption{
-		rsa.WithPrivateKeyEncoder(rsa.X509.PKCS1PrivateKeyEncoder),
-		rsa.WithPrivateKeyDecoder(rsa.X509.PKCS1PrivateKeyDecoder),
-		rsa.WithPublicKeyEncoder(rsa.X509.PKIXPublicKeyEncoder),
-	}
-
+// go test -v -bench=^BenchmarkRSA_GenerateKeys4096$ -benchtime=1s rsa_key_test.go
+func BenchmarkRSA_GenerateKeys4096(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, _, err := rsa.GenerateKeys(4096, opts...)
-		if err != nil {
-			b.Fatal(err)
-		}
-	}
-}
-
-// go test -v -bench=^BenchmarkRSAGenerateKey1024PKCS8PKIX$ -benchtime=1s rsa_key_test.go
-func BenchmarkRSAGenerateKey1024PKCS8PKIX(b *testing.B) {
-	opts := []rsa.KeyOption{
-		rsa.WithPrivateKeyEncoder(rsa.X509.PKCS8PrivateKeyEncoder),
-		rsa.WithPrivateKeyDecoder(rsa.X509.PKCS8PrivateKeyDecoder),
-		rsa.WithPublicKeyEncoder(rsa.X509.PKIXPublicKeyEncoder),
-	}
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		_, _, err := rsa.GenerateKeys(1024, opts...)
-		if err != nil {
-			b.Fatal(err)
-		}
-	}
-}
-
-// go test -v -bench=^BenchmarkRSAGenerateKey2048PKCS8PKIX$ -benchtime=1s rsa_key_test.go
-func BenchmarkRSAGenerateKey2048PKCS8PKIX(b *testing.B) {
-	opts := []rsa.KeyOption{
-		rsa.WithPrivateKeyEncoder(rsa.X509.PKCS8PrivateKeyEncoder),
-		rsa.WithPrivateKeyDecoder(rsa.X509.PKCS8PrivateKeyDecoder),
-		rsa.WithPublicKeyEncoder(rsa.X509.PKIXPublicKeyEncoder),
-	}
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		_, _, err := rsa.GenerateKeys(2048, opts...)
-		if err != nil {
-			b.Fatal(err)
-		}
-	}
-}
-
-// go test -v -bench=^BenchmarkRSAGenerateKey4096PKCS8PKIX$ -benchtime=1s rsa_key_test.go
-func BenchmarkRSAGenerateKey4096PKCS8PKIX(b *testing.B) {
-	opts := []rsa.KeyOption{
-		rsa.WithPrivateKeyEncoder(rsa.X509.PKCS8PrivateKeyEncoder),
-		rsa.WithPrivateKeyDecoder(rsa.X509.PKCS8PrivateKeyDecoder),
-		rsa.WithPublicKeyEncoder(rsa.X509.PKIXPublicKeyEncoder),
-	}
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		_, _, err := rsa.GenerateKeys(4096, opts...)
-		if err != nil {
-			b.Fatal(err)
-		}
-	}
-}
-
-// go test -v -bench=^BenchmarkRSAGenerateKey1024PKCS1PKCS1$ -benchtime=1s rsa_key_test.go
-func BenchmarkRSAGenerateKey1024PKCS1PKCS1(b *testing.B) {
-	opts := []rsa.KeyOption{
-		rsa.WithPrivateKeyEncoder(rsa.X509.PKCS1PrivateKeyEncoder),
-		rsa.WithPrivateKeyDecoder(rsa.X509.PKCS1PrivateKeyDecoder),
-		rsa.WithPublicKeyEncoder(rsa.X509.PKCS1PublicKeyEncoder),
-	}
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		_, _, err := rsa.GenerateKeys(1024, opts...)
-		if err != nil {
-			b.Fatal(err)
-		}
-	}
-}
-
-// go test -v -bench=^BenchmarkRSAGenerateKey2048PKCS1PKCS1$ -benchtime=1s rsa_key_test.go
-func BenchmarkRSAGenerateKey2048PKCS1PKCS1(b *testing.B) {
-	opts := []rsa.KeyOption{
-		rsa.WithPrivateKeyEncoder(rsa.X509.PKCS1PrivateKeyEncoder),
-		rsa.WithPrivateKeyDecoder(rsa.X509.PKCS1PrivateKeyDecoder),
-		rsa.WithPublicKeyEncoder(rsa.X509.PKCS1PublicKeyEncoder),
-	}
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		_, _, err := rsa.GenerateKeys(2048, opts...)
-		if err != nil {
-			b.Fatal(err)
-		}
-	}
-}
-
-// go test -v -bench=^BenchmarkRSAGenerateKey4096PKCS1PKCS1$ -benchtime=1s rsa_key_test.go
-func BenchmarkRSAGenerateKey4096PKCS1PKCS1(b *testing.B) {
-	opts := []rsa.KeyOption{
-		rsa.WithPrivateKeyEncoder(rsa.X509.PKCS1PrivateKeyEncoder),
-		rsa.WithPrivateKeyDecoder(rsa.X509.PKCS1PrivateKeyDecoder),
-		rsa.WithPublicKeyEncoder(rsa.X509.PKCS1PublicKeyEncoder),
-	}
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		_, _, err := rsa.GenerateKeys(4096, opts...)
-		if err != nil {
-			b.Fatal(err)
-		}
-	}
-}
-
-// go test -v -bench=^BenchmarkRSAGenerateKey1024PKCS8PKCS1$ -benchtime=1s rsa_key_test.go
-func BenchmarkRSAGenerateKey1024PKCS8PKCS1(b *testing.B) {
-	opts := []rsa.KeyOption{
-		rsa.WithPrivateKeyEncoder(rsa.X509.PKCS8PrivateKeyEncoder),
-		rsa.WithPrivateKeyDecoder(rsa.X509.PKCS8PrivateKeyDecoder),
-		rsa.WithPublicKeyEncoder(rsa.X509.PKCS1PublicKeyEncoder),
-	}
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		_, _, err := rsa.GenerateKeys(1024, opts...)
-		if err != nil {
-			b.Fatal(err)
-		}
-	}
-}
-
-// go test -v -bench=^BenchmarkRSAGenerateKey2048PKCS8PKCS1$ -benchtime=1s rsa_key_test.go
-func BenchmarkRSAGenerateKey2048PKCS8PKCS1(b *testing.B) {
-	opts := []rsa.KeyOption{
-		rsa.WithPrivateKeyEncoder(rsa.X509.PKCS8PrivateKeyEncoder),
-		rsa.WithPrivateKeyDecoder(rsa.X509.PKCS8PrivateKeyDecoder),
-		rsa.WithPublicKeyEncoder(rsa.X509.PKCS1PublicKeyEncoder),
-	}
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		_, _, err := rsa.GenerateKeys(2048, opts...)
-		if err != nil {
-			b.Fatal(err)
-		}
-	}
-}
-
-// go test -v -bench=^BenchmarkRSAGenerateKey4096PKCS8PKCS1$ -benchtime=1s rsa_key_test.go
-func BenchmarkRSAGenerateKey4096PKCS8PKCS1(b *testing.B) {
-	opts := []rsa.KeyOption{
-		rsa.WithPrivateKeyEncoder(rsa.X509.PKCS8PrivateKeyEncoder),
-		rsa.WithPrivateKeyDecoder(rsa.X509.PKCS8PrivateKeyDecoder),
-		rsa.WithPublicKeyEncoder(rsa.X509.PKCS1PublicKeyEncoder),
-	}
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		_, _, err := rsa.GenerateKeys(4096, opts...)
+		_, _, err := rsa.GenerateKeys(4096)
 		if err != nil {
 			b.Fatal(err)
 		}

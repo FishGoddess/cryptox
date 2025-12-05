@@ -5,151 +5,155 @@
 package hash
 
 import (
-	"bytes"
 	"hash/fnv"
+	"slices"
 	"testing"
+
+	"github.com/FishGoddess/cryptox/bytes/encoding"
 )
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestFnv32$
+// go test -v -cover -run=^TestFnv32$
 func TestFnv32(t *testing.T) {
-	cases := map[string]uint32{
+	testCases := map[string]uint32{
 		"":      2166136261,
 		"123":   1926629307,
 		"你好，世界": 4041100496,
 	}
 
-	for input, expect := range cases {
-		fnv32 := Fnv32([]byte(input))
-		if fnv32 != expect {
-			t.Fatalf("input %s: fnv32 %d != expect %d", input, fnv32, expect)
+	for data, expect := range testCases {
+		got := Fnv32([]byte(data))
+		if got != expect {
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 
 		hash32 := fnv.New32()
-		hash32.Write([]byte(input))
+		hash32.Write([]byte(data))
 
-		expectNumber := hash32.Sum32()
-		if fnv32 != expectNumber {
-			t.Fatalf("input %s: fnv32 %d != expectNumber %d", input, fnv32, expectNumber)
+		expect = hash32.Sum32()
+		if got != expect {
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestFnv32a$
+// go test -v -cover -run=^TestFnv32a$
 func TestFnv32a(t *testing.T) {
-	cases := map[string]uint32{
+	testCases := map[string]uint32{
 		"":      2166136261,
 		"123":   1916298011,
 		"你好，世界": 3850245558,
 	}
 
-	for input, expect := range cases {
-		fnv32a := Fnv32a([]byte(input))
-		if fnv32a != expect {
-			t.Fatalf("input %s: fnv32a %d != expect %d", input, fnv32a, expect)
+	for data, expect := range testCases {
+		got := Fnv32a([]byte(data))
+		if got != expect {
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 
 		hash32 := fnv.New32a()
-		hash32.Write([]byte(input))
+		hash32.Write([]byte(data))
 
-		expectNumber := hash32.Sum32()
-		if fnv32a != expectNumber {
-			t.Fatalf("input %s: fnv32a %d != expectNumber %d", input, fnv32a, expectNumber)
+		expect = hash32.Sum32()
+		if got != expect {
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestFnv64$
+// go test -v -cover -run=^TestFnv64$
 func TestFnv64(t *testing.T) {
-	cases := map[string]uint64{
+	testCases := map[string]uint64{
 		"":      14695981039346656037,
 		"123":   15672520211074539707,
 		"你好，世界": 3537799150651744976,
 	}
 
-	for input, expect := range cases {
-		fnv64 := Fnv64([]byte(input))
-		if fnv64 != expect {
-			t.Fatalf("input %s: fnv64 %d != expect %d", input, fnv64, expect)
+	for data, expect := range testCases {
+		got := Fnv64([]byte(data))
+		if got != expect {
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 
 		hash64 := fnv.New64()
-		hash64.Write([]byte(input))
+		hash64.Write([]byte(data))
 
-		expectNumber := hash64.Sum64()
-		if fnv64 != expectNumber {
-			t.Fatalf("input %s: fnv64 %d != expectNumber %d", input, fnv64, expectNumber)
+		expect = hash64.Sum64()
+		if got != expect {
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestFnv64a$
+// go test -v -cover -run=^TestFnv64a$
 func TestFnv64a(t *testing.T) {
-	cases := map[string]uint64{
+	testCases := map[string]uint64{
 		"":      14695981039346656037,
 		"123":   5003431119771845851,
 		"你好，世界": 18316431221504849174,
 	}
 
-	for input, expect := range cases {
-		fnv64a := Fnv64a([]byte(input))
-		if fnv64a != expect {
-			t.Fatalf("input %s: fnv64a %d != expect %d", input, fnv64a, expect)
+	for data, expect := range testCases {
+		got := Fnv64a([]byte(data))
+		if got != expect {
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 
 		hash64 := fnv.New64a()
-		hash64.Write([]byte(input))
+		hash64.Write([]byte(data))
 
-		expectNumber := hash64.Sum64()
-		if fnv64a != expectNumber {
-			t.Fatalf("input %s: fnv64a %d != expectNumber %d", input, fnv64a, expectNumber)
+		expect = hash64.Sum64()
+		if got != expect {
+			t.Fatalf("data %q: got %d != expect %d", data, got, expect)
 		}
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestFnv128$
+// go test -v -cover -run=^TestFnv128$
 func TestFnv128(t *testing.T) {
-	cases := map[string]string{
-		"":      "6c62272e07bb014262b821756295c58d",
-		"123":   "a68bb31a848b5822836dbc78c6f7cf2b",
-		"你好，世界": "a143d39fc0ccf3153099c75a3ae16e50",
+	testCases := map[string][]byte{
+		"":      []byte("6c62272e07bb014262b821756295c58d"),
+		"123":   []byte("a68bb31a848b5822836dbc78c6f7cf2b"),
+		"你好，世界": []byte("a143d39fc0ccf3153099c75a3ae16e50"),
 	}
 
-	for input, expect := range cases {
-		fnv128 := Fnv128([]byte(input))
-		if fnv128.Hex() != expect {
-			t.Fatalf("input %s: fnv128 %s != expect %s", input, fnv128.Hex(), expect)
+	for data, expect := range testCases {
+		got := Fnv128([]byte(data), WithHex())
+		if !slices.Equal(got, expect) {
+			t.Fatalf("data %q: got %s != expect %s", data, got, expect)
 		}
 
 		hash128 := fnv.New128()
-		hash128.Write([]byte(input))
+		hash128.Write([]byte(data))
 
-		expectBytes := hash128.Sum(nil)
-		if !bytes.Equal(fnv128, expectBytes) {
-			t.Fatalf("input %s: fnv128 %+v != expectBytes %+v", input, fnv128, expectBytes)
+		expect = hash128.Sum(nil)
+		expect = encoding.Hex{}.Encode(expect)
+		if !slices.Equal(got, expect) {
+			t.Fatalf("data %q: got %s != expectBytes %s", data, got, expect)
 		}
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestFnv128a$
+// go test -v -cover -run=^TestFnv128a$
 func TestFnv128a(t *testing.T) {
-	cases := map[string]string{
-		"":      "6c62272e07bb014262b821756295c58d",
-		"123":   "a68c893b0c8b5822836dbc791eed46cb",
-		"你好，世界": "c8a3e17923084bf6e151c7caa750d68e",
+	testCases := map[string][]byte{
+		"":      []byte("6c62272e07bb014262b821756295c58d"),
+		"123":   []byte("a68c893b0c8b5822836dbc791eed46cb"),
+		"你好，世界": []byte("c8a3e17923084bf6e151c7caa750d68e"),
 	}
 
-	for input, expect := range cases {
-		fnv128 := Fnv128a([]byte(input))
-		if fnv128.Hex() != expect {
-			t.Fatalf("input %s: fnv128 %s != expect %s", input, fnv128.Hex(), expect)
+	for data, expect := range testCases {
+		got := Fnv128a([]byte(data), WithHex())
+		if !slices.Equal(got, expect) {
+			t.Fatalf("data %q: got %s != expect %s", data, got, expect)
 		}
 
 		hash128 := fnv.New128a()
-		hash128.Write([]byte(input))
+		hash128.Write([]byte(data))
 
-		expectBytes := hash128.Sum(nil)
-		if !bytes.Equal(fnv128, expectBytes) {
-			t.Fatalf("input %s: fnv128 %+v != expectBytes %+v", input, fnv128, expectBytes)
+		expect = hash128.Sum(nil)
+		expect = encoding.Hex{}.Encode(expect)
+		if !slices.Equal(got, expect) {
+			t.Fatalf("data %q: got %s != expect %s", data, got, expect)
 		}
 	}
 }

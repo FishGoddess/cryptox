@@ -8,7 +8,6 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/FishGoddess/cryptox"
 	"github.com/FishGoddess/cryptox/des"
 )
 
@@ -18,29 +17,23 @@ func main() {
 	key := []byte("12345678")
 	iv := []byte("87654321")
 
-	msg := []byte("你好，世界")
-	fmt.Printf("msg: %s\n", msg)
+	data := []byte("你好，世界")
+	fmt.Printf("data: %s\n", data)
 
-	// We use ctr mode and no padding to encrypt data.
-	// Of course, you can choose another mode if you want.
-	// Also, you can choose no/zero/pkcs5/pkcs7 to padding data.
-	encrypted, err := des.EncryptCTR(key, iv, cryptox.PaddingNone, msg)
+	// Use ctr mode to encrypt data with no padding and encoding base64.
+	encrypt, err := des.EncryptCTR(data, key, iv, des.WithBase64())
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println("encrypted:", encrypted)
-	fmt.Println("encrypted hex:", encrypted.Hex())
-	fmt.Println("encrypted base64:", encrypted.Base64())
+	fmt.Printf("encrypt: %s\n", encrypt)
 
-	// We use ctr mode and no padding to decrypt data.
-	// Of course, you can choose another mode if you want.
-	// Also, you can choose no/zero/pkcs5/pkcs7 to undo padding data.
-	decrypted, err := des.DecryptCTR(key, iv, cryptox.PaddingNone, encrypted)
+	// Decrypt data in the same way.
+	decrypt, err := des.DecryptCTR(encrypt, key, iv, des.WithBase64())
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("decrypted: %s\n", decrypted)
-	fmt.Println("decrypted == msg", bytes.Equal(decrypted, msg))
+	fmt.Printf("decrypt: %s\n", decrypt)
+	fmt.Printf("decrypt is right: %+v\n", bytes.Equal(decrypt, data))
 }

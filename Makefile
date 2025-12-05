@@ -6,10 +6,9 @@ fmt:
 	go fmt ./...
 
 test:
-	go test -cover -count=1 -test.cpu=1 ./...
+	go test -v -cover ./...
 
 bench:
-	go test -v ./_examples/rand_test.go -bench=. -benchtime=1s
 	go test -v ./_examples/hash_test.go -bench=. -benchtime=1s
 	go test -v ./_examples/hmac_test.go -bench=. -benchtime=1s
 	go test -v ./_examples/des_test.go -bench=. -benchtime=1s

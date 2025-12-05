@@ -5,14 +5,13 @@
 package aes
 
 import (
+	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
 	"fmt"
-
-	"github.com/FishGoddess/cryptox"
 )
 
-func newBlock(key cryptox.Bytes) (cipher.Block, int, error) {
+func newBlock(key []byte) (cipher.Block, int, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, 0, err
@@ -22,15 +21,19 @@ func newBlock(key cryptox.Bytes) (cipher.Block, int, error) {
 	return block, blockSize, nil
 }
 
-func EncryptECB(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+// EncryptECB uses ecb mode to encrypt data.
+// It must specify a padding.
+func EncryptECB(data []byte, key []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
 	block, blockSize, err := newBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	bs = bs.Clone()
-	src := padding.Padding(bs, blockSize)
-	dst := src.Clone()
+	src := bytes.Clone(data)
+	src = conf.padding.Pad(src, blockSize)
+	dst := bytes.Clone(src)
 
 	if len(src)%blockSize != 0 {
 		return nil, fmt.Errorf("cryptox/aes: encrypt ecb len(src) %d %% blockSize %d != 0", len(src), blockSize)
@@ -46,17 +49,123 @@ func EncryptECB(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (c
 		end += blockSize
 	}
 
+	dst = conf.encoding.Encode(dst)
 	return dst, nil
 }
 
-func DecryptECB(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+// EncryptCBC uses cbc mode to encrypt data.
+// It must specify a padding.
+func EncryptCBC(data []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
 	block, blockSize, err := newBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	src := bs
-	dst := bs.Clone()
+	src := bytes.Clone(data)
+	src = conf.padding.Pad(src, blockSize)
+	dst := bytes.Clone(src)
+
+	cipher.NewCBCEncrypter(block, iv).CryptBlocks(dst, src)
+	dst = conf.encoding.Encode(dst)
+	return dst, nil
+}
+
+// EncryptCFB uses cfb mode to encrypt data.
+// There is no need to specify a padding.
+func EncryptCFB(data []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
+	block, _, err := newBlock(key)
+	if err != nil {
+		return nil, err
+	}
+
+	src := bytes.Clone(data)
+	dst := bytes.Clone(src)
+
+	cipher.NewCFBEncrypter(block, iv).XORKeyStream(dst, src)
+	dst = conf.encoding.Encode(dst)
+	return dst, nil
+}
+
+// EncryptOFB uses ofb mode to encrypt data.
+// There is no need to specify a padding.
+func EncryptOFB(data []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
+	block, _, err := newBlock(key)
+	if err != nil {
+		return nil, err
+	}
+
+	src := bytes.Clone(data)
+	dst := bytes.Clone(src)
+
+	cipher.NewOFB(block, iv).XORKeyStream(dst, src)
+	dst = conf.encoding.Encode(dst)
+	return dst, nil
+}
+
+// EncryptCTR uses ctr mode to encrypt data.
+// There is no need to specify a padding.
+func EncryptCTR(data []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
+	block, _, err := newBlock(key)
+	if err != nil {
+		return nil, err
+	}
+
+	src := bytes.Clone(data)
+	dst := bytes.Clone(src)
+
+	cipher.NewCTR(block, iv).XORKeyStream(dst, src)
+	dst = conf.encoding.Encode(dst)
+	return dst, nil
+}
+
+// EncryptGCM uses gcm mode to encrypt data.
+// There is no need to specify a padding.
+func EncryptGCM(data []byte, key []byte, nonce []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
+	block, _, err := newBlock(key)
+	if err != nil {
+		return nil, err
+	}
+
+	src := data
+	dst := bytes.Clone(src)
+	dst = dst[:0]
+
+	gcm, err := cipher.NewGCM(block)
+	if err != nil {
+		return nil, err
+	}
+
+	dst = gcm.Seal(dst, nonce, src, conf.additional)
+	dst = conf.encoding.Encode(dst)
+	return dst, nil
+}
+
+// DecryptECB uses ecb mode to decrypt data.
+// It must specify a padding.
+func DecryptECB(data []byte, key []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
+	block, blockSize, err := newBlock(key)
+	if err != nil {
+		return nil, err
+	}
+
+	src, err := conf.encoding.Decode(data)
+	if err != nil {
+		return nil, err
+	}
+
+	dst := bytes.Clone(src)
 
 	if len(src)%blockSize != 0 {
 		return nil, fmt.Errorf("cryptox/aes: decrypt ecb len(src) %d %% blockSize %d != 0", len(src), blockSize)
@@ -72,150 +181,115 @@ func DecryptECB(key cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (c
 		end += blockSize
 	}
 
-	return padding.UndoPadding(dst, blockSize)
+	return conf.padding.Unpad(dst, blockSize)
 }
 
-func EncryptCBC(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
+// DecryptCBC uses cbc mode to decrypt data.
+// It must specify a padding.
+func DecryptCBC(data []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
 	block, blockSize, err := newBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	bs = bs.Clone()
-	src := padding.Padding(bs, blockSize)
-	dst := src.Clone()
-
-	cipher.NewCBCEncrypter(block, iv).CryptBlocks(dst, src)
-	return dst, nil
-}
-
-func DecryptCBC(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	block, blockSize, err := newBlock(key)
+	src, err := conf.encoding.Decode(data)
 	if err != nil {
 		return nil, err
 	}
 
-	src := bs
-	dst := src.Clone()
+	dst := bytes.Clone(src)
 
 	cipher.NewCBCDecrypter(block, iv).CryptBlocks(dst, src)
-	return padding.UndoPadding(dst, blockSize)
+	return conf.padding.Unpad(dst, blockSize)
 }
 
-func EncryptCFB(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	block, blockSize, err := newBlock(key)
+// DecryptCFB uses cfb mode to decrypt data.
+// There is no need to specify a padding.
+func DecryptCFB(data []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
+	block, _, err := newBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	bs = bs.Clone()
-	src := padding.Padding(bs, blockSize)
-	dst := src.Clone()
-
-	cipher.NewCFBEncrypter(block, iv).XORKeyStream(dst, src)
-	return dst, nil
-}
-
-func DecryptCFB(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	block, blockSize, err := newBlock(key)
+	src, err := conf.encoding.Decode(data)
 	if err != nil {
 		return nil, err
 	}
 
-	src := bs
-	dst := bs.Clone()
+	dst := bytes.Clone(src)
 
 	cipher.NewCFBDecrypter(block, iv).XORKeyStream(dst, src)
-	return padding.UndoPadding(dst, blockSize)
-}
-
-func EncryptOFB(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	block, blockSize, err := newBlock(key)
-	if err != nil {
-		return nil, err
-	}
-
-	bs = bs.Clone()
-	src := padding.Padding(bs, blockSize)
-	dst := src.Clone()
-
-	cipher.NewOFB(block, iv).XORKeyStream(dst, src)
 	return dst, nil
 }
 
-func DecryptOFB(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	block, blockSize, err := newBlock(key)
-	if err != nil {
-		return nil, err
-	}
+// DecryptOFB uses ofb mode to decrypt data.
+// There is no need to specify a padding.
+func DecryptOFB(data []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
 
-	src := bs
-	dst := bs.Clone()
-
-	cipher.NewOFB(block, iv).XORKeyStream(dst, src)
-	return padding.UndoPadding(dst, blockSize)
-}
-
-func EncryptCTR(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	block, blockSize, err := newBlock(key)
-	if err != nil {
-		return nil, err
-	}
-
-	bs = bs.Clone()
-	src := padding.Padding(bs, blockSize)
-	dst := src.Clone()
-
-	cipher.NewCTR(block, iv).XORKeyStream(dst, src)
-	return dst, nil
-}
-
-func DecryptCTR(key cryptox.Bytes, iv cryptox.Bytes, padding cryptox.Padding, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	block, blockSize, err := newBlock(key)
-	if err != nil {
-		return nil, err
-	}
-
-	src := bs
-	dst := bs.Clone()
-
-	cipher.NewCTR(block, iv).XORKeyStream(dst, src)
-	return padding.UndoPadding(dst, blockSize)
-}
-
-// EncryptGCM uses gcm mode to encrypt bs.
-func EncryptGCM(key cryptox.Bytes, nonce cryptox.Bytes, additional cryptox.Bytes, bs cryptox.Bytes) (cryptox.Bytes, error) {
 	block, _, err := newBlock(key)
 	if err != nil {
 		return nil, err
 	}
 
-	src := bs.Clone()
-	dst := src[:0]
+	src, err := conf.encoding.Decode(data)
+	if err != nil {
+		return nil, err
+	}
+
+	dst := bytes.Clone(src)
+
+	cipher.NewOFB(block, iv).XORKeyStream(dst, src)
+	return dst, nil
+}
+
+// DecryptCTR uses ctr mode to decrypt data.
+// There is no need to specify a padding.
+func DecryptCTR(data []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
+	block, _, err := newBlock(key)
+	if err != nil {
+		return nil, err
+	}
+
+	src, err := conf.encoding.Decode(data)
+	if err != nil {
+		return nil, err
+	}
+
+	dst := bytes.Clone(src)
+
+	cipher.NewCTR(block, iv).XORKeyStream(dst, src)
+	return dst, nil
+}
+
+// DecryptGCM uses gcm mode to decrypt data.
+// There is no need to specify a padding.
+func DecryptGCM(data []byte, key []byte, nonce []byte, opts ...Option) ([]byte, error) {
+	conf := newConfig().Apply(opts...)
+
+	block, _, err := newBlock(key)
+	if err != nil {
+		return nil, err
+	}
+
+	src, err := conf.encoding.Decode(data)
+	if err != nil {
+		return nil, err
+	}
+
+	dst := bytes.Clone(src)
+	dst = dst[:0]
 
 	gcm, err := cipher.NewGCM(block)
 	if err != nil {
 		return nil, err
 	}
 
-	dst = gcm.Seal(dst, nonce, src, additional)
-	return dst, nil
-}
-
-// DecryptGCM uses gcm mode to decrypt bs.
-func DecryptGCM(key cryptox.Bytes, nonce cryptox.Bytes, additional cryptox.Bytes, bs cryptox.Bytes) (cryptox.Bytes, error) {
-	block, _, err := newBlock(key)
-	if err != nil {
-		return nil, err
-	}
-
-	src := bs.Clone()
-	dst := src[:0]
-
-	gcm, err := cipher.NewGCM(block)
-	if err != nil {
-		return nil, err
-	}
-
-	return gcm.Open(dst, nonce, src, additional)
+	return gcm.Open(dst, nonce, src, conf.additional)
 }
