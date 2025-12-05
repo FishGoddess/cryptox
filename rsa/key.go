@@ -28,12 +28,12 @@ func GenerateKeys(bits int, opts ...KeyOption) (PrivateKey, PublicKey, error) {
 func WritePrivateKey(writer io.Writer, privateKey PrivateKey, opts ...KeyOption) error {
 	conf := newKeyConfig().Apply(opts...)
 
-	bs, err := conf.encodePrivateKey(privateKey.key)
+	data, err := conf.encodePrivateKey(privateKey.key)
 	if err != nil {
 		return err
 	}
 
-	_, err = writer.Write(bs)
+	_, err = writer.Write(data)
 	return err
 }
 
@@ -41,12 +41,12 @@ func WritePrivateKey(writer io.Writer, privateKey PrivateKey, opts ...KeyOption)
 func WritePublicKey(writer io.Writer, publicKey PublicKey, opts ...KeyOption) error {
 	conf := newKeyConfig().Apply(opts...)
 
-	bs, err := conf.encodePublicKey(publicKey.key)
+	data, err := conf.encodePublicKey(publicKey.key)
 	if err != nil {
 		return err
 	}
 
-	_, err = writer.Write(bs)
+	_, err = writer.Write(data)
 	return err
 }
 
@@ -54,12 +54,12 @@ func WritePublicKey(writer io.Writer, publicKey PublicKey, opts ...KeyOption) er
 func ReadPrivateKey(reader io.Reader, opts ...KeyOption) (PrivateKey, error) {
 	conf := newKeyConfig().Apply(opts...)
 
-	bs, err := io.ReadAll(reader)
+	data, err := io.ReadAll(reader)
 	if err != nil {
 		return PrivateKey{}, err
 	}
 
-	key, err := conf.decodePrivateKey(bs)
+	key, err := conf.decodePrivateKey(data)
 	if err != nil {
 		return PrivateKey{}, err
 	}
@@ -72,12 +72,12 @@ func ReadPrivateKey(reader io.Reader, opts ...KeyOption) (PrivateKey, error) {
 func ReadPublicKey(reader io.Reader, opts ...KeyOption) (PublicKey, error) {
 	conf := newKeyConfig().Apply(opts...)
 
-	bs, err := io.ReadAll(reader)
+	data, err := io.ReadAll(reader)
 	if err != nil {
 		return PublicKey{}, err
 	}
 
-	key, err := conf.decodePublicKey(bs)
+	key, err := conf.decodePublicKey(data)
 	if err != nil {
 		return PublicKey{}, err
 	}

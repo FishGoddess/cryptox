@@ -32,8 +32,8 @@ func EncodePrivateKeyPKCS8[Key any](key Key) ([]byte, error) {
 }
 
 // DecodePrivateKeyPKCS1 uses pkcs1 to decode private key.
-func DecodePrivateKeyPKCS1(bs []byte) (*rsa.PrivateKey, error) {
-	_, blockBytes, err := decode(bs)
+func DecodePrivateKeyPKCS1(data []byte) (*rsa.PrivateKey, error) {
+	_, blockBytes, err := decode(data)
 	if err != nil {
 		return nil, err
 	}
@@ -42,8 +42,8 @@ func DecodePrivateKeyPKCS1(bs []byte) (*rsa.PrivateKey, error) {
 }
 
 // DecodePrivateKeyPKCS8 uses pkcs8 to decode private key.
-func DecodePrivateKeyPKCS8[Key any](bs []byte) (Key, error) {
-	_, blockBytes, err := decode(bs)
+func DecodePrivateKeyPKCS8[Key any](data []byte) (Key, error) {
+	_, blockBytes, err := decode(data)
 	if err != nil {
 		var empty Key
 		return empty, err

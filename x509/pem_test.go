@@ -24,12 +24,12 @@ func TestPem(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	bs, err := encode(blockTypePrivate, blockBytes)
+	data, err := encode(blockTypePrivate, blockBytes)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	decodeType, decodeBytes, err := decode(bs)
+	decodeType, decodeBytes, err := decode(data)
 	if err != nil {
 		t.Fatal(err)
 	}

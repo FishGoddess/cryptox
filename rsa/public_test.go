@@ -20,7 +20,7 @@ type testCase struct {
 type testRandomReader struct{}
 
 func (testRandomReader) Read(p []byte) (n int, err error) {
-	for i := 0; i < len(p); i++ {
+	for i := range p {
 		p[i] = 1
 	}
 

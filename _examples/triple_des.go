@@ -8,8 +8,6 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/FishGoddess/cryptox/bytes/encoding"
-	"github.com/FishGoddess/cryptox/bytes/padding"
 	"github.com/FishGoddess/cryptox/des"
 )
 
@@ -19,11 +17,11 @@ func main() {
 	key := []byte("123456788765432112345678")
 	iv := []byte("87654321")
 
-	msg := []byte("你好，世界")
-	fmt.Printf("msg: %s\n", msg)
+	data := []byte("你好，世界")
+	fmt.Printf("data: %s\n", data)
 
 	// Use ctr mode to encrypt data with no padding and encoding base64.
-	encrypt, err := des.EncryptTripleCTR(msg, key, iv, padding.None, encoding.Base64)
+	encrypt, err := des.EncryptTripleCTR(data, key, iv, des.WithBase64())
 	if err != nil {
 		panic(err)
 	}
@@ -31,11 +29,11 @@ func main() {
 	fmt.Printf("encrypt: %s\n", encrypt)
 
 	// Decrypt data in the same way.
-	decrypt, err := des.DecryptTripleCTR(encrypt, key, iv, padding.None, encoding.Base64)
+	decrypt, err := des.DecryptTripleCTR(encrypt, key, iv, des.WithBase64())
 	if err != nil {
 		panic(err)
 	}
 
 	fmt.Printf("decrypt: %s\n", decrypt)
-	fmt.Printf("decrypt is right: %+v\n", bytes.Equal(decrypt, msg))
+	fmt.Printf("decrypt is right: %+v\n", bytes.Equal(decrypt, data))
 }

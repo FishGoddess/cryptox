@@ -21,9 +21,9 @@ func newBlock(key []byte) (cipher.Block, int, error) {
 	return block, blockSize, nil
 }
 
-// EncryptECB uses ecb mode to encrypt bs.
+// EncryptECB uses ecb mode to encrypt data.
 // It must specify a padding.
-func EncryptECB(bs []byte, key []byte, opts ...Option) ([]byte, error) {
+func EncryptECB(data []byte, key []byte, opts ...Option) ([]byte, error) {
 	conf := newConfig().Apply(opts...)
 
 	block, blockSize, err := newBlock(key)
@@ -31,7 +31,7 @@ func EncryptECB(bs []byte, key []byte, opts ...Option) ([]byte, error) {
 		return nil, err
 	}
 
-	src := bytes.Clone(bs)
+	src := bytes.Clone(data)
 	src = conf.padding.Pad(src, blockSize)
 	dst := bytes.Clone(src)
 
@@ -53,9 +53,9 @@ func EncryptECB(bs []byte, key []byte, opts ...Option) ([]byte, error) {
 	return dst, nil
 }
 
-// EncryptCBC uses cbc mode to encrypt bs.
+// EncryptCBC uses cbc mode to encrypt data.
 // It must specify a padding.
-func EncryptCBC(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+func EncryptCBC(data []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
 	conf := newConfig().Apply(opts...)
 
 	block, blockSize, err := newBlock(key)
@@ -63,7 +63,7 @@ func EncryptCBC(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error
 		return nil, err
 	}
 
-	src := bytes.Clone(bs)
+	src := bytes.Clone(data)
 	src = conf.padding.Pad(src, blockSize)
 	dst := bytes.Clone(src)
 
@@ -72,9 +72,9 @@ func EncryptCBC(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error
 	return dst, nil
 }
 
-// EncryptCFB uses cfb mode to encrypt bs.
+// EncryptCFB uses cfb mode to encrypt data.
 // There is no need to specify a padding.
-func EncryptCFB(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+func EncryptCFB(data []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
 	conf := newConfig().Apply(opts...)
 
 	block, _, err := newBlock(key)
@@ -82,7 +82,7 @@ func EncryptCFB(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error
 		return nil, err
 	}
 
-	src := bytes.Clone(bs)
+	src := bytes.Clone(data)
 	dst := bytes.Clone(src)
 
 	cipher.NewCFBEncrypter(block, iv).XORKeyStream(dst, src)
@@ -90,9 +90,9 @@ func EncryptCFB(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error
 	return dst, nil
 }
 
-// EncryptOFB uses ofb mode to encrypt bs.
+// EncryptOFB uses ofb mode to encrypt data.
 // There is no need to specify a padding.
-func EncryptOFB(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+func EncryptOFB(data []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
 	conf := newConfig().Apply(opts...)
 
 	block, _, err := newBlock(key)
@@ -100,7 +100,7 @@ func EncryptOFB(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error
 		return nil, err
 	}
 
-	src := bytes.Clone(bs)
+	src := bytes.Clone(data)
 	dst := bytes.Clone(src)
 
 	cipher.NewOFB(block, iv).XORKeyStream(dst, src)
@@ -108,9 +108,9 @@ func EncryptOFB(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error
 	return dst, nil
 }
 
-// EncryptCTR uses ctr mode to encrypt bs.
+// EncryptCTR uses ctr mode to encrypt data.
 // There is no need to specify a padding.
-func EncryptCTR(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+func EncryptCTR(data []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
 	conf := newConfig().Apply(opts...)
 
 	block, _, err := newBlock(key)
@@ -118,7 +118,7 @@ func EncryptCTR(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error
 		return nil, err
 	}
 
-	src := bytes.Clone(bs)
+	src := bytes.Clone(data)
 	dst := bytes.Clone(src)
 
 	cipher.NewCTR(block, iv).XORKeyStream(dst, src)
@@ -126,9 +126,9 @@ func EncryptCTR(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error
 	return dst, nil
 }
 
-// DecryptECB uses ecb mode to decrypt bs.
+// DecryptECB uses ecb mode to decrypt data.
 // It must specify a padding.
-func DecryptECB(bs []byte, key []byte, opts ...Option) ([]byte, error) {
+func DecryptECB(data []byte, key []byte, opts ...Option) ([]byte, error) {
 	conf := newConfig().Apply(opts...)
 
 	block, blockSize, err := newBlock(key)
@@ -136,7 +136,7 @@ func DecryptECB(bs []byte, key []byte, opts ...Option) ([]byte, error) {
 		return nil, err
 	}
 
-	src, err := conf.encoding.Decode(bs)
+	src, err := conf.encoding.Decode(data)
 	if err != nil {
 		return nil, err
 	}
@@ -160,9 +160,9 @@ func DecryptECB(bs []byte, key []byte, opts ...Option) ([]byte, error) {
 	return conf.padding.Unpad(dst, blockSize)
 }
 
-// DecryptCBC uses cbc mode to decrypt bs.
+// DecryptCBC uses cbc mode to decrypt data.
 // It must specify a padding.
-func DecryptCBC(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+func DecryptCBC(data []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
 	conf := newConfig().Apply(opts...)
 
 	block, blockSize, err := newBlock(key)
@@ -170,7 +170,7 @@ func DecryptCBC(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error
 		return nil, err
 	}
 
-	src, err := conf.encoding.Decode(bs)
+	src, err := conf.encoding.Decode(data)
 	if err != nil {
 		return nil, err
 	}
@@ -181,9 +181,9 @@ func DecryptCBC(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error
 	return conf.padding.Unpad(dst, blockSize)
 }
 
-// DecryptCFB uses cfb mode to decrypt bs.
+// DecryptCFB uses cfb mode to decrypt data.
 // There is no need to specify a padding.
-func DecryptCFB(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+func DecryptCFB(data []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
 	conf := newConfig().Apply(opts...)
 
 	block, _, err := newBlock(key)
@@ -191,7 +191,7 @@ func DecryptCFB(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error
 		return nil, err
 	}
 
-	src, err := conf.encoding.Decode(bs)
+	src, err := conf.encoding.Decode(data)
 	if err != nil {
 		return nil, err
 	}
@@ -202,9 +202,9 @@ func DecryptCFB(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error
 	return dst, nil
 }
 
-// DecryptOFB uses ofb mode to decrypt bs.
+// DecryptOFB uses ofb mode to decrypt data.
 // There is no need to specify a padding.
-func DecryptOFB(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+func DecryptOFB(data []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
 	conf := newConfig().Apply(opts...)
 
 	block, _, err := newBlock(key)
@@ -212,7 +212,7 @@ func DecryptOFB(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error
 		return nil, err
 	}
 
-	src, err := conf.encoding.Decode(bs)
+	src, err := conf.encoding.Decode(data)
 	if err != nil {
 		return nil, err
 	}
@@ -223,9 +223,9 @@ func DecryptOFB(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error
 	return dst, nil
 }
 
-// DecryptCTR uses ctr mode to decrypt bs.
+// DecryptCTR uses ctr mode to decrypt data.
 // There is no need to specify a padding.
-func DecryptCTR(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
+func DecryptCTR(data []byte, key []byte, iv []byte, opts ...Option) ([]byte, error) {
 	conf := newConfig().Apply(opts...)
 
 	block, _, err := newBlock(key)
@@ -233,7 +233,7 @@ func DecryptCTR(bs []byte, key []byte, iv []byte, opts ...Option) ([]byte, error
 		return nil, err
 	}
 
-	src, err := conf.encoding.Decode(bs)
+	src, err := conf.encoding.Decode(data)
 	if err != nil {
 		return nil, err
 	}

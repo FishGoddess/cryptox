@@ -5,7 +5,7 @@
 [![Coverage](_icons/coverage.svg)](_icons/coverage.svg)
 ![Test](https://github.com/FishGoddess/cryptox/actions/workflows/test.yml/badge.svg)
 
-**Cryptox** is a kit for safety which includes some common encrypted/decrypted algorithms.
+**Cryptox** is a kit for safety which includes some common encrypt/decrypt algorithms.
 
 [阅读中文版的文档](./README.md)
 

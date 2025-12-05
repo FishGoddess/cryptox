@@ -10,7 +10,7 @@ import (
 	"errors"
 )
 
-func encode(blockType string, blockBytes []byte) (bs []byte, err error) {
+func encode(blockType string, blockBytes []byte) (data []byte, err error) {
 	block := &pem.Block{Type: blockType, Bytes: blockBytes}
 
 	var buffer bytes.Buffer
@@ -18,12 +18,12 @@ func encode(blockType string, blockBytes []byte) (bs []byte, err error) {
 		return nil, err
 	}
 
-	bs = buffer.Bytes()
-	return bs, nil
+	data = buffer.Bytes()
+	return data, nil
 }
 
-func decode(bs []byte) (blockType string, blockBytes []byte, err error) {
-	block, _ := pem.Decode(bs)
+func decode(data []byte) (blockType string, blockBytes []byte, err error) {
+	block, _ := pem.Decode(data)
 	if block == nil {
 		return "", nil, errors.New("cryptox/x509: decode block is nil")
 	}

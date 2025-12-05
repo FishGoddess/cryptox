@@ -32,8 +32,8 @@ func EncodePublicKeyPKIX[Key any](key Key) ([]byte, error) {
 }
 
 // DecodePublicKeyPKCS1 uses pkcs1 to decode public key.
-func DecodePublicKeyPKCS1(bs []byte) (*rsa.PublicKey, error) {
-	_, blockBytes, err := decode(bs)
+func DecodePublicKeyPKCS1(data []byte) (*rsa.PublicKey, error) {
+	_, blockBytes, err := decode(data)
 	if err != nil {
 		return nil, err
 	}
@@ -42,8 +42,8 @@ func DecodePublicKeyPKCS1(bs []byte) (*rsa.PublicKey, error) {
 }
 
 // DecodePublicKeyPKIX uses pkix to decode public key.
-func DecodePublicKeyPKIX[Key any](bs []byte) (Key, error) {
-	_, blockBytes, err := decode(bs)
+func DecodePublicKeyPKIX[Key any](data []byte) (Key, error) {
+	_, blockBytes, err := decode(data)
 	if err != nil {
 		var empty Key
 		return empty, err

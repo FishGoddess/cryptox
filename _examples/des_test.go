@@ -7,8 +7,6 @@ package main
 import (
 	"testing"
 
-	"github.com/FishGoddess/cryptox/bytes/encoding"
-	"github.com/FishGoddess/cryptox/bytes/padding"
 	"github.com/FishGoddess/cryptox/des"
 )
 
@@ -24,7 +22,7 @@ func BenchmarkDES_EncryptECB(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := des.EncryptECB(desBenchMsg, desBenchKey, padding.PKCS7, encoding.None)
+		_, err := des.EncryptECB(desBenchMsg, desBenchKey, des.WithPKCS7())
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -37,7 +35,7 @@ func BenchmarkDES_EncryptCBC(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := des.EncryptCBC(desBenchMsg, desBenchKey, desBenchIV, padding.PKCS7, encoding.None)
+		_, err := des.EncryptCBC(desBenchMsg, desBenchKey, desBenchIV, des.WithPKCS7())
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -50,7 +48,7 @@ func BenchmarkDES_EncryptCFB(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := des.EncryptCFB(desBenchMsg, desBenchKey, desBenchIV, padding.None, encoding.None)
+		_, err := des.EncryptCFB(desBenchMsg, desBenchKey, desBenchIV)
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -63,7 +61,7 @@ func BenchmarkDES_EncryptOFB(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := des.EncryptOFB(desBenchMsg, desBenchKey, desBenchIV, padding.None, encoding.None)
+		_, err := des.EncryptOFB(desBenchMsg, desBenchKey, desBenchIV)
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -76,7 +74,7 @@ func BenchmarkDES_EncryptCTR(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := des.EncryptCTR(desBenchMsg, desBenchKey, desBenchIV, padding.None, encoding.None)
+		_, err := des.EncryptCTR(desBenchMsg, desBenchKey, desBenchIV)
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -85,7 +83,7 @@ func BenchmarkDES_EncryptCTR(b *testing.B) {
 
 // go test -v -bench=^BenchmarkDES_DecryptECB$ -benchtime=1s des_test.go
 func BenchmarkDES_DecryptECB(b *testing.B) {
-	encrypt, err := des.EncryptECB(desBenchMsg, desBenchKey, padding.PKCS7, encoding.None)
+	encrypt, err := des.EncryptECB(desBenchMsg, desBenchKey, des.WithPKCS7())
 	if err != nil {
 		b.Fatal(err)
 	}
@@ -94,7 +92,7 @@ func BenchmarkDES_DecryptECB(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := des.DecryptECB(encrypt, desBenchKey, padding.PKCS7, encoding.None)
+		_, err := des.DecryptECB(encrypt, desBenchKey, des.WithPKCS7())
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -103,7 +101,7 @@ func BenchmarkDES_DecryptECB(b *testing.B) {
 
 // go test -v -bench=^BenchmarkDES_DecryptCBC$ -benchtime=1s des_test.go
 func BenchmarkDES_DecryptCBC(b *testing.B) {
-	encrypt, err := des.EncryptCBC(desBenchMsg, desBenchKey, desBenchIV, padding.PKCS7, encoding.None)
+	encrypt, err := des.EncryptCBC(desBenchMsg, desBenchKey, desBenchIV, des.WithPKCS7())
 	if err != nil {
 		b.Fatal(err)
 	}
@@ -112,7 +110,7 @@ func BenchmarkDES_DecryptCBC(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := des.DecryptCBC(encrypt, desBenchKey, desBenchIV, padding.PKCS7, encoding.None)
+		_, err := des.DecryptCBC(encrypt, desBenchKey, desBenchIV, des.WithPKCS7())
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -121,7 +119,7 @@ func BenchmarkDES_DecryptCBC(b *testing.B) {
 
 // go test -v -bench=^BenchmarkDES_DecryptCFB$ -benchtime=1s des_test.go
 func BenchmarkDES_DecryptCFB(b *testing.B) {
-	encrypt, err := des.EncryptCFB(desBenchMsg, desBenchKey, desBenchIV, padding.None, encoding.None)
+	encrypt, err := des.EncryptCFB(desBenchMsg, desBenchKey, desBenchIV)
 	if err != nil {
 		b.Fatal(err)
 	}
@@ -130,7 +128,7 @@ func BenchmarkDES_DecryptCFB(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := des.DecryptCFB(encrypt, desBenchKey, desBenchIV, padding.None, encoding.None)
+		_, err := des.DecryptCFB(encrypt, desBenchKey, desBenchIV)
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -139,7 +137,7 @@ func BenchmarkDES_DecryptCFB(b *testing.B) {
 
 // go test -v -bench=^BenchmarkDES_DecryptOFB$ -benchtime=1s des_test.go
 func BenchmarkDES_DecryptOFB(b *testing.B) {
-	encrypt, err := des.EncryptOFB(desBenchMsg, desBenchKey, desBenchIV, padding.None, encoding.None)
+	encrypt, err := des.EncryptOFB(desBenchMsg, desBenchKey, desBenchIV)
 	if err != nil {
 		b.Fatal(err)
 	}
@@ -148,7 +146,7 @@ func BenchmarkDES_DecryptOFB(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := des.DecryptOFB(encrypt, desBenchKey, desBenchIV, padding.None, encoding.None)
+		_, err := des.DecryptOFB(encrypt, desBenchKey, desBenchIV)
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -157,7 +155,7 @@ func BenchmarkDES_DecryptOFB(b *testing.B) {
 
 // go test -v -bench=^BenchmarkDES_DecryptCTR$ -benchtime=1s des_test.go
 func BenchmarkDES_DecryptCTR(b *testing.B) {
-	encrypt, err := des.EncryptCTR(desBenchMsg, desBenchKey, desBenchIV, padding.None, encoding.None)
+	encrypt, err := des.EncryptCTR(desBenchMsg, desBenchKey, desBenchIV)
 	if err != nil {
 		b.Fatal(err)
 	}
@@ -166,7 +164,7 @@ func BenchmarkDES_DecryptCTR(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := des.DecryptCTR(encrypt, desBenchKey, desBenchIV, padding.None, encoding.None)
+		_, err := des.DecryptCTR(encrypt, desBenchKey, desBenchIV)
 		if err != nil {
 			b.Fatal(err)
 		}

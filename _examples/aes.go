@@ -9,7 +9,6 @@ import (
 	"fmt"
 
 	"github.com/FishGoddess/cryptox/aes"
-	"github.com/FishGoddess/cryptox/bytes/encoding"
 )
 
 func main() {
@@ -18,11 +17,11 @@ func main() {
 	key := []byte("12345678876543211234567887654321")
 	nonce := []byte("123456abcdef")
 
-	msg := []byte("你好，世界")
-	fmt.Printf("msg: %s\n", msg)
+	data := []byte("你好，世界")
+	fmt.Printf("data: %s\n", data)
 
 	// Use gcm mode to encrypt data with no padding and encoding base64.
-	encrypt, err := aes.EncryptGCM(msg, key, nonce, nil, encoding.Base64)
+	encrypt, err := aes.EncryptGCM(data, key, nonce, aes.WithBase64())
 	if err != nil {
 		panic(err)
 	}
@@ -30,11 +29,11 @@ func main() {
 	fmt.Printf("encrypt: %s\n", encrypt)
 
 	// Decrypt data in the same way.
-	decrypt, err := aes.DecryptGCM(encrypt, key, nonce, nil, encoding.Base64)
+	decrypt, err := aes.DecryptGCM(encrypt, key, nonce, aes.WithBase64())
 	if err != nil {
 		panic(err)
 	}
 
 	fmt.Printf("decrypt: %s\n", decrypt)
-	fmt.Printf("decrypt is right: %+v\n", bytes.Equal(decrypt, msg))
+	fmt.Printf("decrypt is right: %+v\n", bytes.Equal(decrypt, data))
 }

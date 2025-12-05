@@ -12,30 +12,30 @@ type PublicKey struct {
 	key *rsa.PublicKey
 }
 
-// EncryptPKCS1v15 encrypts bs with pkcs1 v15.
-func (pk PublicKey) EncryptPKCS1v15(bs []byte, opts ...Option) ([]byte, error) {
+// EncryptPKCS1v15 encrypts data with pkcs1 v15.
+func (pk PublicKey) EncryptPKCS1v15(data []byte, opts ...Option) ([]byte, error) {
 	conf := newConfig().Apply(opts...)
 
-	bs, err := rsa.EncryptPKCS1v15(conf.random, pk.key, bs)
+	data, err := rsa.EncryptPKCS1v15(conf.random, pk.key, data)
 	if err != nil {
 		return nil, err
 	}
 
-	bs = conf.encoding.Encode(bs)
-	return bs, nil
+	data = conf.encoding.Encode(data)
+	return data, nil
 }
 
-// EncryptOAEP encrypts bs with oaep.
-func (pk PublicKey) EncryptOAEP(bs []byte, label []byte, opts ...Option) ([]byte, error) {
+// EncryptOAEP encrypts data with oaep.
+func (pk PublicKey) EncryptOAEP(data []byte, label []byte, opts ...Option) ([]byte, error) {
 	conf := newConfig().Apply(opts...)
 
-	bs, err := rsa.EncryptOAEP(conf.hash, conf.random, pk.key, bs, label)
+	data, err := rsa.EncryptOAEP(conf.hash, conf.random, pk.key, data, label)
 	if err != nil {
 		return nil, err
 	}
 
-	bs = conf.encoding.Encode(bs)
-	return bs, nil
+	data = conf.encoding.Encode(data)
+	return data, nil
 }
 
 // VerifyPKCS1v15 verifies hashed with pkcs1 v15.

@@ -8,43 +8,43 @@ import "fmt"
 
 type Padding interface {
 	// Pad pads some bytes to the byte slice.
-	Pad(bs []byte, blockSize int) []byte
+	Pad(data []byte, blockSize int) []byte
 
 	// Unpad unpads some bytes from the byte slice.
-	Unpad(bs []byte, blockSize int) ([]byte, error)
+	Unpad(data []byte, blockSize int) ([]byte, error)
 }
 
 type None struct{}
 
 // Pad returns the original byte slice.
-func (None) Pad(bs []byte, blockSize int) []byte {
-	return bs
+func (None) Pad(data []byte, blockSize int) []byte {
+	return data
 }
 
 // Unpad returns the original byte slice.
-func (None) Unpad(bs []byte, blockSize int) ([]byte, error) {
-	return bs, nil
+func (None) Unpad(data []byte, blockSize int) ([]byte, error) {
+	return data, nil
 }
 
 type Zero struct{}
 
 // Pad pads some bytes to the byte slice in zero way.
-func (Zero) Pad(bs []byte, blockSize int) []byte {
-	padding := blockSize - (len(bs) % blockSize)
+func (Zero) Pad(data []byte, blockSize int) []byte {
+	padding := blockSize - (len(data) % blockSize)
 	for i := 0; i < padding; i++ {
-		bs = append(bs, 0)
+		data = append(data, 0)
 	}
 
-	return bs
+	return data
 }
 
 // Unpad unpads some bytes from the byte slice in zero way.
-func (Zero) Unpad(bs []byte, blockSize int) ([]byte, error) {
-	length := len(bs)
+func (Zero) Unpad(data []byte, blockSize int) ([]byte, error) {
+	length := len(data)
 
 	var i int
 	for i = length; i > 0; i-- {
-		if bs[i-1] != 0 {
+		if data[i-1] != 0 {
 			break
 		}
 
@@ -54,61 +54,61 @@ func (Zero) Unpad(bs []byte, blockSize int) ([]byte, error) {
 		}
 	}
 
-	return bs[:i], nil
+	return data[:i], nil
 }
 
 type PKCS5 struct{}
 
 // Pad pads some bytes to the byte slice in pkcs5 way.
-func (PKCS5) Pad(bs []byte, blockSize int) []byte {
-	padding := blockSize - (len(bs) % blockSize)
+func (PKCS5) Pad(data []byte, blockSize int) []byte {
+	padding := blockSize - (len(data) % blockSize)
 	for i := 0; i < padding; i++ {
-		bs = append(bs, byte(padding))
+		data = append(data, byte(padding))
 	}
 
-	return bs
+	return data
 }
 
 // Unpad unpads some bytes from the byte slice in pkcs5 way.
-func (PKCS5) Unpad(bs []byte, blockSize int) ([]byte, error) {
-	length := len(bs)
-	number := int(bs[length-1])
+func (PKCS5) Unpad(data []byte, blockSize int) ([]byte, error) {
+	length := len(data)
+	number := int(data[length-1])
 
 	if number > length {
-		return nil, fmt.Errorf("cryptox: unpad number %d > length %d", number, length)
+		return nil, fmt.Errorf("cryptox/padding: unpad number %d > length %d", number, length)
 	}
 
 	if number > blockSize {
-		return nil, fmt.Errorf("cryptox: unpad number %d > blockSize %d", number, blockSize)
+		return nil, fmt.Errorf("cryptox/padding: unpad number %d > blockSize %d", number, blockSize)
 	}
 
-	return bs[:length-number], nil
+	return data[:length-number], nil
 }
 
 type PKCS7 struct{}
 
 // Pad pads some bytes to the byte slice in pkcs7 way.
-func (PKCS7) Pad(bs []byte, blockSize int) []byte {
-	padding := blockSize - (len(bs) % blockSize)
+func (PKCS7) Pad(data []byte, blockSize int) []byte {
+	padding := blockSize - (len(data) % blockSize)
 	for i := 0; i < padding; i++ {
-		bs = append(bs, byte(padding))
+		data = append(data, byte(padding))
 	}
 
-	return bs
+	return data
 }
 
 // Unpad unpads some bytes from the byte slice in pkcs7 way.
-func (PKCS7) Unpad(bs []byte, blockSize int) ([]byte, error) {
-	length := len(bs)
-	number := int(bs[length-1])
+func (PKCS7) Unpad(data []byte, blockSize int) ([]byte, error) {
+	length := len(data)
+	number := int(data[length-1])
 
 	if number > length {
-		return nil, fmt.Errorf("cryptox: unpad number %d > length %d", number, length)
+		return nil, fmt.Errorf("cryptox/padding: unpad number %d > length %d", number, length)
 	}
 
 	if number > blockSize {
-		return nil, fmt.Errorf("cryptox: unpad number %d > blockSize %d", number, blockSize)
+		return nil, fmt.Errorf("cryptox/padding: unpad number %d > blockSize %d", number, blockSize)
 	}
 
-	return bs[:length-number], nil
+	return data[:length-number], nil
 }

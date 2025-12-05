@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-type testHashFunc = func(bs []byte, key []byte, opts ...Option) []byte
+type testHashFunc = func(data []byte, key []byte, opts ...Option) []byte
 
 type testCase struct {
 	Data           []byte

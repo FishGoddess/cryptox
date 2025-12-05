@@ -7,12 +7,11 @@ package main
 import (
 	"testing"
 
-	"github.com/FishGoddess/cryptox/bytes/encoding"
 	"github.com/FishGoddess/cryptox/hash"
 )
 
 var (
-	benchData = []byte("你好，世界")
+	hashBenchData = []byte("你好，世界")
 )
 
 // go test -v -bench=^BenchmarkHash_MD5$ -benchtime=1s hash_test.go
@@ -21,7 +20,7 @@ func BenchmarkHash_MD5(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.MD5(benchData, encoding.None)
+		hash.MD5(hashBenchData)
 	}
 }
 
@@ -31,7 +30,7 @@ func BenchmarkHash_SHA1(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.SHA1(benchData, encoding.None)
+		hash.SHA1(hashBenchData)
 	}
 }
 
@@ -41,7 +40,7 @@ func BenchmarkHash_SHA224(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.SHA224(benchData, encoding.None)
+		hash.SHA224(hashBenchData)
 	}
 }
 
@@ -51,7 +50,7 @@ func BenchmarkHash_SHA256(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.SHA256(benchData, encoding.None)
+		hash.SHA256(hashBenchData)
 	}
 }
 
@@ -61,7 +60,7 @@ func BenchmarkHash_SHA384(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.SHA384(benchData, encoding.None)
+		hash.SHA384(hashBenchData)
 	}
 }
 
@@ -71,7 +70,7 @@ func BenchmarkHash_SHA512(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.SHA512(benchData, encoding.None)
+		hash.SHA512(hashBenchData)
 	}
 }
 
@@ -81,7 +80,7 @@ func BenchmarkHash_CRC32IEEE(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.CRC32IEEE(benchData)
+		hash.CRC32IEEE(hashBenchData)
 	}
 }
 
@@ -91,7 +90,7 @@ func BenchmarkHash_CRC64ISO(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.CRC64ISO(benchData)
+		hash.CRC64ISO(hashBenchData)
 	}
 }
 
@@ -101,7 +100,7 @@ func BenchmarkHash_CRC64ECMA(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.CRC64ECMA(benchData)
+		hash.CRC64ECMA(hashBenchData)
 	}
 }
 
@@ -111,7 +110,7 @@ func BenchmarkHash_Fnv32(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.Fnv32(benchData)
+		hash.Fnv32(hashBenchData)
 	}
 }
 
@@ -121,7 +120,7 @@ func BenchmarkHash_Fnv32a(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.Fnv32a(benchData)
+		hash.Fnv32a(hashBenchData)
 	}
 }
 
@@ -131,7 +130,7 @@ func BenchmarkHash_Fnv64(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.Fnv64(benchData)
+		hash.Fnv64(hashBenchData)
 	}
 }
 
@@ -141,7 +140,7 @@ func BenchmarkHash_Fnv64a(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.Fnv64a(benchData)
+		hash.Fnv64a(hashBenchData)
 	}
 }
 
@@ -151,7 +150,7 @@ func BenchmarkHash_Fnv128(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.Fnv128(benchData, encoding.None)
+		hash.Fnv128(hashBenchData)
 	}
 }
 
@@ -161,6 +160,6 @@ func BenchmarkHash_Fnv128a(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hash.Fnv128a(benchData, encoding.None)
+		hash.Fnv128a(hashBenchData)
 	}
 }

@@ -12,16 +12,16 @@ import (
 // go test -v -cover -run=^TestBytes$
 func TestBytes(t *testing.T) {
 	for i := 1; i <= 64; i++ {
-		bs := Bytes(i)
+		data := Bytes(i)
 
-		for _, b := range bs {
+		for _, b := range data {
 			index := bytes.IndexByte(words, b)
 			if index < 0 {
 				t.Fatalf("b %+v not in words %+v", b, words)
 			}
 		}
 
-		t.Logf("%s\n", bs)
+		t.Logf("%s\n", data)
 	}
 }
 

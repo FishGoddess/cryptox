@@ -11,26 +11,26 @@ import (
 
 var words = []byte("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 
-func appendBytes(bs []byte, n int) []byte {
+func appendBytes(data []byte, n int) []byte {
 	length := len(words)
 	for i := 0; i < n; i++ {
 		index := rand.IntN(length)
-		bs = append(bs, words[index])
+		data = append(data, words[index])
 	}
 
-	return bs
+	return data
 }
 
 // Bytes returns n bytes in random which can be used to generate an iv.
 func Bytes(n int) []byte {
-	bs := make([]byte, 0, n)
-	bs = appendBytes(bs, n)
-	return bs
+	data := make([]byte, 0, n)
+	data = appendBytes(data, n)
+	return data
 }
 
 // String returns a string including n bytes in random which can be used to generate an iv.
 func String(n int) string {
-	bs := Bytes(n)
-	ptr := unsafe.SliceData(bs)
-	return unsafe.String(ptr, len(bs))
+	data := Bytes(n)
+	ptr := unsafe.SliceData(data)
+	return unsafe.String(ptr, len(data))
 }

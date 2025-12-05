@@ -17,12 +17,12 @@ func TestPrivateKeyPKCS1(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	bs, err := EncodePrivateKeyPKCS1(privateKey)
+	data, err := EncodePrivateKeyPKCS1(privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	decodeKey, err := DecodePrivateKeyPKCS1(bs)
+	decodeKey, err := DecodePrivateKeyPKCS1(data)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -39,12 +39,12 @@ func TestPrivateKeyPKCS8(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	bs, err := EncodePrivateKeyPKCS8(privateKey)
+	data, err := EncodePrivateKeyPKCS8(privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	decodeKey, err := DecodePrivateKeyPKCS8[*rsa.PrivateKey](bs)
+	decodeKey, err := DecodePrivateKeyPKCS8[*rsa.PrivateKey](data)
 	if err != nil {
 		t.Fatal(err)
 	}

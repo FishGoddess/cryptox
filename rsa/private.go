@@ -12,40 +12,40 @@ type PrivateKey struct {
 	key *rsa.PrivateKey
 }
 
-// DecryptPKCS1v15 decrypts bs with pkcs1 v15.
-func (pk PrivateKey) DecryptPKCS1v15(bs []byte, opts ...Option) ([]byte, error) {
+// DecryptPKCS1v15 decrypts data with pkcs1 v15.
+func (pk PrivateKey) DecryptPKCS1v15(data []byte, opts ...Option) ([]byte, error) {
 	conf := newConfig().Apply(opts...)
 
-	bs, err := conf.encoding.Decode(bs)
+	data, err := conf.encoding.Decode(data)
 	if err != nil {
 		return nil, err
 	}
 
-	return rsa.DecryptPKCS1v15(conf.random, pk.key, bs)
+	return rsa.DecryptPKCS1v15(conf.random, pk.key, data)
 }
 
-// DecryptPKCS1v15SessionKey decrypts bs using a session key with pkcs1 v15.
-func (pk PrivateKey) DecryptPKCS1v15SessionKey(bs []byte, sessionKey []byte, opts ...Option) error {
+// DecryptPKCS1v15SessionKey decrypts data using a session key with pkcs1 v15.
+func (pk PrivateKey) DecryptPKCS1v15SessionKey(data []byte, sessionKey []byte, opts ...Option) error {
 	conf := newConfig().Apply(opts...)
 
-	bs, err := conf.encoding.Decode(bs)
+	data, err := conf.encoding.Decode(data)
 	if err != nil {
 		return err
 	}
 
-	return rsa.DecryptPKCS1v15SessionKey(conf.random, pk.key, bs, sessionKey)
+	return rsa.DecryptPKCS1v15SessionKey(conf.random, pk.key, data, sessionKey)
 }
 
-// DecryptOAEP decrypts bs with oaep.
-func (pk PrivateKey) DecryptOAEP(bs []byte, label []byte, opts ...Option) ([]byte, error) {
+// DecryptOAEP decrypts data with oaep.
+func (pk PrivateKey) DecryptOAEP(data []byte, label []byte, opts ...Option) ([]byte, error) {
 	conf := newConfig().Apply(opts...)
 
-	bs, err := conf.encoding.Decode(bs)
+	data, err := conf.encoding.Decode(data)
 	if err != nil {
 		return nil, err
 	}
 
-	return rsa.DecryptOAEP(conf.hash, conf.random, pk.key, bs, label)
+	return rsa.DecryptOAEP(conf.hash, conf.random, pk.key, data, label)
 }
 
 // SignPKCS1v15 signs hashed with pkcs1 v15.

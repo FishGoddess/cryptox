@@ -11,50 +11,50 @@ import (
 	"crypto/sha512"
 )
 
-// MD5 uses md5 to hash bs.
-func MD5(bs []byte, opts ...Option) []byte {
+// MD5 uses md5 to hash data.
+func MD5(data []byte, opts ...Option) []byte {
 	conf := newConfig().Apply(opts...)
 
-	sum := md5.Sum(bs)
+	sum := md5.Sum(data)
 	return conf.encoding.Encode(sum[:])
 }
 
-// SHA1 uses sha1 to hash bs.
-func SHA1(bs []byte, opts ...Option) []byte {
+// SHA1 uses sha1 to hash data.
+func SHA1(data []byte, opts ...Option) []byte {
 	conf := newConfig().Apply(opts...)
 
-	sum := sha1.Sum(bs)
+	sum := sha1.Sum(data)
 	return conf.encoding.Encode(sum[:])
 }
 
-// SHA224 uses sha224 to hash bs.
-func SHA224(bs []byte, opts ...Option) []byte {
+// SHA224 uses sha224 to hash data.
+func SHA224(data []byte, opts ...Option) []byte {
 	conf := newConfig().Apply(opts...)
 
-	sum := sha256.Sum224(bs)
+	sum := sha256.Sum224(data)
 	return conf.encoding.Encode(sum[:])
 }
 
-// SHA256 uses sha256 to hash bs.
-func SHA256(bs []byte, opts ...Option) []byte {
+// SHA256 uses sha256 to hash data.
+func SHA256(data []byte, opts ...Option) []byte {
 	conf := newConfig().Apply(opts...)
 
-	sum := sha256.Sum256(bs)
+	sum := sha256.Sum256(data)
 	return conf.encoding.Encode(sum[:])
 }
 
-// SHA384 uses sha384 to hash bs.
-func SHA384(bs []byte, opts ...Option) []byte {
+// SHA384 uses sha384 to hash data.
+func SHA384(data []byte, opts ...Option) []byte {
 	conf := newConfig().Apply(opts...)
 
-	sum := sha512.Sum384(bs)
+	sum := sha512.Sum384(data)
 	return conf.encoding.Encode(sum[:])
 }
 
-// SHA512 uses sha512 to hash bs.
-func SHA512(bs []byte, opts ...Option) []byte {
+// SHA512 uses sha512 to hash data.
+func SHA512(data []byte, opts ...Option) []byte {
 	conf := newConfig().Apply(opts...)
 
-	sum := sha512.Sum512(bs)
+	sum := sha512.Sum512(data)
 	return conf.encoding.Encode(sum[:])
 }

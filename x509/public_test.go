@@ -19,12 +19,12 @@ func TestPublicKeyPKCS1(t *testing.T) {
 
 	publicKey := &privateKey.PublicKey
 
-	bs, err := EncodePublicKeyPKCS1(publicKey)
+	data, err := EncodePublicKeyPKCS1(publicKey)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	decodeKey, err := DecodePublicKeyPKCS1(bs)
+	decodeKey, err := DecodePublicKeyPKCS1(data)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -43,12 +43,12 @@ func TestPublicKeyPKIX(t *testing.T) {
 
 	publicKey := &privateKey.PublicKey
 
-	bs, err := EncodePublicKeyPKIX(publicKey)
+	data, err := EncodePublicKeyPKIX(publicKey)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	decodeKey, err := DecodePublicKeyPKIX[*rsa.PublicKey](bs)
+	decodeKey, err := DecodePublicKeyPKIX[*rsa.PublicKey](data)
 	if err != nil {
 		t.Fatal(err)
 	}

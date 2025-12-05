@@ -20,8 +20,8 @@ type KeyConfig struct {
 	random           io.Reader
 	encodePrivateKey func(key *rsa.PrivateKey) ([]byte, error)
 	encodePublicKey  func(key *rsa.PublicKey) ([]byte, error)
-	decodePrivateKey func(bs []byte) (*rsa.PrivateKey, error)
-	decodePublicKey  func(bs []byte) (*rsa.PublicKey, error)
+	decodePrivateKey func(data []byte) (*rsa.PrivateKey, error)
+	decodePublicKey  func(data []byte) (*rsa.PublicKey, error)
 }
 
 func newKeyConfig() *KeyConfig {
@@ -68,14 +68,14 @@ func WithKeyEncodePublic(encode func(key *rsa.PublicKey) ([]byte, error)) KeyOpt
 }
 
 // WithKeyDecodePrivate sets decode to key config.
-func WithKeyDecodePrivate(decode func(bs []byte) (*rsa.PrivateKey, error)) KeyOption {
+func WithKeyDecodePrivate(decode func(data []byte) (*rsa.PrivateKey, error)) KeyOption {
 	return func(conf *KeyConfig) {
 		conf.decodePrivateKey = decode
 	}
 }
 
 // WithKeyDecodePublic sets decode to key config.
-func WithKeyDecodePublic(decode func(bs []byte) (*rsa.PublicKey, error)) KeyOption {
+func WithKeyDecodePublic(decode func(data []byte) (*rsa.PublicKey, error)) KeyOption {
 	return func(conf *KeyConfig) {
 		conf.decodePublicKey = decode
 	}

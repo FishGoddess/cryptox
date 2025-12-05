@@ -7,13 +7,12 @@ package main
 import (
 	"testing"
 
-	"github.com/FishGoddess/cryptox/bytes/encoding"
 	"github.com/FishGoddess/cryptox/hmac"
 )
 
 var (
-	hmacBenchKey  = []byte("key")
 	hmacBenchData = []byte("你好，世界")
+	hmacBenchKey  = []byte("key")
 )
 
 // go test -v -bench=^BenchmarkHMAC_MD5$ -benchtime=1s hash_test.go
@@ -22,7 +21,7 @@ func BenchmarkHMAC_MD5(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hmac.MD5(hmacBenchData, hmacBenchKey, encoding.None)
+		hmac.MD5(hmacBenchData, hmacBenchKey)
 	}
 }
 
@@ -32,7 +31,7 @@ func BenchmarkHMAC_SHA1(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hmac.SHA1(hmacBenchData, hmacBenchKey, encoding.None)
+		hmac.SHA1(hmacBenchData, hmacBenchKey)
 	}
 }
 
@@ -42,7 +41,7 @@ func BenchmarkHMAC_SHA224(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hmac.SHA224(hmacBenchData, hmacBenchKey, encoding.None)
+		hmac.SHA224(hmacBenchData, hmacBenchKey)
 	}
 }
 
@@ -52,7 +51,7 @@ func BenchmarkHMAC_SHA256(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hmac.SHA256(hmacBenchData, hmacBenchKey, encoding.None)
+		hmac.SHA256(hmacBenchData, hmacBenchKey)
 	}
 }
 
@@ -62,7 +61,7 @@ func BenchmarkHMAC_SHA384(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hmac.SHA384(hmacBenchData, hmacBenchKey, encoding.None)
+		hmac.SHA384(hmacBenchData, hmacBenchKey)
 	}
 }
 
@@ -72,6 +71,6 @@ func BenchmarkHMAC_SHA512(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		hmac.SHA512(hmacBenchData, hmacBenchKey, encoding.None)
+		hmac.SHA512(hmacBenchData, hmacBenchKey)
 	}
 }
