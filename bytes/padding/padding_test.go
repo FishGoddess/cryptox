@@ -5,6 +5,7 @@
 package padding
 
 import (
+	"fmt"
 	"slices"
 	"testing"
 )
@@ -14,25 +15,27 @@ type testCase struct {
 	PaddingData []byte
 }
 
-func testPadding(t *testing.T, blockSize int, padding Padding, testCases []testCase) {
+func testPadding(name string, blockSize int, padding Padding, testCases []testCase) error {
 	for _, testCase := range testCases {
 		got := padding.Pad(testCase.Data, blockSize)
 		want := testCase.PaddingData
 
 		if !slices.Equal(got, want) {
-			t.Fatalf("data %+v: got %+v != want %+v", testCase.Data, got, want)
+			return fmt.Errorf("%s data %+v: got %+v != want %+v", name, testCase.Data, got, want)
 		}
 
 		got, err := padding.Unpad(got, blockSize)
 		if err != nil {
-			t.Fatal(err)
+			return err
 		}
 
 		want = testCase.Data
 		if !slices.Equal(got, want) {
-			t.Fatalf("data %+v: got %+v != want %+v", testCase.Data, got, want)
+			return fmt.Errorf("%s data %+v: got %+v != want %+v", name, testCase.Data, got, want)
 		}
 	}
+
+	return nil
 }
 
 // go test -v -cover -run=^TestNone$
@@ -56,7 +59,9 @@ func TestNone(t *testing.T) {
 		},
 	}
 
-	testPadding(t, 8, None{}, testCases)
+	if err := testPadding(t.Name(), 8, None{}, testCases); err != nil {
+		t.Fatal(err)
+	}
 
 	testCases = []testCase{
 		{
@@ -77,7 +82,9 @@ func TestNone(t *testing.T) {
 		},
 	}
 
-	testPadding(t, 16, None{}, testCases)
+	if err := testPadding(t.Name(), 16, None{}, testCases); err != nil {
+		t.Fatal(err)
+	}
 }
 
 // go test -v -cover -run=^TestZero$
@@ -101,7 +108,9 @@ func TestZero(t *testing.T) {
 		},
 	}
 
-	testPadding(t, 8, Zero{}, testCases)
+	if err := testPadding(t.Name(), 8, Zero{}, testCases); err != nil {
+		t.Fatal(err)
+	}
 
 	testCases = []testCase{
 		{
@@ -122,7 +131,9 @@ func TestZero(t *testing.T) {
 		},
 	}
 
-	testPadding(t, 16, Zero{}, testCases)
+	if err := testPadding(t.Name(), 16, Zero{}, testCases); err != nil {
+		t.Fatal(err)
+	}
 }
 
 // go test -v -cover -run=^TestPKCS5$
@@ -146,7 +157,9 @@ func TestPKCS5(t *testing.T) {
 		},
 	}
 
-	testPadding(t, 8, PKCS5{}, testCases)
+	if err := testPadding(t.Name(), 8, PKCS5{}, testCases); err != nil {
+		t.Fatal(err)
+	}
 
 	testCases = []testCase{
 		{
@@ -167,7 +180,9 @@ func TestPKCS5(t *testing.T) {
 		},
 	}
 
-	testPadding(t, 16, PKCS5{}, testCases)
+	if err := testPadding(t.Name(), 16, PKCS5{}, testCases); err != nil {
+		t.Fatal(err)
+	}
 }
 
 // go test -v -cover -run=^TestPKCS7$
@@ -191,7 +206,9 @@ func TestPKCS7(t *testing.T) {
 		},
 	}
 
-	testPadding(t, 8, PKCS7{}, testCases)
+	if err := testPadding(t.Name(), 8, PKCS7{}, testCases); err != nil {
+		t.Fatal(err)
+	}
 
 	testCases = []testCase{
 		{
@@ -212,5 +229,7 @@ func TestPKCS7(t *testing.T) {
 		},
 	}
 
-	testPadding(t, 16, PKCS7{}, testCases)
+	if err := testPadding(t.Name(), 16, PKCS5{}, testCases); err != nil {
+		t.Fatal(err)
+	}
 }

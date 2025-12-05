@@ -5,7 +5,7 @@
 [![Coverage](_icons/coverage.svg)](_icons/coverage.svg)
 ![Test](https://github.com/FishGoddess/cryptox/actions/workflows/test.yml/badge.svg)
 
-**Cryptox** is a kit for safety which includes some common encrypt/decrypt algorithms.
+**Cryptox** is a safety kit including some common algorithms for convenience.
 
 [阅读中文版的文档](./README.md)
 
@@ -16,7 +16,7 @@
 * CRC/FNV hash supports.
 * HMAC mixed hash supports.
 * DES/3DES/AES encrypt and decrypt supports.
-* RSA/ECC encrypt and decrypt supports.
+* RSA encrypt and decrypt supports.
 * ECB/CBC/OFB/CFB/CTR/GCM mode supports.
 * ZERO/PKCS5/PKCS7 padding supports.
 

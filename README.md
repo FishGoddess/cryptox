@@ -5,7 +5,7 @@
 [![Coverage](_icons/coverage.svg)](_icons/coverage.svg)
 ![Test](https://github.com/FishGoddess/cryptox/actions/workflows/test.yml/badge.svg)
 
-**Cryptox** 是使用 Go 开发的安全套件，包括了常用的对称加密和非对称加密算法，还有散列算法、编解码常用算法等，主要是为了方便相关场景使用。
+**Cryptox** 是使用 Go 开发的安全套件，基于标准库封装了一些常用算法，主要为了方便使用。
 
 [Read me in English](./README.en.md)
 
@@ -16,7 +16,7 @@
 * 支持 CRC/FNV 等散列算法。
 * 支持 HMAC 混合基础的散列算法。
 * 支持 DES/3DES/AES 等对称加密算法。
-* 支持 RSA/ECC 等非对称加密算法。
+* 支持 RSA 等非对称加密算法。
 * 支持 ECB/CBC/OFB/CFB/CTR/GCM 等分组模式。
 * 支持 ZERO/PKCS5/PKCS7 等字节填充方式。
 
