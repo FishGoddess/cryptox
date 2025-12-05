@@ -62,12 +62,14 @@ func TestKeyConfig(t *testing.T) {
 // go test -v -cover -run=^TestConfig$
 func TestConfig(t *testing.T) {
 	hash := sha256.New()
+	saltLength := 32
 
 	opts := []Option{
 		WithHex(),
 		WithRandom(rand.Reader),
 		WithHash(hash),
 		WithCryptoHash(crypto.SHA256),
+		WithSalt(saltLength),
 	}
 
 	conf := newConfig().Apply(opts...)
@@ -99,6 +101,10 @@ func TestConfig(t *testing.T) {
 	}
 
 	if conf.cryptoHash != crypto.SHA256 {
-		t.Fatalf("conf.cryptoHash %d != crypto.SHA256 %d", conf.cryptoHash, crypto.SHA256)
+		t.Fatalf("got %d != expect %d", conf.cryptoHash, crypto.SHA256)
+	}
+
+	if conf.saltLength != saltLength {
+		t.Fatalf("got %d != expect %d", conf.saltLength, saltLength)
 	}
 }

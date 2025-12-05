@@ -86,6 +86,7 @@ type Config struct {
 	random     io.Reader
 	hash       hash.Hash
 	cryptoHash crypto.Hash
+	saltLength int
 }
 
 func newConfig() *Config {
@@ -94,6 +95,7 @@ func newConfig() *Config {
 		random:     rand.Reader,
 		hash:       sha256.New(),
 		cryptoHash: crypto.SHA256,
+		saltLength: rsa.PSSSaltLengthAuto,
 	}
 
 	return conf
@@ -141,5 +143,12 @@ func WithHash(hash hash.Hash) Option {
 func WithCryptoHash(hash crypto.Hash) Option {
 	return func(conf *Config) {
 		conf.cryptoHash = hash
+	}
+}
+
+// WithSalt sets salt length to config.
+func WithSalt(saltLength int) Option {
+	return func(conf *Config) {
+		conf.saltLength = saltLength
 	}
 }

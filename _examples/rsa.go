@@ -48,7 +48,7 @@ func main() {
 	// Use the private key to sign data.
 	digest := hash.SHA256(data)
 
-	sign, err := privateKey.SignPSS(digest, 0, rsa.WithHex())
+	sign, err := privateKey.SignPSS(digest, rsa.WithHex())
 	if err != nil {
 		panic(err)
 	}
@@ -56,7 +56,7 @@ func main() {
 	fmt.Printf("sign: %s\n", sign)
 
 	// Use the public key to verify the sign.
-	err = publicKey.VerifyPSS(digest, sign, 0, rsa.WithHex())
+	err = publicKey.VerifyPSS(digest, sign, rsa.WithHex())
 	if err != nil {
 		panic(err)
 	}

@@ -47,91 +47,79 @@ _注：数据为 128 字节，ecb/cbc 为 pkcs7 填充，cfb/ofb/ctr/gcm 为不�
 ```
 goos: linux
 goarch: amd64
-cpu: AMD EPYC 7K62 48-Core Processor
+cpu: Intel(R) Xeon(R) CPU E5-26xx v4
 
-BenchmarkGenerateBytes-2        11454386               102.6 ns/op            16 B/op          1 allocs/op
-BenchmarkGenerateString-2       11392647               106.1 ns/op            16 B/op          1 allocs/op
+BenchmarkHash_MD5-2              5402781               222.2 ns/op            32 B/op          2 allocs/op
+BenchmarkHash_SHA1-2             2861774               428.6 ns/op            40 B/op          2 allocs/op
+BenchmarkHash_SHA224-2           3223394               377.9 ns/op            48 B/op          2 allocs/op
+BenchmarkHash_SHA256-2           3195488               391.1 ns/op            48 B/op          2 allocs/op
+BenchmarkHash_SHA384-2           2543738               475.8 ns/op            64 B/op          2 allocs/op
+BenchmarkHash_SHA512-2           2521041               484.7 ns/op            80 B/op          2 allocs/op
+BenchmarkHash_CRC32IEEE-2       29772795                40.62 ns/op            0 B/op          0 allocs/op
+BenchmarkHash_CRC64ISO-2        30194895                38.81 ns/op            0 B/op          0 allocs/op
+BenchmarkHash_CRC64ECMA-2       30640298                38.88 ns/op            0 B/op          0 allocs/op
+BenchmarkHash_Fnv32-2           76871449                14.81 ns/op            0 B/op          0 allocs/op
+BenchmarkHash_Fnv32a-2          77299245                14.90 ns/op            0 B/op          0 allocs/op
+BenchmarkHash_Fnv64-2           85886235                13.11 ns/op            0 B/op          0 allocs/op
+BenchmarkHash_Fnv64a-2          88818280                13.59 ns/op            0 B/op          0 allocs/op
+BenchmarkHash_Fnv128-2           7457739               166.9 ns/op            40 B/op          3 allocs/op
+BenchmarkHash_Fnv128a-2          7051596               170.2 ns/op            40 B/op          3 allocs/op
 
-BenchmarkMD5-2           8933902               133.6 ns/op             0 B/op          0 allocs/op
-BenchmarkSHA1-2          7997222               148.7 ns/op             0 B/op          0 allocs/op
-BenchmarkSHA224-2       12905275                93.82 ns/op            0 B/op          0 allocs/op
-BenchmarkSHA256-2       13305572                90.11 ns/op            0 B/op          0 allocs/op
-BenchmarkSHA384-2        4501677               266.8 ns/op             0 B/op          0 allocs/op
-BenchmarkSHA512-2        4457496               272.0 ns/op             0 B/op          0 allocs/op
-BenchmarkCRC32IEEE-2    37977817                26.99 ns/op            0 B/op          0 allocs/op
-BenchmarkCRC64ISO-2     49464211                23.77 ns/op            0 B/op          0 allocs/op
-BenchmarkCRC64ECMA-2    47987559                23.85 ns/op            0 B/op          0 allocs/op
-BenchmarkFnv32-2        88136509                13.91 ns/op            0 B/op          0 allocs/op
-BenchmarkFnv32a-2       92693382                13.53 ns/op            0 B/op          0 allocs/op
-BenchmarkFnv64-2        78227923                15.31 ns/op            0 B/op          0 allocs/op
-BenchmarkFnv64a-2       79213070                15.35 ns/op            0 B/op          0 allocs/op
-BenchmarkFnv128-2       15003325                77.31 ns/op           16 B/op          1 allocs/op
-BenchmarkFnv128a-2      15473437                76.73 ns/op           16 B/op          1 allocs/op
+BenchmarkHMAC_MD5-2              1137166              1080 ns/op             448 B/op          7 allocs/op
+BenchmarkHMAC_SHA1-2              534306              1941 ns/op             488 B/op          7 allocs/op
+BenchmarkHMAC_SHA224-2            650616              1616 ns/op             528 B/op          7 allocs/op
+BenchmarkHMAC_SHA256-2            741920              1643 ns/op             528 B/op          7 allocs/op
+BenchmarkHMAC_SHA384-2            521118              2165 ns/op             864 B/op          7 allocs/op
+BenchmarkHMAC_SHA512-2            501279              2147 ns/op             880 B/op          7 allocs/op
 
-BenchmarkHMACUsingMD5-2          1418788               837.4 ns/op           432 B/op          6 allocs/op
-BenchmarkHMACUsingSHA1-2         1304995               922.9 ns/op           472 B/op          6 allocs/op
-BenchmarkHMACUsingSHA224-2       1879555               651.9 ns/op           512 B/op          6 allocs/op
-BenchmarkHMACUsingSHA256-2       1880856               656.8 ns/op           512 B/op          6 allocs/op
-BenchmarkHMACUsingSHA384-2        702820              1679 ns/op             848 B/op          6 allocs/op
-BenchmarkHMACUsingSHA512-2        691454              1629 ns/op             864 B/op          6 allocs/op
+BenchmarkDES_EncryptECB-2         228224              5109 ns/op             688 B/op          5 allocs/op
+BenchmarkDES_EncryptCBC-2         201259              5450 ns/op             784 B/op          8 allocs/op
+BenchmarkDES_EncryptCFB-2         219808              5234 ns/op             512 B/op          7 allocs/op
+BenchmarkDES_EncryptOFB-2         101382             11784 ns/op            1016 B/op          7 allocs/op
+BenchmarkDES_EncryptCTR-2          97594             12126 ns/op            1016 B/op          7 allocs/op
+BenchmarkDES_DecryptECB-2         223354              4725 ns/op             304 B/op          3 allocs/op
+BenchmarkDES_DecryptCBC-2         227923              5235 ns/op             400 B/op          6 allocs/op
+BenchmarkDES_DecryptCFB-2         231697              4991 ns/op             384 B/op          6 allocs/op
+BenchmarkDES_DecryptOFB-2          98470             11694 ns/op             888 B/op          6 allocs/op
+BenchmarkDES_DecryptCTR-2          96957             12125 ns/op             888 B/op          6 allocs/op
 
-BenchmarkDESEncryptECB-2          321910              3601 ns/op             656 B/op          4 allocs/op
-BenchmarkDESEncryptCBC-2          307196              3911 ns/op             752 B/op          7 allocs/op
-BenchmarkDESEncryptCFB-2          319731              3689 ns/op             480 B/op          6 allocs/op
-BenchmarkDESEncryptOFB-2          126572              9045 ns/op             984 B/op          6 allocs/op
-BenchmarkDESEncryptCTR-2          125204              9471 ns/op             984 B/op          6 allocs/op
-BenchmarkDESDecryptECB-2          340486              3461 ns/op             272 B/op          2 allocs/op
-BenchmarkDESDecryptCBC-2          321182              3730 ns/op             368 B/op          5 allocs/op
-BenchmarkDESDecryptCFB-2          329288              3607 ns/op             352 B/op          5 allocs/op
-BenchmarkDESDecryptOFB-2          131550              9054 ns/op             856 B/op          5 allocs/op
-BenchmarkDESDecryptCTR-2          125089              9539 ns/op             856 B/op          5 allocs/op
+BenchmarkDES_EncryptTripleECB-2            89923             13391 ns/op             944 B/op          5 allocs/op
+BenchmarkDES_EncryptTripleCBC-2            87915             13518 ns/op            1040 B/op          8 allocs/op
+BenchmarkDES_EncryptTripleCFB-2            84099             13238 ns/op             768 B/op          7 allocs/op
+BenchmarkDES_EncryptTripleOFB-2            39392             30196 ns/op            1272 B/op          7 allocs/op
+BenchmarkDES_EncryptTripleCTR-2            39442             31233 ns/op            1272 B/op          7 allocs/op
+BenchmarkDES_DecryptTripleECB-2            94470             12518 ns/op             560 B/op          3 allocs/op
+BenchmarkDES_DecryptTripleCBC-2            92020             12995 ns/op             656 B/op          6 allocs/op
+BenchmarkDES_DecryptTripleCFB-2            86136             12939 ns/op             640 B/op          6 allocs/op
+BenchmarkDES_DecryptTripleOFB-2            39723             29703 ns/op            1144 B/op          6 allocs/op
+BenchmarkDES_DecryptTripleCTR-2            33714             31441 ns/op            1144 B/op          6 allocs/op
 
-BenchmarkDESEncryptECBTriple-2            124927              9474 ns/op             912 B/op          4 allocs/op
-BenchmarkDESEncryptCBCTriple-2            121834              9701 ns/op            1008 B/op          7 allocs/op
-BenchmarkDESEncryptCFBTriple-2            127020              9334 ns/op             736 B/op          6 allocs/op
-BenchmarkDESEncryptOFBTriple-2             50922             23598 ns/op            1240 B/op          6 allocs/op
-BenchmarkDESEncryptCTRTriple-2             49735             23873 ns/op            1240 B/op          6 allocs/op
-BenchmarkDESDecryptECBTriple-2            128005              9328 ns/op             528 B/op          2 allocs/op
-BenchmarkDESDecryptCBCTriple-2            122860              9558 ns/op             624 B/op          5 allocs/op
-BenchmarkDESDecryptCFBTriple-2            126201              9334 ns/op             608 B/op          5 allocs/op
-BenchmarkDESDecryptOFBTriple-2             50688             23291 ns/op            1112 B/op          5 allocs/op
-BenchmarkDESDecryptCTRTriple-2             50391             23913 ns/op            1112 B/op          5 allocs/op
+BenchmarkAES_EncryptECB-2        1441474               852.3 ns/op          1104 B/op          5 allocs/op
+BenchmarkAES_EncryptCBC-2         906620              1127 ns/op            1616 B/op          6 allocs/op
+BenchmarkAES_EncryptCFB-2        1198174              1040 ns/op             944 B/op          7 allocs/op
+BenchmarkAES_EncryptOFB-2         542982              1909 ns/op            1440 B/op          7 allocs/op
+BenchmarkAES_EncryptCTR-2        1678208               691.6 ns/op          1344 B/op          5 allocs/op
+BenchmarkAES_EncryptGCM-2        1284980               940.5 ns/op          1616 B/op          5 allocs/op
+BenchmarkAES_DecryptECB-2        1832341               670.6 ns/op           720 B/op          3 allocs/op
+BenchmarkAES_DecryptCBC-2        1310142               860.3 ns/op          1232 B/op          4 allocs/op
+BenchmarkAES_DecryptCFB-2        1206058               981.7 ns/op           816 B/op          6 allocs/op
+BenchmarkAES_DecryptOFB-2         568182              1939 ns/op            1312 B/op          6 allocs/op
+BenchmarkAES_DecryptCTR-2        1997515               602.6 ns/op          1216 B/op          4 allocs/op
+BenchmarkAES_DecryptGCM-2        1393825               921.6 ns/op          1488 B/op          4 allocs/op
 
-BenchmarkAESEncryptECB-2         1960758               578.4 ns/op          1104 B/op          7 allocs/op
-BenchmarkAESEncryptCBC-2         1413351               842.1 ns/op          1216 B/op         10 allocs/op
-BenchmarkAESEncryptCFB-2         1657416               726.3 ns/op           944 B/op          9 allocs/op
-BenchmarkAESEncryptOFB-2          924843              1206 ns/op            1440 B/op          9 allocs/op
-BenchmarkAESEncryptCTR-2          808509              1381 ns/op            1440 B/op          9 allocs/op
-BenchmarkAESEncryptGCM-2         1784593               661.2 ns/op          1168 B/op          7 allocs/op
-BenchmarkAESDecryptECB-2         2590693               475.5 ns/op           720 B/op          5 allocs/op
-BenchmarkAESDecryptCBC-2         1715998               711.6 ns/op           832 B/op          8 allocs/op
-BenchmarkAESDecryptCFB-2         1809044               656.0 ns/op           816 B/op          8 allocs/op
-BenchmarkAESDecryptOFB-2          956439              1152 ns/op            1312 B/op          8 allocs/op
-BenchmarkAESDecryptCTR-2          841315              1348 ns/op            1312 B/op          8 allocs/op
-BenchmarkAESDecryptGCM-2         1944147               633.5 ns/op          1040 B/op          6 allocs/op
+BenchmarkRSA_EncryptPKCS1v15-2                     22177             59262 ns/op            1568 B/op         11 allocs/op
+BenchmarkRSA_EncryptOAEP-2                         21324             57993 ns/op            1672 B/op         16 allocs/op
+BenchmarkRSA_DecryptPKCS1v15-2                       654           1808449 ns/op             448 B/op          3 allocs/op
+BenchmarkRSA_DecryptPKCS1v15SessionKey-2             680           1762642 ns/op             448 B/op          3 allocs/op
+BenchmarkRSA_DecryptOAEP-2                           674           1727423 ns/op             552 B/op          8 allocs/op
+BenchmarkRSA_SignPKCS1v15-2                          663           1767622 ns/op             704 B/op          4 allocs/op
+BenchmarkRSA_SignPSS-2                               676           1893845 ns/op            1104 B/op          9 allocs/op
+BenchmarkRSA_VerifyPKCS1v15-2                      23022             50468 ns/op            1568 B/op         11 allocs/op
+BenchmarkRSA_VerifyPSS-2                           20220             56627 ns/op            1520 B/op         15 allocs/op
 
-BenchmarkRSAEncryptPKCS1v15-2                       1252            948252 ns/op           95488 B/op        155 allocs/op
-BenchmarkRSAEncryptOAEP-2                           1315            909433 ns/op           95592 B/op        160 allocs/op
-BenchmarkRSADecryptPKCS1v15-2                        166           7219740 ns/op            7600 B/op         16 allocs/op
-BenchmarkRSADecryptPKCS1v15SessionKey-2              165           7154349 ns/op            7600 B/op         16 allocs/op
-BenchmarkRSADecryptOAEP-2                            166           7150228 ns/op            7704 B/op         21 allocs/op
-BenchmarkRSASignPSS-2                                154           7670215 ns/op           67168 B/op        100 allocs/op
-BenchmarkRSASignPKCS1v15-2                           156           7637694 ns/op           66992 B/op         95 allocs/op
-BenchmarkRSAVerifyPSS-2                             1308            901882 ns/op           95184 B/op        159 allocs/op
-BenchmarkRSAVerifyPKCS1v15-2                        1339            895115 ns/op           94976 B/op        154 allocs/op
-
-BenchmarkRSAGenerateKey1024PKCS1PKIX-2                93          20882099 ns/op         1048351 B/op       4090 allocs/op
-BenchmarkRSAGenerateKey2048PKCS1PKIX-2                12         179918684 ns/op         3038840 B/op       8000 allocs/op
-BenchmarkRSAGenerateKey4096PKCS1PKIX-2                 1        3257891003 ns/op        15509888 B/op      25112 allocs/op
-BenchmarkRSAGenerateKey1024PKCS8PKIX-2                51          22485111 ns/op         1148367 B/op       4450 allocs/op
-BenchmarkRSAGenerateKey2048PKCS8PKIX-2                10         149631216 ns/op         2446195 B/op       6550 allocs/op
-BenchmarkRSAGenerateKey4096PKCS8PKIX-2                 1        1617318757 ns/op         7521280 B/op      12421 allocs/op
-BenchmarkRSAGenerateKey1024PKCS1PKCS1-2               57          22467728 ns/op         1144077 B/op       4387 allocs/op
-BenchmarkRSAGenerateKey2048PKCS1PKCS1-2               25         176744406 ns/op         2982597 B/op       7835 allocs/op
-BenchmarkRSAGenerateKey4096PKCS1PKCS1-2                1        1577239084 ns/op         7272704 B/op      11896 allocs/op
-BenchmarkRSAGenerateKey1024PKCS8PKCS1-2               61          20029226 ns/op         1000116 B/op       3942 allocs/op
-BenchmarkRSAGenerateKey2048PKCS8PKCS1-2               21         178710269 ns/op         2998867 B/op       7896 allocs/op
-BenchmarkRSAGenerateKey4096PKCS8PKCS1-2                1        2782582400 ns/op        13284080 B/op      21606 allocs/op
+BenchmarkRSA_GenerateKeys1024-2               60          21398224 ns/op          283350 B/op       2851 allocs/op
+BenchmarkRSA_GenerateKeys2048-2               84         117753488 ns/op          600303 B/op       5459 allocs/op
+BenchmarkRSA_GenerateKeys4096-2                1        1432974432 ns/op         2709912 B/op      14359 allocs/op
 ```
 
 ### 🎨 贡献者

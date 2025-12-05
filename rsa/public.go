@@ -6,6 +6,7 @@ package rsa
 
 import (
 	"crypto/rsa"
+	"fmt"
 )
 
 type PublicKey struct {
@@ -51,14 +52,18 @@ func (pk PublicKey) VerifyPKCS1v15(hashed []byte, sign []byte, opts ...Option) e
 }
 
 // VerifyPSS verifies digest with pss.
-func (pk PublicKey) VerifyPSS(digest []byte, sign []byte, saltLength int, opts ...Option) error {
+func (pk PublicKey) VerifyPSS(digest []byte, sign []byte, opts ...Option) error {
 	conf := newConfig().Apply(opts...)
-	pssOpts := &rsa.PSSOptions{Hash: conf.cryptoHash, SaltLength: saltLength}
+
+	if !conf.cryptoHash.Available() {
+		return fmt.Errorf("cryptox/rsa: crypto hash %+v isn't available", conf.cryptoHash)
+	}
 
 	sign, err := conf.encoding.Decode(sign)
 	if err != nil {
 		return err
 	}
 
+	pssOpts := &rsa.PSSOptions{Hash: conf.cryptoHash, SaltLength: conf.saltLength}
 	return rsa.VerifyPSS(pk.key, conf.cryptoHash, digest, sign, pssOpts)
 }

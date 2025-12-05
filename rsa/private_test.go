@@ -158,34 +158,34 @@ func TestSignVerifyPSS(t *testing.T) {
 		digest := sum[:]
 
 		// None
-		sign, err := privateKey.SignPSS(digest, 0)
+		sign, err := privateKey.SignPSS(digest)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		err = publicKey.VerifyPSS(digest, sign, 0)
+		err = publicKey.VerifyPSS(digest, sign)
 		if err != nil {
 			t.Fatal(err)
 		}
 
 		// Hex
-		sign, err = privateKey.SignPSS(digest, 0, WithHex())
+		sign, err = privateKey.SignPSS(digest, WithHex())
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		err = publicKey.VerifyPSS(digest, sign, 0, WithHex())
+		err = publicKey.VerifyPSS(digest, sign, WithHex())
 		if err != nil {
 			t.Fatal(err)
 		}
 
 		// Base64
-		sign, err = privateKey.SignPSS(digest, 0, WithBase64())
+		sign, err = privateKey.SignPSS(digest, WithBase64())
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		err = publicKey.VerifyPSS(digest, sign, 0, WithBase64())
+		err = publicKey.VerifyPSS(digest, sign, WithBase64())
 		if err != nil {
 			t.Fatal(err)
 		}

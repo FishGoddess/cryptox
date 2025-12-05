@@ -6,6 +6,7 @@ package rsa
 
 import (
 	"crypto/rsa"
+	"fmt"
 )
 
 type PrivateKey struct {
@@ -62,9 +63,14 @@ func (pk PrivateKey) SignPKCS1v15(hashed []byte, opts ...Option) ([]byte, error)
 }
 
 // SignPSS signs digest with pss.
-func (pk PrivateKey) SignPSS(digest []byte, saltLength int, opts ...Option) ([]byte, error) {
+func (pk PrivateKey) SignPSS(digest []byte, opts ...Option) ([]byte, error) {
 	conf := newConfig().Apply(opts...)
-	pssOpts := &rsa.PSSOptions{Hash: conf.cryptoHash, SaltLength: saltLength}
+
+	if !conf.cryptoHash.Available() {
+		return nil, fmt.Errorf("cryptox/rsa: crypto hash %+v isn't available", conf.cryptoHash)
+	}
+
+	pssOpts := &rsa.PSSOptions{Hash: conf.cryptoHash, SaltLength: conf.saltLength}
 
 	sign, err := rsa.SignPSS(conf.random, pk.key, conf.cryptoHash, digest, pssOpts)
 	if err != nil {
