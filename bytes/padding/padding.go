@@ -31,6 +31,10 @@ type Zero struct{}
 // Pad pads some bytes to the byte slice in zero way.
 func (Zero) Pad(data []byte, blockSize int) []byte {
 	padding := blockSize - (len(data) % blockSize)
+	if padding == blockSize {
+		return data
+	}
+
 	for i := 0; i < padding; i++ {
 		data = append(data, 0)
 	}
@@ -40,21 +44,12 @@ func (Zero) Pad(data []byte, blockSize int) []byte {
 
 // Unpad unpads some bytes from the byte slice in zero way.
 func (Zero) Unpad(data []byte, blockSize int) ([]byte, error) {
-	length := len(data)
-
-	var i int
-	for i = length; i > 0; i-- {
-		if data[i-1] != 0 {
-			break
-		}
-
-		// Remove block size of byte slice at most.
-		if length-i >= blockSize {
-			break
-		}
+	index := len(data)
+	for index > 0 && data[index-1] == 0 {
+		index--
 	}
 
-	return data[:i], nil
+	return data[:index], nil
 }
 
 type PKCS5 struct{}
