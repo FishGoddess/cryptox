@@ -6,15 +6,23 @@ package rsa
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"slices"
 	"testing"
 )
 
-type testCase struct {
+type encryptTestCase struct {
 	Data              []byte
 	EncryptData       []byte
 	EncryptDataHex    []byte
 	EncryptDataBase64 []byte
+}
+
+type signTestCase struct {
+	Data           []byte
+	SignData       []byte
+	SignDataHex    []byte
+	SignDataBase64 []byte
 }
 
 type testRandomReader struct{}
@@ -25,6 +33,44 @@ func (testRandomReader) Read(p []byte) (n int, err error) {
 	}
 
 	return len(p), nil
+}
+
+func newTestPrivateKey() PrivateKey {
+	reader := bytes.NewReader([]byte(`-----BEGIN PRIVATE KEY-----
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCnoCnYqtdcxo2Z
+zcrpkfHYg+s/gGrlt7Ww//gBJfcCZ64ls4fD4I0BD+Xe0WHuT5poow6Cyyl20yrv
+Y13oqlRr05bsnPpu2ZOiEPfiAQb898xgYYwoDwLEk75Uu1ox53unhhZbRKNne1V1
+QMYFpxAgeAMxML09ZmEqPp3q0BNZcjZqaq/2umHVOBOrqrRJZG7APZpixAvwbRKJ
+zELq40s0zD6ECovZk/3WVF8BEcrmybmnbns1Y89ptXFZIQVKPqHXUK9+VbIiKZsU
++UKpY29WKjOkELcSrG7HMZbIXivzswGn5c0DskXQ/TbzV5WNxpW07Op0s3y9G7n+
+kTcytZETAgMBAAECggEACpRE/9aBwr+0lnU9WLIW0Y47LdCk2ScChw9omhNI0cnf
+B6RwgvAW8MRi7XCeiHlVVURGjqz+ysU3YPtkT7esSKUxJxwd1sV8QqQP2PTX+ZA0
+Fw3LrYg2VFdqEZPvdICCYTIeaBfeuOcOSi5Shm8i8+xPG0QoYAnS7mUcTK0MLj65
+FYcb1p7rteeqpQwKqekaAEqOo084Nbs10++ltct3wM4xOvEFJubdMUj6kruOVwG5
+onuyONTWQ9U1akSRwlx1HnafieTG/Rsvx+6FT4wAgioZy3JKlWsLckI0K5zi/YSz
+Z0ZeqdtGLI7JbYIKv+H+zeLv0mPErwOXJk0qm3b6eQKBgQDJVMYzwB1BIVU545dz
+8+YX69WfFVjH9RSJ+9monq6fu0QW6s2qH4O8DCKqG5fuSAXPVzYvVrEDV4KGsyPG
+m0uQteM5om7ICIQVvewxBiaDX0bvFwiK7gfzdLVMgYirrkxZUQ4NgGTRScAP2ysm
+sOn52Om5ZK5JZ3v8C/aQU/D5CQKBgQDVJGcDV7XlOVMptAVICEP4G+jg2fS9ORlz
+TkgpK8sw1l1P6eO9WU2TrOh8UCQFntVe5YwgzQuBK4PJACsbHqx1Xww57MI1dlIQ
+p2vP6dFmVlneIrcHXZ4QRQug6Envp03Smnbzf9clDCAtZkt3gGDc2r0yxn8AY6rE
++q6mITHMOwKBgQC7ernmzutvDv8yHQGX9HM7q10N+u7lpQ8vPtt87edmzxekz5oc
+5aPipNpS1ccxGNhwL6JBitTja8YccQzLkSlY5EdoEB5hH60AIg+jxzpt83c2hZhq
+5yV4TCHX0HfYh0KJmbUgVYOMcMTs/wa7zNrU0m0zOtIhgMAwAWPlGoW3IQKBgHSs
+l6NRySVwiuCiRd3XgHV5ubIUPY+ziQYAjSnUakcSoUPUkbEeCIRVO3KJYB6fgseO
+unVeKPUNf/dwmygeU2Nwoz22J92iJmwtaawHn3P4wvsBX9WtXpAja6kqXwbMO6KU
+oZbLnVcPWzHe9GK3KM7dAoKf+/eXl2x6mU4hj6PvAoGBALKTzLcqAr7n+TqcRAJU
+nm44K4zj52Nj0lpritovFbP1EiVoj07AFqFULE3aHMeGKwe+aNxz5JTSHPaP6aa9
+iD4CVoJzQ41OimqHnnRSgy3g+ylk7plLk/M0rE+6Ev945Xv8vGOGci6KgkBpOx37
+/yglpQbyju+BbRvq9gDfLuKX
+-----END PRIVATE KEY-----`))
+
+	privateKey, err := ReadPrivateKey(reader)
+	if err != nil {
+		panic(err)
+	}
+
+	return privateKey
 }
 
 func newTestPublicKey() PublicKey {
@@ -51,7 +97,7 @@ func TestEncryptDecryptPKCS1v15(t *testing.T) {
 	privateKey := newTestPrivateKey()
 	publicKey := newTestPublicKey()
 
-	testCases := []testCase{
+	testCases := []encryptTestCase{
 		{
 			Data:              []byte(""),
 			EncryptData:       []byte{116, 242, 43, 134, 99, 44, 254, 137, 141, 79, 25, 122, 116, 221, 33, 96, 98, 244, 87, 125, 98, 109, 108, 84, 77, 195, 236, 156, 53, 182, 149, 206, 127, 200, 196, 60, 107, 48, 158, 215, 245, 177, 47, 197, 102, 116, 39, 76, 206, 55, 19, 32, 199, 254, 96, 0, 237, 156, 213, 200, 198, 78, 28, 110, 103, 8, 177, 211, 58, 215, 159, 252, 26, 122, 230, 78, 197, 219, 93, 8, 164, 72, 191, 25, 127, 54, 108, 22, 245, 188, 66, 155, 239, 1, 145, 209, 147, 37, 170, 38, 16, 210, 247, 191, 83, 22, 26, 148, 46, 124, 56, 12, 24, 36, 128, 80, 36, 58, 99, 104, 222, 236, 163, 212, 151, 30, 83, 117, 177, 175, 227, 251, 145, 219, 14, 7, 53, 224, 21, 193, 56, 180, 8, 199, 189, 211, 19, 42, 75, 216, 176, 164, 88, 101, 87, 219, 92, 222, 164, 13, 169, 153, 236, 23, 104, 132, 203, 245, 150, 247, 177, 241, 124, 220, 79, 159, 152, 213, 222, 144, 70, 100, 44, 36, 86, 36, 198, 224, 175, 252, 252, 113, 37, 253, 140, 184, 180, 155, 236, 236, 155, 138, 65, 233, 51, 93, 50, 122, 194, 253, 251, 3, 172, 161, 118, 130, 106, 71, 150, 68, 174, 136, 242, 164, 0, 83, 232, 128, 165, 138, 203, 54, 157, 239, 36, 254, 174, 105, 100, 11, 193, 22, 184, 233, 198, 247, 167, 187, 6, 188, 124, 186, 234, 54, 79, 242},
@@ -138,7 +184,7 @@ func TestEncryptDecryptOAEP(t *testing.T) {
 	privateKey := newTestPrivateKey()
 	publicKey := newTestPublicKey()
 
-	testCases := []testCase{
+	testCases := []encryptTestCase{
 		{
 			Data:              []byte(""),
 			EncryptData:       []byte{93, 21, 253, 18, 191, 140, 145, 9, 36, 234, 228, 96, 42, 8, 3, 111, 186, 171, 32, 0, 227, 220, 31, 173, 88, 184, 250, 55, 71, 16, 193, 185, 37, 16, 140, 70, 2, 82, 92, 146, 182, 1, 168, 184, 83, 227, 21, 123, 238, 157, 73, 142, 23, 30, 240, 129, 242, 6, 216, 247, 93, 7, 7, 112, 214, 166, 171, 193, 246, 163, 43, 146, 87, 246, 235, 254, 40, 130, 72, 190, 154, 52, 162, 23, 204, 143, 217, 139, 62, 123, 142, 140, 124, 152, 38, 213, 189, 94, 205, 165, 221, 174, 213, 160, 96, 218, 71, 121, 187, 105, 2, 99, 226, 97, 109, 122, 141, 73, 255, 252, 123, 212, 83, 154, 190, 213, 107, 29, 163, 67, 122, 169, 38, 220, 29, 149, 181, 106, 92, 126, 227, 193, 129, 225, 203, 153, 157, 165, 252, 68, 132, 77, 131, 109, 77, 100, 178, 182, 155, 5, 250, 89, 203, 215, 59, 82, 63, 46, 21, 49, 87, 190, 154, 115, 49, 98, 26, 222, 113, 186, 18, 205, 132, 74, 125, 141, 215, 179, 2, 211, 68, 72, 119, 40, 107, 232, 75, 120, 60, 146, 176, 39, 255, 124, 199, 195, 77, 68, 93, 227, 174, 17, 165, 139, 91, 84, 21, 252, 124, 199, 74, 171, 223, 17, 144, 193, 101, 151, 195, 147, 163, 96, 174, 37, 6, 97, 48, 216, 116, 159, 250, 165, 140, 235, 27, 45, 136, 152, 96, 163, 4, 207, 57, 245, 102, 204},
@@ -243,5 +289,135 @@ func TestDecryptPKCS1v15SessionKey(t *testing.T) {
 
 	if !slices.Equal(sessionKey, gotSessionKey) {
 		t.Fatalf("got %+v != expect %+v", sessionKey, gotSessionKey)
+	}
+}
+
+// go test -v -cover -run=^TestSignVerifyPKCS1v15$
+func TestSignVerifyPKCS1v15(t *testing.T) {
+	privateKey := newTestPrivateKey()
+	publicKey := newTestPublicKey()
+
+	testCases := []signTestCase{
+		{
+			Data:           []byte(""),
+			SignData:       []byte(""),
+			SignDataHex:    []byte(""),
+			SignDataBase64: []byte(""),
+		},
+		{
+			Data:           []byte("123"),
+			SignData:       []byte(""),
+			SignDataHex:    []byte(""),
+			SignDataBase64: []byte(""),
+		},
+		{
+			Data:           []byte("你好，世界"),
+			SignData:       []byte(""),
+			SignDataHex:    []byte(""),
+			SignDataBase64: []byte(""),
+		},
+	}
+
+	for _, testCase := range testCases {
+		sum := sha256.Sum256(testCase.Data)
+		hashed := sum[:]
+
+		// None
+		sign, err := privateKey.SignPKCS1v15(hashed)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = publicKey.VerifyPKCS1v15(hashed, sign)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		// Hex
+		sign, err = privateKey.SignPKCS1v15(hashed, WithHex())
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = publicKey.VerifyPKCS1v15(hashed, sign, WithHex())
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		// Base64
+		sign, err = privateKey.SignPKCS1v15(hashed, WithBase64())
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = publicKey.VerifyPKCS1v15(hashed, sign, WithBase64())
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+}
+
+// go test -v -cover -run=^TestSignVerifyPSS$
+func TestSignVerifyPSS(t *testing.T) {
+	privateKey := newTestPrivateKey()
+	publicKey := newTestPublicKey()
+
+	testCases := []signTestCase{
+		{
+			Data:           []byte(""),
+			SignData:       []byte(""),
+			SignDataHex:    []byte(""),
+			SignDataBase64: []byte(""),
+		},
+		{
+			Data:           []byte("123"),
+			SignData:       []byte(""),
+			SignDataHex:    []byte(""),
+			SignDataBase64: []byte(""),
+		},
+		{
+			Data:           []byte("你好，世界"),
+			SignData:       []byte(""),
+			SignDataHex:    []byte(""),
+			SignDataBase64: []byte(""),
+		},
+	}
+
+	for _, testCase := range testCases {
+		sum := sha256.Sum256(testCase.Data)
+		digest := sum[:]
+
+		// None
+		sign, err := privateKey.SignPSS(digest)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = publicKey.VerifyPSS(digest, sign)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		// Hex
+		sign, err = privateKey.SignPSS(digest, WithHex())
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = publicKey.VerifyPSS(digest, sign, WithHex())
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		// Base64
+		sign, err = privateKey.SignPSS(digest, WithBase64())
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = publicKey.VerifyPSS(digest, sign, WithBase64())
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
 }
