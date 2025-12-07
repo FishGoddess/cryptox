@@ -6,15 +6,23 @@ package rsa
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"slices"
 	"testing"
 )
 
-type testCase struct {
+type encryptTestCase struct {
 	Data              []byte
 	EncryptData       []byte
 	EncryptDataHex    []byte
 	EncryptDataBase64 []byte
+}
+
+type signTestCase struct {
+	Data           []byte
+	SignData       []byte
+	SignDataHex    []byte
+	SignDataBase64 []byte
 }
 
 type testRandomReader struct{}
@@ -25,6 +33,44 @@ func (testRandomReader) Read(p []byte) (n int, err error) {
 	}
 
 	return len(p), nil
+}
+
+func newTestPrivateKey() PrivateKey {
+	reader := bytes.NewReader([]byte(`-----BEGIN PRIVATE KEY-----
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCnoCnYqtdcxo2Z
+zcrpkfHYg+s/gGrlt7Ww//gBJfcCZ64ls4fD4I0BD+Xe0WHuT5poow6Cyyl20yrv
+Y13oqlRr05bsnPpu2ZOiEPfiAQb898xgYYwoDwLEk75Uu1ox53unhhZbRKNne1V1
+QMYFpxAgeAMxML09ZmEqPp3q0BNZcjZqaq/2umHVOBOrqrRJZG7APZpixAvwbRKJ
+zELq40s0zD6ECovZk/3WVF8BEcrmybmnbns1Y89ptXFZIQVKPqHXUK9+VbIiKZsU
++UKpY29WKjOkELcSrG7HMZbIXivzswGn5c0DskXQ/TbzV5WNxpW07Op0s3y9G7n+
+kTcytZETAgMBAAECggEACpRE/9aBwr+0lnU9WLIW0Y47LdCk2ScChw9omhNI0cnf
+B6RwgvAW8MRi7XCeiHlVVURGjqz+ysU3YPtkT7esSKUxJxwd1sV8QqQP2PTX+ZA0
+Fw3LrYg2VFdqEZPvdICCYTIeaBfeuOcOSi5Shm8i8+xPG0QoYAnS7mUcTK0MLj65
+FYcb1p7rteeqpQwKqekaAEqOo084Nbs10++ltct3wM4xOvEFJubdMUj6kruOVwG5
+onuyONTWQ9U1akSRwlx1HnafieTG/Rsvx+6FT4wAgioZy3JKlWsLckI0K5zi/YSz
+Z0ZeqdtGLI7JbYIKv+H+zeLv0mPErwOXJk0qm3b6eQKBgQDJVMYzwB1BIVU545dz
+8+YX69WfFVjH9RSJ+9monq6fu0QW6s2qH4O8DCKqG5fuSAXPVzYvVrEDV4KGsyPG
+m0uQteM5om7ICIQVvewxBiaDX0bvFwiK7gfzdLVMgYirrkxZUQ4NgGTRScAP2ysm
+sOn52Om5ZK5JZ3v8C/aQU/D5CQKBgQDVJGcDV7XlOVMptAVICEP4G+jg2fS9ORlz
+TkgpK8sw1l1P6eO9WU2TrOh8UCQFntVe5YwgzQuBK4PJACsbHqx1Xww57MI1dlIQ
+p2vP6dFmVlneIrcHXZ4QRQug6Envp03Smnbzf9clDCAtZkt3gGDc2r0yxn8AY6rE
++q6mITHMOwKBgQC7ernmzutvDv8yHQGX9HM7q10N+u7lpQ8vPtt87edmzxekz5oc
+5aPipNpS1ccxGNhwL6JBitTja8YccQzLkSlY5EdoEB5hH60AIg+jxzpt83c2hZhq
+5yV4TCHX0HfYh0KJmbUgVYOMcMTs/wa7zNrU0m0zOtIhgMAwAWPlGoW3IQKBgHSs
+l6NRySVwiuCiRd3XgHV5ubIUPY+ziQYAjSnUakcSoUPUkbEeCIRVO3KJYB6fgseO
+unVeKPUNf/dwmygeU2Nwoz22J92iJmwtaawHn3P4wvsBX9WtXpAja6kqXwbMO6KU
+oZbLnVcPWzHe9GK3KM7dAoKf+/eXl2x6mU4hj6PvAoGBALKTzLcqAr7n+TqcRAJU
+nm44K4zj52Nj0lpritovFbP1EiVoj07AFqFULE3aHMeGKwe+aNxz5JTSHPaP6aa9
+iD4CVoJzQ41OimqHnnRSgy3g+ylk7plLk/M0rE+6Ev945Xv8vGOGci6KgkBpOx37
+/yglpQbyju+BbRvq9gDfLuKX
+-----END PRIVATE KEY-----`))
+
+	privateKey, err := ReadPrivateKey(reader)
+	if err != nil {
+		panic(err)
+	}
+
+	return privateKey
 }
 
 func newTestPublicKey() PublicKey {
@@ -51,7 +97,7 @@ func TestEncryptDecryptPKCS1v15(t *testing.T) {
 	privateKey := newTestPrivateKey()
 	publicKey := newTestPublicKey()
 
-	testCases := []testCase{
+	testCases := []encryptTestCase{
 		{
 			Data:              []byte(""),
 			EncryptData:       []byte{116, 242, 43, 134, 99, 44, 254, 137, 141, 79, 25, 122, 116, 221, 33, 96, 98, 244, 87, 125, 98, 109, 108, 84, 77, 195, 236, 156, 53, 182, 149, 206, 127, 200, 196, 60, 107, 48, 158, 215, 245, 177, 47, 197, 102, 116, 39, 76, 206, 55, 19, 32, 199, 254, 96, 0, 237, 156, 213, 200, 198, 78, 28, 110, 103, 8, 177, 211, 58, 215, 159, 252, 26, 122, 230, 78, 197, 219, 93, 8, 164, 72, 191, 25, 127, 54, 108, 22, 245, 188, 66, 155, 239, 1, 145, 209, 147, 37, 170, 38, 16, 210, 247, 191, 83, 22, 26, 148, 46, 124, 56, 12, 24, 36, 128, 80, 36, 58, 99, 104, 222, 236, 163, 212, 151, 30, 83, 117, 177, 175, 227, 251, 145, 219, 14, 7, 53, 224, 21, 193, 56, 180, 8, 199, 189, 211, 19, 42, 75, 216, 176, 164, 88, 101, 87, 219, 92, 222, 164, 13, 169, 153, 236, 23, 104, 132, 203, 245, 150, 247, 177, 241, 124, 220, 79, 159, 152, 213, 222, 144, 70, 100, 44, 36, 86, 36, 198, 224, 175, 252, 252, 113, 37, 253, 140, 184, 180, 155, 236, 236, 155, 138, 65, 233, 51, 93, 50, 122, 194, 253, 251, 3, 172, 161, 118, 130, 106, 71, 150, 68, 174, 136, 242, 164, 0, 83, 232, 128, 165, 138, 203, 54, 157, 239, 36, 254, 174, 105, 100, 11, 193, 22, 184, 233, 198, 247, 167, 187, 6, 188, 124, 186, 234, 54, 79, 242},
@@ -138,7 +184,7 @@ func TestEncryptDecryptOAEP(t *testing.T) {
 	privateKey := newTestPrivateKey()
 	publicKey := newTestPublicKey()
 
-	testCases := []testCase{
+	testCases := []encryptTestCase{
 		{
 			Data:              []byte(""),
 			EncryptData:       []byte{93, 21, 253, 18, 191, 140, 145, 9, 36, 234, 228, 96, 42, 8, 3, 111, 186, 171, 32, 0, 227, 220, 31, 173, 88, 184, 250, 55, 71, 16, 193, 185, 37, 16, 140, 70, 2, 82, 92, 146, 182, 1, 168, 184, 83, 227, 21, 123, 238, 157, 73, 142, 23, 30, 240, 129, 242, 6, 216, 247, 93, 7, 7, 112, 214, 166, 171, 193, 246, 163, 43, 146, 87, 246, 235, 254, 40, 130, 72, 190, 154, 52, 162, 23, 204, 143, 217, 139, 62, 123, 142, 140, 124, 152, 38, 213, 189, 94, 205, 165, 221, 174, 213, 160, 96, 218, 71, 121, 187, 105, 2, 99, 226, 97, 109, 122, 141, 73, 255, 252, 123, 212, 83, 154, 190, 213, 107, 29, 163, 67, 122, 169, 38, 220, 29, 149, 181, 106, 92, 126, 227, 193, 129, 225, 203, 153, 157, 165, 252, 68, 132, 77, 131, 109, 77, 100, 178, 182, 155, 5, 250, 89, 203, 215, 59, 82, 63, 46, 21, 49, 87, 190, 154, 115, 49, 98, 26, 222, 113, 186, 18, 205, 132, 74, 125, 141, 215, 179, 2, 211, 68, 72, 119, 40, 107, 232, 75, 120, 60, 146, 176, 39, 255, 124, 199, 195, 77, 68, 93, 227, 174, 17, 165, 139, 91, 84, 21, 252, 124, 199, 74, 171, 223, 17, 144, 193, 101, 151, 195, 147, 163, 96, 174, 37, 6, 97, 48, 216, 116, 159, 250, 165, 140, 235, 27, 45, 136, 152, 96, 163, 4, 207, 57, 245, 102, 204},
@@ -243,5 +289,161 @@ func TestDecryptPKCS1v15SessionKey(t *testing.T) {
 
 	if !slices.Equal(sessionKey, gotSessionKey) {
 		t.Fatalf("got %+v != expect %+v", sessionKey, gotSessionKey)
+	}
+}
+
+// go test -v -cover -run=^TestSignVerifyPKCS1v15$
+func TestSignVerifyPKCS1v15(t *testing.T) {
+	privateKey := newTestPrivateKey()
+	publicKey := newTestPublicKey()
+
+	testCases := []signTestCase{
+		{
+			Data:           []byte(""),
+			SignData:       []byte{129, 179, 114, 121, 197, 185, 134, 59, 90, 166, 224, 37, 174, 125, 153, 232, 105, 240, 59, 0, 240, 138, 96, 226, 197, 33, 49, 46, 93, 207, 75, 41, 6, 114, 86, 167, 171, 119, 149, 211, 8, 92, 254, 93, 87, 253, 118, 93, 32, 37, 217, 71, 18, 253, 7, 244, 156, 214, 224, 132, 80, 137, 157, 223, 51, 22, 194, 24, 241, 249, 118, 61, 62, 132, 174, 169, 225, 186, 219, 93, 208, 253, 63, 53, 88, 180, 138, 207, 34, 239, 23, 140, 107, 174, 18, 123, 62, 144, 78, 95, 37, 170, 143, 231, 27, 164, 95, 248, 136, 104, 124, 9, 10, 126, 252, 83, 132, 129, 29, 54, 216, 55, 67, 87, 193, 25, 50, 112, 1, 199, 234, 36, 52, 109, 80, 250, 140, 153, 87, 174, 45, 170, 15, 148, 176, 239, 132, 77, 160, 44, 18, 192, 19, 248, 131, 76, 213, 39, 205, 33, 185, 73, 37, 111, 48, 250, 129, 17, 48, 222, 63, 225, 233, 25, 7, 78, 215, 22, 168, 72, 115, 209, 68, 18, 44, 192, 77, 64, 249, 206, 25, 199, 90, 157, 159, 49, 65, 207, 135, 203, 228, 4, 20, 171, 232, 10, 39, 221, 112, 170, 116, 67, 2, 35, 188, 175, 185, 67, 137, 41, 152, 172, 247, 203, 216, 60, 108, 74, 66, 150, 29, 235, 220, 203, 1, 86, 60, 218, 16, 249, 117, 249, 57, 53, 53, 89, 34, 3, 183, 220, 129, 61, 220, 100, 30, 5},
+			SignDataHex:    []byte("81b37279c5b9863b5aa6e025ae7d99e869f03b00f08a60e2c521312e5dcf4b29067256a7ab7795d3085cfe5d57fd765d2025d94712fd07f49cd6e08450899ddf3316c218f1f9763d3e84aea9e1badb5dd0fd3f3558b48acf22ef178c6bae127b3e904e5f25aa8fe71ba45ff888687c090a7efc5384811d36d8374357c119327001c7ea24346d50fa8c9957ae2daa0f94b0ef844da02c12c013f8834cd527cd21b949256f30fa811130de3fe1e919074ed716a84873d144122cc04d40f9ce19c75a9d9f3141cf87cbe40414abe80a27dd70aa74430223bcafb943892998acf7cbd83c6c4a42961debdccb01563cda10f975f9393535592203b7dc813ddc641e05"),
+			SignDataBase64: []byte("gbNyecW5hjtapuAlrn2Z6GnwOwDwimDixSExLl3PSykGclanq3eV0whc/l1X/XZdICXZRxL9B/Sc1uCEUImd3zMWwhjx+XY9PoSuqeG6213Q/T81WLSKzyLvF4xrrhJ7PpBOXyWqj+cbpF/4iGh8CQp+/FOEgR022DdDV8EZMnABx+okNG1Q+oyZV64tqg+UsO+ETaAsEsAT+INM1SfNIblJJW8w+oERMN4/4ekZB07XFqhIc9FEEizATUD5zhnHWp2fMUHPh8vkBBSr6Aon3XCqdEMCI7yvuUOJKZis98vYPGxKQpYd69zLAVY82hD5dfk5NTVZIgO33IE93GQeBQ=="),
+		},
+		{
+			Data:           []byte("123"),
+			SignData:       []byte{83, 42, 239, 63, 196, 167, 59, 217, 168, 150, 243, 79, 72, 131, 50, 55, 253, 221, 0, 157, 120, 34, 147, 108, 134, 247, 37, 105, 179, 237, 198, 114, 150, 78, 42, 218, 7, 222, 113, 145, 30, 52, 203, 170, 14, 250, 103, 189, 70, 232, 0, 59, 255, 40, 44, 254, 170, 219, 117, 119, 5, 100, 150, 124, 221, 131, 203, 146, 173, 192, 158, 238, 64, 240, 6, 107, 197, 219, 173, 201, 131, 121, 58, 69, 194, 43, 104, 13, 175, 115, 144, 15, 232, 23, 76, 121, 156, 95, 128, 74, 127, 166, 222, 202, 197, 102, 146, 69, 149, 56, 62, 64, 238, 50, 225, 96, 188, 10, 182, 245, 35, 8, 172, 114, 66, 84, 15, 171, 226, 64, 184, 90, 180, 101, 231, 218, 245, 127, 217, 127, 11, 97, 225, 120, 199, 209, 250, 164, 149, 22, 235, 180, 185, 206, 72, 151, 204, 81, 172, 99, 41, 209, 192, 24, 21, 20, 168, 34, 198, 160, 160, 179, 223, 105, 179, 29, 240, 233, 130, 138, 100, 109, 4, 240, 146, 58, 65, 215, 153, 231, 138, 185, 20, 49, 68, 5, 215, 166, 35, 63, 183, 236, 1, 173, 106, 123, 127, 4, 243, 15, 136, 35, 207, 196, 30, 142, 72, 80, 139, 176, 87, 122, 139, 244, 44, 181, 153, 174, 173, 155, 255, 216, 138, 251, 21, 78, 126, 196, 218, 87, 150, 115, 22, 131, 138, 103, 33, 141, 200, 53, 58, 32, 177, 20, 130, 12},
+			SignDataHex:    []byte("532aef3fc4a73bd9a896f34f48833237fddd009d7822936c86f72569b3edc672964e2ada07de71911e34cbaa0efa67bd46e8003bff282cfeaadb75770564967cdd83cb92adc09eee40f0066bc5dbadc983793a45c22b680daf73900fe8174c799c5f804a7fa6decac566924595383e40ee32e160bc0ab6f52308ac7242540fabe240b85ab465e7daf57fd97f0b61e178c7d1faa49516ebb4b9ce4897cc51ac6329d1c0181514a822c6a0a0b3df69b31df0e9828a646d04f0923a41d799e78ab914314405d7a6233fb7ec01ad6a7b7f04f30f8823cfc41e8e48508bb0577a8bf42cb599aead9bffd88afb154e7ec4da57967316838a67218dc8353a20b114820c"),
+			SignDataBase64: []byte("UyrvP8SnO9molvNPSIMyN/3dAJ14IpNshvclabPtxnKWTiraB95xkR40y6oO+me9RugAO/8oLP6q23V3BWSWfN2Dy5KtwJ7uQPAGa8XbrcmDeTpFwitoDa9zkA/oF0x5nF+ASn+m3srFZpJFlTg+QO4y4WC8Crb1IwisckJUD6viQLhatGXn2vV/2X8LYeF4x9H6pJUW67S5zkiXzFGsYynRwBgVFKgixqCgs99psx3w6YKKZG0E8JI6QdeZ54q5FDFEBdemIz+37AGtant/BPMPiCPPxB6OSFCLsFd6i/QstZmurZv/2Ir7FU5+xNpXlnMWg4pnIY3INTogsRSCDA=="),
+		},
+		{
+			Data:           []byte("你好，世界"),
+			SignData:       []byte{91, 171, 10, 72, 166, 48, 201, 74, 31, 142, 144, 115, 173, 245, 134, 109, 54, 46, 104, 83, 150, 137, 229, 141, 115, 32, 203, 220, 105, 124, 63, 142, 245, 251, 228, 202, 255, 170, 46, 62, 219, 191, 209, 157, 17, 65, 16, 15, 197, 14, 169, 152, 157, 20, 41, 202, 215, 64, 114, 180, 235, 21, 20, 149, 119, 68, 52, 2, 164, 117, 175, 110, 154, 29, 253, 182, 114, 186, 96, 27, 62, 128, 181, 104, 23, 182, 199, 218, 118, 52, 1, 229, 62, 58, 46, 84, 75, 88, 190, 183, 110, 246, 163, 255, 100, 140, 164, 109, 241, 236, 139, 230, 233, 123, 156, 172, 33, 191, 122, 29, 101, 124, 43, 47, 235, 96, 21, 165, 71, 110, 170, 117, 179, 253, 60, 211, 249, 6, 198, 68, 181, 42, 254, 178, 222, 182, 154, 249, 152, 108, 91, 127, 140, 159, 219, 233, 157, 167, 82, 196, 115, 254, 190, 89, 91, 150, 123, 16, 70, 198, 214, 13, 88, 73, 144, 67, 208, 143, 107, 60, 51, 149, 17, 1, 236, 196, 156, 142, 58, 109, 231, 207, 150, 26, 29, 54, 177, 60, 94, 247, 164, 148, 218, 51, 139, 77, 127, 20, 91, 174, 135, 154, 94, 169, 246, 191, 205, 203, 151, 178, 120, 205, 156, 193, 1, 215, 118, 45, 59, 76, 115, 119, 54, 18, 61, 82, 204, 29, 249, 107, 24, 82, 87, 66, 197, 135, 120, 103, 125, 192, 156, 50, 196, 25, 94, 0},
+			SignDataHex:    []byte("5bab0a48a630c94a1f8e9073adf5866d362e68539689e58d7320cbdc697c3f8ef5fbe4caffaa2e3edbbfd19d1141100fc50ea9989d1429cad74072b4eb15149577443402a475af6e9a1dfdb672ba601b3e80b56817b6c7da763401e53e3a2e544b58beb76ef6a3ff648ca46df1ec8be6e97b9cac21bf7a1d657c2b2feb6015a5476eaa75b3fd3cd3f906c644b52afeb2deb69af9986c5b7f8c9fdbe99da752c473febe595b967b1046c6d60d58499043d08f6b3c33951101ecc49c8e3a6de7cf961a1d36b13c5ef7a494da338b4d7f145bae879a5ea9f6bfcdcb97b278cd9cc101d7762d3b4c737736123d52cc1df96b18525742c58778677dc09c32c4195e00"),
+			SignDataBase64: []byte("W6sKSKYwyUofjpBzrfWGbTYuaFOWieWNcyDL3Gl8P471++TK/6ouPtu/0Z0RQRAPxQ6pmJ0UKcrXQHK06xUUlXdENAKkda9umh39tnK6YBs+gLVoF7bH2nY0AeU+Oi5US1i+t272o/9kjKRt8eyL5ul7nKwhv3odZXwrL+tgFaVHbqp1s/080/kGxkS1Kv6y3raa+ZhsW3+Mn9vpnadSxHP+vllblnsQRsbWDVhJkEPQj2s8M5URAezEnI46befPlhodNrE8XveklNozi01/FFuuh5peqfa/zcuXsnjNnMEB13YtO0xzdzYSPVLMHflrGFJXQsWHeGd9wJwyxBleAA=="),
+		},
+	}
+
+	random := testRandomReader{}
+	for _, testCase := range testCases {
+		sum := sha256.Sum256(testCase.Data)
+		hashed := sum[:]
+
+		// None
+		sign, err := privateKey.SignPKCS1v15(hashed, WithRandom(random))
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = publicKey.VerifyPKCS1v15(hashed, sign)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if !slices.Equal(sign, testCase.SignData) {
+			t.Fatalf("data %q: got %+v != expect %+v", testCase.Data, sign, testCase.SignData)
+		}
+
+		// Hex
+		sign, err = privateKey.SignPKCS1v15(hashed, WithRandom(random), WithHex())
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = publicKey.VerifyPKCS1v15(hashed, sign, WithHex())
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if !slices.Equal(sign, testCase.SignDataHex) {
+			t.Fatalf("data %q: got %+v != expect %+v", testCase.Data, sign, testCase.SignDataHex)
+		}
+
+		// Base64
+		sign, err = privateKey.SignPKCS1v15(hashed, WithRandom(random), WithBase64())
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = publicKey.VerifyPKCS1v15(hashed, sign, WithBase64())
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if !slices.Equal(sign, testCase.SignDataBase64) {
+			t.Fatalf("data %q: got %+v != expect %+v", testCase.Data, sign, testCase.SignDataBase64)
+		}
+	}
+}
+
+// go test -v -cover -run=^TestSignVerifyPSS$
+func TestSignVerifyPSS(t *testing.T) {
+	privateKey := newTestPrivateKey()
+	publicKey := newTestPublicKey()
+
+	testCases := []signTestCase{
+		{
+			Data:           []byte(""),
+			SignData:       []byte{161, 34, 168, 37, 113, 200, 52, 111, 6, 21, 153, 133, 88, 58, 242, 82, 187, 130, 203, 20, 19, 181, 126, 108, 89, 141, 226, 139, 159, 213, 116, 76, 230, 60, 218, 189, 62, 162, 80, 143, 229, 150, 110, 64, 148, 49, 238, 237, 239, 218, 196, 185, 215, 98, 69, 225, 136, 37, 47, 74, 21, 238, 126, 69, 225, 198, 230, 21, 146, 138, 223, 21, 178, 171, 56, 57, 238, 179, 231, 9, 100, 46, 181, 38, 226, 156, 254, 233, 251, 52, 177, 138, 67, 242, 58, 244, 172, 168, 129, 151, 182, 14, 158, 179, 179, 58, 4, 38, 177, 189, 63, 209, 162, 31, 138, 210, 217, 233, 124, 7, 10, 136, 13, 171, 191, 177, 199, 68, 178, 107, 3, 74, 248, 19, 2, 228, 98, 19, 59, 233, 174, 104, 177, 38, 38, 153, 12, 145, 128, 99, 113, 4, 197, 168, 203, 118, 66, 126, 40, 136, 96, 99, 229, 198, 114, 114, 2, 131, 157, 74, 20, 22, 122, 94, 152, 87, 21, 143, 43, 58, 169, 89, 67, 29, 252, 155, 253, 141, 172, 84, 156, 116, 155, 95, 172, 136, 73, 78, 111, 214, 35, 18, 64, 83, 223, 157, 245, 162, 176, 174, 33, 207, 76, 147, 60, 138, 123, 242, 152, 195, 227, 57, 171, 209, 250, 134, 172, 129, 96, 100, 238, 183, 122, 48, 17, 25, 83, 244, 39, 128, 28, 223, 115, 123, 30, 37, 254, 81, 217, 159, 204, 67, 61, 91, 43, 91},
+			SignDataHex:    []byte("a122a82571c8346f06159985583af252bb82cb1413b57e6c598de28b9fd5744ce63cdabd3ea2508fe5966e409431eeedefdac4b9d76245e188252f4a15ee7e45e1c6e615928adf15b2ab3839eeb3e709642eb526e29cfee9fb34b18a43f23af4aca88197b60e9eb3b33a0426b1bd3fd1a21f8ad2d9e97c070a880dabbfb1c744b26b034af81302e462133be9ae68b12626990c9180637104c5a8cb76427e28886063e5c6727202839d4a14167a5e9857158f2b3aa959431dfc9bfd8dac549c749b5fac88494e6fd623124053df9df5a2b0ae21cf4c933c8a7bf298c3e339abd1fa86ac816064eeb77a30111953f427801cdf737b1e25fe51d99fcc433d5b2b5b"),
+			SignDataBase64: []byte("oSKoJXHING8GFZmFWDryUruCyxQTtX5sWY3ii5/VdEzmPNq9PqJQj+WWbkCUMe7t79rEuddiReGIJS9KFe5+ReHG5hWSit8Vsqs4Oe6z5wlkLrUm4pz+6fs0sYpD8jr0rKiBl7YOnrOzOgQmsb0/0aIfitLZ6XwHCogNq7+xx0SyawNK+BMC5GITO+muaLEmJpkMkYBjcQTFqMt2Qn4oiGBj5cZycgKDnUoUFnpemFcVjys6qVlDHfyb/Y2sVJx0m1+siElOb9YjEkBT3531orCuIc9MkzyKe/KYw+M5q9H6hqyBYGTut3owERlT9CeAHN9zex4l/lHZn8xDPVsrWw=="),
+		},
+		{
+			Data:           []byte("123"),
+			SignData:       []byte{64, 28, 139, 85, 221, 5, 144, 182, 180, 149, 52, 110, 105, 57, 34, 218, 205, 92, 111, 32, 170, 202, 219, 24, 33, 244, 0, 81, 60, 84, 103, 54, 206, 210, 214, 201, 33, 133, 154, 206, 219, 26, 151, 165, 166, 215, 170, 44, 72, 46, 5, 79, 48, 111, 43, 211, 12, 36, 165, 116, 82, 241, 99, 230, 129, 206, 219, 111, 19, 16, 176, 13, 88, 177, 78, 133, 220, 20, 222, 149, 194, 222, 106, 8, 8, 153, 151, 39, 223, 118, 104, 118, 82, 167, 85, 89, 199, 82, 155, 6, 54, 231, 76, 74, 50, 188, 176, 232, 67, 74, 94, 81, 216, 97, 225, 75, 129, 52, 143, 1, 14, 78, 21, 57, 193, 49, 109, 175, 69, 228, 174, 133, 243, 25, 202, 77, 72, 36, 143, 152, 170, 91, 184, 126, 99, 204, 45, 106, 50, 76, 34, 233, 82, 168, 62, 65, 80, 199, 19, 22, 135, 12, 118, 29, 200, 31, 233, 185, 104, 19, 80, 62, 145, 223, 189, 72, 23, 157, 31, 117, 22, 85, 65, 48, 244, 6, 196, 187, 77, 61, 141, 160, 224, 208, 245, 30, 244, 3, 209, 21, 204, 28, 145, 29, 23, 142, 231, 41, 93, 224, 107, 171, 96, 118, 50, 213, 36, 158, 119, 41, 50, 96, 50, 14, 73, 152, 11, 255, 96, 55, 101, 124, 253, 238, 1, 42, 14, 86, 132, 181, 58, 69, 16, 57, 164, 204, 215, 11, 167, 54, 38, 157, 234, 42, 28, 142},
+			SignDataHex:    []byte("401c8b55dd0590b6b495346e693922dacd5c6f20aacadb1821f400513c546736ced2d6c921859acedb1a97a5a6d7aa2c482e054f306f2bd30c24a57452f163e681cedb6f1310b00d58b14e85dc14de95c2de6a0808999727df76687652a75559c7529b0636e74c4a32bcb0e8434a5e51d861e14b81348f010e4e1539c1316daf45e4ae85f319ca4d48248f98aa5bb87e63cc2d6a324c22e952a83e4150c71316870c761dc81fe9b96813503e91dfbd48179d1f7516554130f406c4bb4d3d8da0e0d0f51ef403d115cc1c911d178ee7295de06bab607632d5249e77293260320e49980bff6037657cfdee012a0e5684b53a451039a4ccd70ba736269dea2a1c8e"),
+			SignDataBase64: []byte("QByLVd0FkLa0lTRuaTki2s1cbyCqytsYIfQAUTxUZzbO0tbJIYWaztsal6Wm16osSC4FTzBvK9MMJKV0UvFj5oHO228TELANWLFOhdwU3pXC3moICJmXJ992aHZSp1VZx1KbBjbnTEoyvLDoQ0peUdhh4UuBNI8BDk4VOcExba9F5K6F8xnKTUgkj5iqW7h+Y8wtajJMIulSqD5BUMcTFocMdh3IH+m5aBNQPpHfvUgXnR91FlVBMPQGxLtNPY2g4ND1HvQD0RXMHJEdF47nKV3ga6tgdjLVJJ53KTJgMg5JmAv/YDdlfP3uASoOVoS1OkUQOaTM1wunNiad6iocjg=="),
+		},
+		{
+			Data:           []byte("你好，世界"),
+			SignData:       []byte{27, 12, 230, 47, 28, 51, 98, 101, 24, 13, 39, 155, 59, 75, 201, 31, 118, 236, 99, 13, 4, 171, 16, 155, 132, 146, 24, 157, 103, 240, 4, 109, 5, 14, 123, 185, 15, 88, 70, 209, 40, 254, 58, 38, 249, 38, 153, 88, 154, 182, 216, 252, 221, 224, 174, 166, 55, 119, 10, 203, 50, 146, 193, 92, 58, 15, 215, 183, 247, 36, 222, 139, 41, 126, 33, 166, 7, 19, 196, 120, 143, 165, 99, 14, 252, 36, 232, 120, 69, 153, 48, 154, 36, 243, 81, 103, 206, 40, 38, 176, 119, 190, 163, 251, 239, 62, 34, 5, 17, 214, 209, 61, 114, 180, 220, 52, 100, 26, 108, 121, 50, 201, 18, 233, 124, 45, 249, 176, 136, 148, 6, 154, 83, 108, 16, 18, 187, 151, 40, 166, 140, 47, 31, 137, 240, 28, 168, 218, 82, 181, 71, 143, 109, 73, 127, 137, 75, 159, 197, 18, 101, 188, 43, 150, 127, 160, 166, 165, 170, 37, 141, 76, 130, 137, 81, 190, 144, 5, 231, 220, 119, 120, 116, 214, 201, 138, 30, 95, 19, 185, 185, 225, 76, 168, 104, 249, 162, 229, 93, 76, 153, 123, 8, 39, 173, 247, 172, 74, 168, 157, 75, 87, 163, 242, 59, 196, 171, 7, 84, 248, 138, 54, 212, 102, 94, 172, 145, 181, 153, 196, 251, 62, 246, 155, 244, 142, 142, 100, 233, 168, 122, 132, 140, 110, 20, 12, 237, 152, 149, 64, 162, 182, 147, 90, 73, 173},
+			SignDataHex:    []byte("1b0ce62f1c336265180d279b3b4bc91f76ec630d04ab109b8492189d67f0046d050e7bb90f5846d128fe3a26f92699589ab6d8fcdde0aea637770acb3292c15c3a0fd7b7f724de8b297e21a60713c4788fa5630efc24e8784599309a24f35167ce2826b077bea3fbef3e220511d6d13d72b4dc34641a6c7932c912e97c2df9b08894069a536c1012bb9728a68c2f1f89f01ca8da52b5478f6d497f894b9fc51265bc2b967fa0a6a5aa258d4c828951be9005e7dc777874d6c98a1e5f13b9b9e14ca868f9a2e55d4c997b0827adf7ac4aa89d4b57a3f23bc4ab0754f88a36d4665eac91b599c4fb3ef69bf48e8e64e9a87a848c6e140ced989540a2b6935a49ad"),
+			SignDataBase64: []byte("GwzmLxwzYmUYDSebO0vJH3bsYw0EqxCbhJIYnWfwBG0FDnu5D1hG0Sj+Oib5JplYmrbY/N3grqY3dwrLMpLBXDoP17f3JN6LKX4hpgcTxHiPpWMO/CToeEWZMJok81FnzigmsHe+o/vvPiIFEdbRPXK03DRkGmx5MskS6Xwt+bCIlAaaU2wQEruXKKaMLx+J8Byo2lK1R49tSX+JS5/FEmW8K5Z/oKalqiWNTIKJUb6QBefcd3h01smKHl8TubnhTKho+aLlXUyZewgnrfesSqidS1ej8jvEqwdU+Io21GZerJG1mcT7Pvab9I6OZOmoeoSMbhQM7ZiVQKK2k1pJrQ=="),
+		},
+	}
+
+	random := testRandomReader{}
+	for _, testCase := range testCases {
+		sum := sha256.Sum256(testCase.Data)
+		digest := sum[:]
+
+		// None
+		sign, err := privateKey.SignPSS(digest, WithRandom(random))
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = publicKey.VerifyPSS(digest, sign)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if !slices.Equal(sign, testCase.SignData) {
+			t.Fatalf("data %q: got %+v != expect %+v", testCase.Data, sign, testCase.SignData)
+		}
+
+		// Hex
+		sign, err = privateKey.SignPSS(digest, WithRandom(random), WithHex())
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = publicKey.VerifyPSS(digest, sign, WithHex())
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if !slices.Equal(sign, testCase.SignDataHex) {
+			t.Fatalf("data %q: got %+v != expect %+v", testCase.Data, sign, testCase.SignDataHex)
+		}
+
+		// Base64
+		sign, err = privateKey.SignPSS(digest, WithRandom(random), WithBase64())
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = publicKey.VerifyPSS(digest, sign, WithBase64())
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if !slices.Equal(sign, testCase.SignDataBase64) {
+			t.Fatalf("data %q: got %+v != expect %+v", testCase.Data, sign, testCase.SignDataBase64)
+		}
 	}
 }

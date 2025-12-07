@@ -16,3 +16,5 @@ bench:
 	go test -v ./_examples/aes_test.go -bench=. -benchtime=1s
 	go test -v ./_examples/rsa_test.go -bench=. -benchtime=1s
 	go test -v ./_examples/rsa_key_test.go -bench=. -benchtime=1s
+	go test -v ./_examples/ed25519_test.go -bench=. -benchtime=1s
+	go test -v ./_examples/ed25519_key_test.go -bench=. -benchtime=1s

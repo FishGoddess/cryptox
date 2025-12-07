@@ -17,6 +17,7 @@
 * 支持 HMAC 混合基础的散列算法。
 * 支持 DES/3DES/AES 等对称加密算法。
 * 支持 RSA 等非对称加密算法。
+* 支持 ED25519 等签名算法。
 * 支持 ECB/CBC/OFB/CFB/CTR/GCM 等分组模式。
 * 支持 ZERO/PKCS5/PKCS7 等字节填充方式。
 
@@ -35,6 +36,8 @@ $ go get -u github.com/FishGoddess/cryptox
 * [aes](_examples/aes.go)
 * [rsa](_examples/rsa.go)
 * [rsa_key](_examples/rsa_key.go)
+* [ed25519](_examples/ed25519.go)
+* [ed25519_key](_examples/ed25519_key.go)
 
 ### 🚴🏻 性能测试
 
@@ -120,6 +123,11 @@ BenchmarkRSA_VerifyPSS-2                           20220             56627 ns/op
 BenchmarkRSA_GenerateKeys1024-2               60          21398224 ns/op          283350 B/op       2851 allocs/op
 BenchmarkRSA_GenerateKeys2048-2               84         117753488 ns/op          600303 B/op       5459 allocs/op
 BenchmarkRSA_GenerateKeys4096-2                1        1432974432 ns/op         2709912 B/op      14359 allocs/op
+
+BenchmarkED25519_Sign-2            32125             36469 ns/op             112 B/op          2 allocs/op
+BenchmarkED25519_Verify-2          13927             90989 ns/op              48 B/op          1 allocs/op
+
+BenchmarkED25519_GenerateKeys-2            38296             30692 ns/op             208 B/op          4 allocs/op
 ```
 
 ### 🎨 贡献者
