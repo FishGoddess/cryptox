@@ -16,7 +16,8 @@
 * 支持 CRC/FNV 等散列算法。
 * 支持 HMAC 混合基础的散列算法。
 * 支持 DES/3DES/AES 等对称加密算法。
-* 支持 RSA/ED25519 等非对称加密算法。
+* 支持 RSA 等非对称加密算法。
+* 支持 ED25519 等签名算法。
 * 支持 ECB/CBC/OFB/CFB/CTR/GCM 等分组模式。
 * 支持 ZERO/PKCS5/PKCS7 等字节填充方式。
 

@@ -16,7 +16,8 @@
 * CRC/FNV hash supports.
 * HMAC mixed hash supports.
 * DES/3DES/AES encrypt and decrypt supports.
-* RSA/ED25519 encrypt and decrypt supports.
+* RSA encrypt and decrypt supports.
+* ED25519 sign supports.
 * ECB/CBC/OFB/CFB/CTR/GCM mode supports.
 * ZERO/PKCS5/PKCS7 padding supports.
 
