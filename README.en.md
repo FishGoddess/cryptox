@@ -16,7 +16,7 @@
 * CRC/FNV hash supports.
 * HMAC mixed hash supports.
 * DES/3DES/AES encrypt and decrypt supports.
-* RSA encrypt and decrypt supports.
+* RSA/ED25519 encrypt and decrypt supports.
 * ECB/CBC/OFB/CFB/CTR/GCM mode supports.
 * ZERO/PKCS5/PKCS7 padding supports.
 
@@ -35,6 +35,8 @@ $ go get -u github.com/FishGoddess/cryptox
 * [aes](_examples/aes.go)
 * [rsa](_examples/rsa.go)
 * [rsa_key](_examples/rsa_key.go)
+* [ed25519](_examples/ed25519.go)
+* [ed25519_key](_examples/ed25519_key.go)
 
 ### 🚴🏻 Benchmarks
 

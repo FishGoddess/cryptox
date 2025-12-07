@@ -16,7 +16,7 @@
 * 支持 CRC/FNV 等散列算法。
 * 支持 HMAC 混合基础的散列算法。
 * 支持 DES/3DES/AES 等对称加密算法。
-* 支持 RSA 等非对称加密算法。
+* 支持 RSA/ED25519 等非对称加密算法。
 * 支持 ECB/CBC/OFB/CFB/CTR/GCM 等分组模式。
 * 支持 ZERO/PKCS5/PKCS7 等字节填充方式。
 
@@ -35,6 +35,8 @@ $ go get -u github.com/FishGoddess/cryptox
 * [aes](_examples/aes.go)
 * [rsa](_examples/rsa.go)
 * [rsa_key](_examples/rsa_key.go)
+* [ed25519](_examples/ed25519.go)
+* [ed25519_key](_examples/ed25519_key.go)
 
 ### 🚴🏻 性能测试
 
