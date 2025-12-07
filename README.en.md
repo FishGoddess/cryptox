@@ -122,6 +122,11 @@ BenchmarkRSA_VerifyPSS-2                           20220             56627 ns/op
 BenchmarkRSA_GenerateKeys1024-2               60          21398224 ns/op          283350 B/op       2851 allocs/op
 BenchmarkRSA_GenerateKeys2048-2               84         117753488 ns/op          600303 B/op       5459 allocs/op
 BenchmarkRSA_GenerateKeys4096-2                1        1432974432 ns/op         2709912 B/op      14359 allocs/op
+
+BenchmarkED25519_Sign-2            32125             36469 ns/op             112 B/op          2 allocs/op
+BenchmarkED25519_Verify-2          13927             90989 ns/op              48 B/op          1 allocs/op
+
+BenchmarkED25519_GenerateKeys-2            38296             30692 ns/op             208 B/op          4 allocs/op
 ```
 
 ### 🎨 Contributing
