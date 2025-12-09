@@ -13,6 +13,15 @@ import (
 func TestBytes(t *testing.T) {
 	for i := 1; i <= 64; i++ {
 		data := Bytes(i)
+		if len(data) != i {
+			t.Fatalf("len(data) %d != i %d", len(data), i)
+		}
+
+		t.Logf("%s\n", data)
+	}
+
+	for i := 1; i <= 64; i++ {
+		data := Bytes(i, WithWeak())
 
 		for _, b := range data {
 			index := bytes.IndexByte(words, b)
@@ -29,11 +38,20 @@ func TestBytes(t *testing.T) {
 func TestString(t *testing.T) {
 	for i := 1; i <= 64; i++ {
 		str := String(i)
+		if len(str) != i {
+			t.Fatalf("len(str) %d != i %d", len(str), i)
+		}
+
+		t.Logf("%s\n", str)
+	}
+
+	for i := 1; i <= 64; i++ {
+		str := String(i, WithWeak())
 
 		for _, r := range str {
 			index := bytes.IndexRune(words, r)
 			if index < 0 {
-				t.Fatalf("b %+v not in words %+v", r, words)
+				t.Fatalf("r %+v not in words %+v", r, words)
 			}
 		}
 
